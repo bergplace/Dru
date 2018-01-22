@@ -4,3 +4,5 @@ and to know when blockchain will be ready and maybe place to write
 arbitrary mongodb querys
 
 Also make it possible to run query witch mongoDb statistics
+
+

@@ -16,7 +16,11 @@ The main things that can be accomplished with well chosen deployment and packagi
 
 Docker is known for achieving those goals, but not everything about Docker will be helpful. My main concern is running Bitcoin Core in Docker Image, it would be a great inconvenience to people who already have full node on their machine and this problem has to be dealt with.
 
-My proposal is to have Bitcoin Core installed separately, and create FTP server that would provide access to its block data, the rest of the application would by in Docker. With that we can keep the advantages of using docker, and provide a new possibility to the user - keeping Bitcoin Core on separate machine witch when considering that both parts of the application, Bitcoin Core and database with API will be well over 100Gb in size might be a big advantage. 
+My proposal is to have Bitcoin Core installed separately, and create simple HTTP server that would provide access to block data, the rest of the application would by in Docker. Creation of such server can be achieved with running command  
+\begin{verbatim}
+python -m http.server 8000 --bind 127.0.0.1
+\end{verbatim}
+With that we can keep the advantages of using docker, and provide a new possibility to the user - keeping Bitcoin Core on separate machine witch when considering that both parts of the application, Bitcoin Core and database with API will be well over 100Gb in size might be a big advantage.
 
 \section{Database}
 \subsection*{Database operations}
