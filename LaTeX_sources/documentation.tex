@@ -12,40 +12,40 @@
 \section{Deployment and packaging}
 \subsubsection*{Docker - for and against}
 
-The main things that can be acomplished with well chosen deployment and packaging are simplicity of use and cross-platform possibilities witch can positivelly influence adoption rate of this solution in perspective of both usage and further open source developement.
+The main things that can be accomplished with well chosen deployment and packaging are simplicity of use and cross-platform possibilities witch can positively influence adoption rate of this solution in perspective of both usage and further open source development.
 
-Docker is known for achiewing those goals, but not everything about Docker will be helpfull. My main consern is runing Bitcoin Core in Docker Image, it would be a great inconvinience to people who already have full node on their maschine and this problem has to be delt with.
+Docker is known for achieving those goals, but not everything about Docker will be helpful. My main concern is running Bitcoin Core in Docker Image, it would be a great inconvenience to people who already have full node on their machine and this problem has to be dealt with.
 
-My proposal is to have Bitcoin Core installed separatly, and create FTP server that would provide access to its block data, the rest of the application would by in Docker. With that we can keep the advantages of using docker, and provide a new possibility to the user - keeping Bitcoin Core on separate maschine witch when consitering that both parts of the aplication, Bitcoin Core and database with API will be well over 100Gb in size might be a big advantage. 
+My proposal is to have Bitcoin Core installed separately, and create FTP server that would provide access to its block data, the rest of the application would by in Docker. With that we can keep the advantages of using docker, and provide a new possibility to the user - keeping Bitcoin Core on separate machine witch when considering that both parts of the application, Bitcoin Core and database with API will be well over 100Gb in size might be a big advantage. 
 
 \section{Database}
 \subsection*{Database operations}
 My least concern are operations that modify the data, and their performance will not be taken into consideration
 
-Main goal is to enable fast querying of the blocks by block hash, time and other block atributes, and to be able to return specified amount of consecutive blocks starting or ending with certain block. 
+Main goal is to enable fast querying of the blocks by block hash, time and other block attributes, and to be able to return specified amount of consecutive blocks starting or ending with certain block. 
 
-Additionally it might be necesary to enable fast querying for transactions or blocks containing transactions of certain adresses but further research of what users need in this regard is needed
+Additionally it might be necessary to enable fast querying for transactions or blocks containing transactions of certain addresses but further research of what users need in this regard is needed
 
 \subsection{Database choice}
-At the beggining lets simplify the choice between RDBMS and NoSQL databases. Out of many NoSQL possibilities I have chosen MongoDB database based on some quick research of different NoSQL systems strengths and weakneses.
+At the beginning lets simplify the choice between RDBMS and NoSQL databases. Out of many NoSQL possibilities I have chosen MongoDB database based on some quick research of different NoSQL systems strengths and weaknesses.
 
-Lets lay out some facts that will help to decide wether to use relational database, or MongoDB
+Lets lay out some facts that will help to decide whether to use relational database, or MongoDB
 
 \begin{itemize}
 \item 
 To achieve fast querying, the data will be strongly denormalized
 \item 
 You can achieve comparable performance from MongoDB and some RDBMS but Mongo seams to make storing denormalized data idiomatic and RDBMS with highly denormalized data just don't feel right
-\item MongoDB fully suports JSON, witch will be the format of data recieved by end user
+\item MongoDB fully supports JSON, witch will be the format of data received by end user
 \end{itemize}
 
-Based on these facts I will use as my databese MongoDB. This problem seams like a perfect usage for database of such type because of its denormalized nature and native suport for JSON
+Based on these facts I will use as my database MongoDB. This problem seams like a perfect usage for database of such type because of its denormalized nature and native support for JSON
  \subsection{Database structure}
  
- At this point I propose having one collection of blocks, each document containing all block atributes like hashes, time, transactions list and others
+ At this point I propose having one collection of blocks, each document containing all block attributes like hashes, time, transactions list and others
  
-Indexing increases performance of querying the data and hinders the performance of operations like adding and removing data witch in this case looks like a great bargain. There might be additional memory cost asociated with indexes, but this should not be a problem.
+Indexing increases performance of querying the data and hinders the performance of operations like adding and removing data witch in this case looks like a great bargain. There might be additional memory cost associated with indexes, but this should not be a problem.
 
-The indexess will be added to fields like block hash, time or height, adding indexing to transaction list is also a possibility and will be considered and tested. With indexes on transaction list it should be possible to quickly query for blocks containing transactions in witch given adress recieves or sends bitcoin, but its hard for me to speculate about this matter without thorow testing in live system.
+The indexes will be added to fields like block hash, time or height, adding indexing to transaction list is also a possibility and will be considered and tested. With indexes on transaction list it should be possible to quickly query for blocks containing transactions in witch given address receives or sends bitcoin, but its hard for me to speculate about this matter without thorough testing in live system.
 \end{document}
 
