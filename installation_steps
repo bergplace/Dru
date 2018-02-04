@@ -1,0 +1,36 @@
+# !!!!!!!!!!!!!!!!!!!!!!!!!BITCOIN-CORE!!!!!!!!!!!!!!!!!!!!!!  
+# in dir with bitcoind:
+./bitcoind -datadir="/opt/platform/bitcoin-data" -deamon &
+
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!DOCKER!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# install docker-ce using instructions from internet
+docker run mongo
+
+# run named and dettached instance of mongo
+docker run --name btc-mongo -d mongo --auth
+
+# connect to mongo shell
+docker exec -it btc-mongo mongo admin
+
+# run mongo with specified volume dir and exported port
+docker run -p 27017:27017 -v /opt/platform/mongo-btc-db:/data/db --name btc-mongo -d mongo  
+
+# connect to container terminal 
+docker exec -it container-name bash
+
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!MONGO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# add dummy admin account
+db.createUser({ user: 'admin', pwd: 'admin', roles: [ { role: "userAdminAnyDatabase", db: "admin" } ] });
+
+#tworzenie bazy
+use btc-blocks
+
+# tworzenie kolekcji
+# ustawic noPadding - poniewaz dokumenty nie beda modyfikowane
+db.createCollection("blocks", { noPadding: true});
+
+# restricted user
+db.createUser({ user: 'btc-user', pwd: 'btc-user', roles: [ { role: "read", db: "btc-blocks" } ] });
+
