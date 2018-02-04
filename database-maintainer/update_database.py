@@ -28,8 +28,8 @@ structure of block info:
 
 class BlockchainDBMaintainer(object):
 
-    def __init__(self, **kwargs):
-        self.btc_data_dir_path = kwargs['btc_data_dir_path']
+    def __init__(self, config):
+        self.btc_data_dir_path = config['btc_data_dir_path']
         self.block_hash_chain = {}
         self.checked_blk_files = set()
         self.genesis_hash = '0000000000000000000000000000000000000000000000000000000000000000'
@@ -40,13 +40,13 @@ class BlockchainDBMaintainer(object):
         print('blocks data gathering starts')
         files_to_check = sorted(set(get_files(self.btc_data_dir_path))
                                 - self.checked_blk_files)
-        self.checked_blk_files += set(files_to_check)
+        self.checked_blk_files = set(files_to_check) | self.checked_blk_files
         for i, blk_file in enumerate(files_to_check):
             for raw_block in get_blocks(blk_file):
                 b = Block(raw_block)
-                self.block_hash_chain[b.header.previous_block_hash] = (
+                self.block_hash_chain[b.header.previous_block_hash] = [
                     b.hash, blk_file, False
-                )  # maybe add verified flag as well
+                ]  # maybe add verified flag as well
             print('{}% ready'.format(100 * i / len(files_to_check)))
 
     def verify_blocks(self):
@@ -64,7 +64,12 @@ class BlockchainDBMaintainer(object):
             block_stack.append(block)
         # verify
         next_block = self.block_hash_chain.get(block_stack[-1][0], None)
+        bc_length = len(self.block_hash_chain)
+        counter = 0
         while next_block:
+            counter += 1
+            if counter % 100 == 0:
+                print(counter/bc_length)
             block_stack.append(next_block)
             self.last_verified = block_stack[0]
             self.last_verified[2] = True
