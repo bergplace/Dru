@@ -7,26 +7,11 @@ import os
 import urllib.parse
 
 """
-General description:
-
-on start:
-    gather block info
-loop:
-    get hash of last block in db
-    check in witch file next valid block is
-    if there is no such information 
-        update block info
-        and check in witch file next valid block is
-    load it to db
-    
-problems:
-    not verified blocks, get only those confirmed
-    by 5 other
-    
-    
-structure of block info:
-
-    {previous_block_hash: (this_block_hash, filename)}
+TODO:
+saving blocks - mirror the structure of block from blockchain.info
+initializing db - creating indexes
+fix getting info about totally processed blk files
+switch from using depreciated links to using bridge network
 """
 
 
@@ -37,12 +22,15 @@ class BlockchainDBMaintainer(object):
         self.block_hash_chain = {}
         self.checked_blk_files = set()
         self.genesis_hash = '0000000000000000000000000000000000000000000000000000000000000000'
-        self.last_verified = self.genesis_hash
+        self.last_verified = self.genesis_hash   # mam last saved więc to nie będzie potrzxebne
         self.verification_threshold = 6
-        self.blocks = self.get_blocks_collection()
+        self.blocks_collection = self.get_blocks_collection()
+        self.last_saved_block = self.get_hash_of_last_saved_block()
 
     def refresh_block_data(self):
         log('blocks data gathering starts')
+        # check all blk files that are 128Mb
+        # process all of them and after, add them as checked
         files_to_check = sorted(set(get_files(self.btc_data_dir_path))  # there is bug
                                 - self.checked_blk_files)
         self.checked_blk_files = set(files_to_check) | self.checked_blk_files
@@ -54,21 +42,17 @@ class BlockchainDBMaintainer(object):
                 ]
             log('{}% ready'.format(100 * i / len(files_to_check)))
 
-    def verify_blocks(self):
-        log('blocks verification starts')
+    def save_blocks(self):
+        log('blocks saving starts')
         block_queue = deque()
         next_block = self.block_hash_chain.get(self.last_verified, None)
-        bc_length = len(self.block_hash_chain)
-        counter = 0
         while next_block:
-            counter += 1
-            if counter % 100 == 0:
-                log('{}%'.format(counter/bc_length))
             block_queue.append(next_block)
-            self.last_verified = block_queue[0]
-            self.last_verified[2] = True
             if len(block_queue) >= self.verification_threshold:
                 block_queue.popleft()
+                self.last_verified = block_queue[0]
+                self.last_verified[2] = True
+                self.save_one_block(self.last_verified)
             next_block = self.block_hash_chain.get(block_queue[-1][0], None)
 
     def get_blocks_collection(self):
@@ -80,14 +64,35 @@ class BlockchainDBMaintainer(object):
             .blocks
 
     def get_hash_of_last_saved_block(self):
-        hash_of_last = self.blocks.find({}).sort([('height', -1)]).limit(1)
-        return hash_of_last[0] if hash_of_last.count() != 0 else None
+        hash_of_last = self.blocks_collection.find({}).sort([('height', -1)]).limit(1)
+        return hash_of_last[0].hash if hash_of_last.count() != 0 else self.genesis_hash
+
+    def save_one_block(self, block_hash, file_path):
+        block = None
+        for b in get_blocks(file_path):
+            if b.hash == block_hash:
+                block = b
+                break
+        self.blocks_collection.insert_one(self.block_to_dict(block))
+
+    def block_to_dict(self, block):
+        block_dict = {
+            'hash': block.hash,
+            'height': block.height,
+            'prev_hash': block.header.previous_block_hash,
+            'version': block.header.version,
+            'merkle_root': block.header.merkle_root,
+            'timestamp': block.header.timestamp,
+            'difficulty': block.header.difficulty,
+            'transactions': None # trochę się niechce już dzisiaj ;)
+        }
 
     def run(self):
         log(str(self.get_hash_of_last_saved_block().count()))
         while True:
             self.refresh_block_data()
-            self.verify_blocks()
+            self.save_blocks()
+
             log('sleeps for 10 minutes')
             time.sleep(600)
 
