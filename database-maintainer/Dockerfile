@@ -5,4 +5,6 @@ COPY ./src/ /src/
 RUN pip install --no-cache-dir -r requirements.txt
 RUN mkdir /btc-blocks-data/
 
-CMD [ "python", "/src/update_database.py" ]
+EXPOSE 27017
+
+CMD [ "python", "-u", "/src/update_database.py" ]

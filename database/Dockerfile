@@ -1,0 +1,17 @@
+FROM aashreys/mongo-auth:latest
+ENV AUTH yes
+
+ENV MONGODB_ADMIN_USER root
+ENV MONGODB_ADMIN_PASS password
+
+ENV MONGODB_APPLICATION_DATABASE bitcoin
+ENV MONGODB_APPLICATION_USER btc-user
+ENV MONGODB_APPLICATION_PASS btc-pass
+
+
+
+
+
+
+
+
