@@ -61,7 +61,7 @@ class BlockchainDBMaintainer(object):
             block = self.block_hash_chain.get(block_stack[-1][0], None)
             if block is None:
                 return
-            block_stack.append(block)
+            block_stack.append(block)  # lets delete this for and put if in while loop
         # verify
         next_block = self.block_hash_chain.get(block_stack[-1][0], None)
         bc_length = len(self.block_hash_chain)
@@ -83,7 +83,6 @@ class BlockchainDBMaintainer(object):
 
 if __name__ == '__main__':
     config = {
-        'btc_data_dir_path': '/opt/platform/bitcoin-data/blocks',
-        'db_maintainer_block_info_file_path': '/home/mp/block_info',
+        'btc_data_dir_path': '/btc-blocks-data',
     }  # there will be config loader later on
     BlockchainDBMaintainer(config).run()
