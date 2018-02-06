@@ -43,7 +43,7 @@ class BlockchainDBMaintainer(object):
             block_queue.append(next_block)
             if len(block_queue) >= self.verification_threshold:
                 block_queue.popleft()
-                self.save_one_block(block_queue[0])
+                self.save_one_block(*block_queue[0])
             next_block = self.block_hash_chain.get(block_queue[-1][0], None)
 
     def get_blocks_collection(self):
@@ -61,7 +61,8 @@ class BlockchainDBMaintainer(object):
 
     def save_one_block(self, block_hash, file_path):
         block = None
-        for b in get_blocks(file_path):
+        for raw_block in get_blocks(file_path):
+            b = Block(raw_block)
             if b.hash == block_hash:
                 block = b
                 break
@@ -79,7 +80,7 @@ class BlockchainDBMaintainer(object):
             'n_tx': block.n_transactions,
             'size': block.size,
             'bits': block.header.bits,
-            'nonce': block.header.nonoce,
+            'nonce': block.header.nonce,
             'difficulty': block.header.difficulty,
             'transactions': [self.transaction_to_dict(tx) for tx in block.transactions]
         }
@@ -95,16 +96,15 @@ class BlockchainDBMaintainer(object):
 
     def input_to_dict(self, tx_input):
         return {
-            'sequence': tx_input.sequence,
+            'sequence_number': tx_input.sequence_number,
             'script': tx_input.script.script,
-            'type': tx_input.script.type,
             'value': tx_input.script.value,
         }
 
     def output_to_dict(self, output):
         return {
             'value': output.value,
-            'script': output.script,
+            'script': output.script.script,
             'adresses': [self.adress_to_dict(addr) for addr in output.addresses],
         }
 
