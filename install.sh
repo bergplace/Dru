@@ -20,11 +20,17 @@ fi
 
 ./uninstall.sh  # this should not be in production
 
+
+
+docker network create btcnet
+
 docker build -t btc-blockchain-db ./database
 
-docker run -d --name btc-blockchain-db -v $database_dir:/data/db btc-blockchain-db
+docker run -d --network=btcnet --name btc-blockchain-db -v $database_dir:/data/db btc-blockchain-db
 
 docker build -t btc-blockchain-db-maintainer ./database-maintainer
 
-docker run -d --name btc-blockchain-db-maintainer -v $btc_blocks_dir:/btc-blocks-data --link btc-blockchain-db btc-blockchain-db-maintainer
+docker run -d --network=btcnet --name btc-blockchain-db-maintainer -v $btc_blocks_dir:/btc-blocks-data btc-blockchain-db-maintainer
+
+
 
