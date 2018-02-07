@@ -101,10 +101,10 @@ class BlockchainDBMaintainer(object):
                 blocks_list.append(block_queue.popleft())
                 if len(blocks_list) >= self.amount_of_blocks_procesed_at_once:
                     processed = pool.map(prepare_block_list, self.split_list(blocks_list, self.n_processes))
-                    blocks_list = []
-                    log('saves {} blocks'.format(len(processed)))
-                    for block in (block for block in blocks_list for blocks_list in processed):
-                        self.save_block(block)
+                    log('saves {} blocks'.format(len(processed) * len(processed[0])))
+                    for lst in processed:
+                        for block in lst:
+                            self.save_block(block)
             next_block = self.block_hash_chain.get(block_queue[-1][0], None)
             block_queue.append(next_block)
 
