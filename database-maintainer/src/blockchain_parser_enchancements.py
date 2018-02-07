@@ -1,3 +1,14 @@
+from blockchain_parser.block import Block
+from blockchain_parser.blockchain import get_blocks
+
+
+def get_block(block_info):
+    block_hash, file_path, i = block_info
+    for j, raw_block in enumerate(get_blocks(file_path)):
+        if i == j:
+            return Block(raw_block)
+
+
 def block_to_dict(block):
     return {
         'hash': block.hash,

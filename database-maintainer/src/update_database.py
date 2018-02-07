@@ -7,7 +7,7 @@ from blockchain_parser.blockchain import Blockchain, get_files, get_blocks
 from blockchain_parser.block import Block
 from collections import deque, defaultdict
 from pymongo import MongoClient
-from blockchain_parser_enchancements import block_to_dict
+from blockchain_parser_enchancements import block_to_dict, get_block
 import os
 import urllib.parse
 import random
@@ -90,7 +90,7 @@ class BlockchainDBMaintainer(object):
             next_block = self.block_hash_chain.get(block_queue[-1][0], None)
 
     def save_blocks_parallel(self):
-        log('blocks saving starts')
+        log('blocks saving starts with {} processes'.format(self.n_processes))
         block_queue = deque()
         next_block = self.block_hash_chain.get(self.get_hash_of_last_saved_block(), None)
         block_queue.append(next_block)
@@ -100,8 +100,9 @@ class BlockchainDBMaintainer(object):
             if len(block_queue) >= self.verification_threshold:
                 blocks_list.append(block_queue.popleft())
                 if len(blocks_list) >= self.amount_of_blocks_procesed_at_once:
-                    processed = pool.map(self.prepare_block_list, self.split_list(blocks_list, self.n_processes))
+                    processed = pool.map(prepare_block_list, self.split_list(blocks_list, self.n_processes))
                     blocks_list = []
+                    log('saves {} blocks'.format(len(processed)))
                     for block in (block for block in blocks_list for blocks_list in processed):
                         self.save_block(block)
             next_block = self.block_hash_chain.get(block_queue[-1][0], None)
@@ -114,7 +115,6 @@ class BlockchainDBMaintainer(object):
             splitted.append(lst[:split_point])
             lst = lst[split_point:]
         return splitted
-
 
     def get_blocks_collection(self):
         if TESTING:
@@ -132,21 +132,12 @@ class BlockchainDBMaintainer(object):
         return hash_of_last[0].hash if hash_of_last.count() != 0 else self.genesis_hash
 
     def save_one_block(self, block_info):
-        b = self.get_block(block_info)
+        b = get_block(block_info)
         start = time.time()
         b = block_to_dict(b)
         self.t_block_to_dict += time.time() - start
         self.save_block(b)
         log('block {} inserted to db'.format(block_info[0]))
-
-    def prepare_block_list(self, block_info_list):
-        return list(map(lambda x: block_to_dict(self.get_block(x)), block_info_list))
-
-    def get_block(self, block_info):
-        block_hash, file_path, i = block_info
-        for j, raw_block in enumerate(get_blocks(file_path)):
-            if i == j:
-                return Block(raw_block)
 
     def save_block(self, block):
         self.blocks_collection.insert_one(block)
@@ -185,7 +176,8 @@ class BlockchainDBMaintainer(object):
             try:
                 start = time.time()
                 rand_blocks = [[random.choice(blocks) for _ in range(25)] for _ in range(4)]
-                p.map(self.prepare_block_list, rand_blocks)
+                p.map(prepare_block_list, rand_blocks)
+                p.map(prepare_block_list, self.split_list(rand_blocks[0], self.n_processes))
                 res.append(time.time() - start)
                 print('PARTIAL TIME: {}'.format(time.time() - start))
             except RuntimeError:
@@ -205,6 +197,10 @@ class BlockchainDBMaintainer(object):
             log('current collection count: {}'.format(self.blocks_collection.count()))
             log('sleeps for 10 minutes')
             time.sleep(600)
+
+
+def prepare_block_list(block_info_list):
+    return list(map(lambda x: block_to_dict(get_block(x)), block_info_list))
 
 
 def log(msg):
