@@ -55,7 +55,7 @@ class BlockchainDBMaintainer(object):
         self.rest_time = 0
         self.rounds = 0
         self.t_block_to_dict = 0
-        self.amount_of_blocks_procesed_at_once = 200
+        self.amount_of_blocks_procesed_at_once = 512
 
     def refresh_block_data(self):
         log('blocks data gathering starts')
