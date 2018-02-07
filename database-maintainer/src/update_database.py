@@ -60,21 +60,22 @@ class BlockchainDBMaintainer(object):
     def refresh_block_data(self):
         log('blocks data gathering starts')
         files_to_check = self.get_files_to_check()
-        for i, blk_file in enumerate(files_to_check):
-            for j, raw_block in enumerate(get_blocks(blk_file)):
+        log('files to check: {}'.format(files_to_check))
+        for blk_i, blk_file in enumerate(files_to_check):
+            for rb_i, raw_block in enumerate(get_blocks(blk_file)):
                 b = Block(raw_block)
                 self.block_hash_chain[b.header.previous_block_hash] = [
-                    b.hash, blk_file, j
+                    b.hash, blk_file, rb_i
                 ]
-            log('{}% ready'.format(100 * i / len(files_to_check)))
+            log('{}% ready'.format(100 * blk_i / len(files_to_check)))
 
     def get_files_to_check(self):
-        new_files_sizes = {path: os.path.getsize(path) for path in get_files(self.btc_data_dir_path)}
+        new_file_sizes = {path: os.path.getsize(path) for path in get_files(self.btc_data_dir_path)}
         files_to_check = []
-        for file, size in new_files_sizes.items():
+        for file, size in new_file_sizes.items():
             if size != self.blk_files_previous_sizes.get(file, 0):
                 files_to_check.append(file)
-        self.blk_files_previous_sizes = new_files_sizes
+        self.blk_files_previous_sizes = new_file_sizes
         return files_to_check
 
     def save_blocks(self):
