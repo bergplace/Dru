@@ -1,0 +1,15 @@
+Testing:
+
+Everything should be unit tested, and it should be possible to run tests for
+all parts at once, with combined report of results, and coverage
+
+Documentation:
+
+thorough docstrings everywhere, design decisions and architecture
+covered in documentation pdf
+
+Performance:
+
+initial loading of blocks to mongo should be under 24h,
+it would be great if it would proceed in 10h, but now I suspect it to run for
+about 100h
