@@ -140,7 +140,7 @@ class BlockchainDBMaintainer(object):
         log('block {} inserted to db'.format(block_info[0]))
 
     def save_block(self, block):
-        log(self.blocks_collection.insert_one(block).inserted_id)
+        self.blocks_collection.insert_one(block)
 
     def test_saving(self):
         """
