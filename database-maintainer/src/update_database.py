@@ -92,7 +92,7 @@ class BlockchainDBMaintainer(object):
         log('blocks saving starts')
         block_queue = deque()
         next_block = self.block_hash_chain.get(self.get_hash_of_last_saved_block(), None)
-        deque.append(next_block)
+        block_queue.append(next_block)
         pool = Pool(processes=self.n_processes)
         blocks_list = []
         while next_block:
