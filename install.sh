@@ -1,7 +1,7 @@
 #!/bin/bash
 
-btc_blocks_dir=/home/marcin/nfs
-database_dir=/home/marcin/btc_mongo
+btc_blocks_dir=/opt/platform/bitcoin-data/blocks
+database_dir=/opt/platform/mongo-data
 
 if [ $btc_blocks_dir == "not_set" ]
     then echo "please set btc_blocks_dir variable, it should contain absolute path to directory containing bitcoin blkXXXXX.dat files"

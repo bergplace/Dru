@@ -100,12 +100,21 @@ class BlockchainDBMaintainer(object):
             if len(block_queue) >= self.verification_threshold:
                 blocks_list.append(block_queue.popleft())
                 if len(blocks_list) >= self.amount_of_blocks_procesed_at_once:
-                    processed = pool.map(self.prepare_block_list, numpy.array_split(blocks_list, self.n_processes))
+                    processed = pool.map(self.prepare_block_list, self.split_list(blocks_list, self.n_processes))
                     blocks_list = []
                     for block in (block for block in blocks_list for blocks_list in processed):
                         self.save_block(block)
             next_block = self.block_hash_chain.get(block_queue[-1][0], None)
             block_queue.append(next_block)
+
+    def split_list(self, lst, n):
+        splitted = []
+        for i in reversed(range(1, n + 1)):
+            split_point = len(lst)//i
+            splitted.append(lst[:split_point])
+            lst = lst[split_point:]
+        return splitted
+
 
     def get_blocks_collection(self):
         if TESTING:
