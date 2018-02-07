@@ -61,10 +61,10 @@ class BlockchainDBMaintainer(object):
         log('blocks data gathering starts')
         files_to_check = self.get_files_to_check()
         for i, blk_file in enumerate(files_to_check):
-            for i, raw_block in enumerate(get_blocks(blk_file)):
+            for j, raw_block in enumerate(get_blocks(blk_file)):
                 b = Block(raw_block)
                 self.block_hash_chain[b.header.previous_block_hash] = [
-                    b.hash, blk_file, i
+                    b.hash, blk_file, j
                 ]
             log('{}% ready'.format(100 * i / len(files_to_check)))
 
@@ -92,6 +92,7 @@ class BlockchainDBMaintainer(object):
         log('blocks saving starts')
         block_queue = deque()
         next_block = self.block_hash_chain.get(self.get_hash_of_last_saved_block(), None)
+        deque.append(next_block)
         pool = Pool(processes=self.n_processes)
         blocks_list = []
         while next_block:
