@@ -14,6 +14,7 @@ import random
 from multiprocessing import Pool
 import numpy
 
+from utils import split_list
 
 """
 ok  zrobić w tej mojej strukturze tj block_hash_chain zamiast
@@ -55,7 +56,8 @@ class BlockchainDBMaintainer(object):
         self.rest_time = 0
         self.rounds = 0
         self.t_block_to_dict = 0
-        self.amount_of_blocks_procesed_at_once = 512
+        self.blocks_to_process = 512
+        self.blockchain = []
 
     def refresh_block_data(self):
         log('blocks data gathering starts')
@@ -78,43 +80,29 @@ class BlockchainDBMaintainer(object):
         self.blk_files_previous_sizes = new_file_sizes
         return files_to_check
 
-    def save_blocks(self):
-        log('blocks saving starts')
-        block_queue = deque()
-        next_block = self.block_hash_chain.get(self.get_hash_of_last_saved_block(), None)
-        while next_block:
-            block_queue.append(next_block)
-            if len(block_queue) >= self.verification_threshold:
-                block_queue.popleft()
-                self.save_one_block(block_queue[0])
-            next_block = self.block_hash_chain.get(block_queue[-1][0], None)
+    def create_block_chain(self):
+        self.blockchain = []
+        block = self.block_hash_chain.get(self.get_hash_of_last_saved_block(), None)
+        while block:
+            self.blockchain.append(block)
+            block = self.block_hash_chain.get(block[0], None)
+            if len(self.blockchain) % 1000 == 0:
+                log('{} blocks in blockchain'.format(len(self.blockchain)))
+        self.blockchain = self.blockchain[:-self.verification_threshold]
 
     def save_blocks_parallel(self):
         log('blocks saving starts with {} processes'.format(self.n_processes))
-        block_queue = deque()
-        next_block = self.block_hash_chain.get(self.get_hash_of_last_saved_block(), None)
-        block_queue.append(next_block)
         pool = Pool(processes=self.n_processes)
-        blocks_list = []
-        while next_block:
-            if len(block_queue) >= self.verification_threshold:
-                blocks_list.append(block_queue.popleft())
-                if len(blocks_list) >= self.amount_of_blocks_procesed_at_once:
-                    processed = pool.map(prepare_block_list, self.split_list(blocks_list, self.n_processes))
-                    log('saves {} blocks'.format(len(processed) * len(processed[0])))
-                    for lst in processed:
-                        for block in lst:
-                            self.save_block(block)
-            next_block = self.block_hash_chain.get(block_queue[-1][0], None)
-            block_queue.append(next_block)
-
-    def split_list(self, lst, n):
-        splitted = []
-        for i in reversed(range(1, n + 1)):
-            split_point = len(lst)//i
-            splitted.append(lst[:split_point])
-            lst = lst[split_point:]
-        return splitted
+        while self.blockchain:
+            processed = pool.map(prepare_block_list, split_list(
+                self.blockchain[:self.blocks_to_process],
+                self.n_processes
+            ))
+            log('saves {} blocks'.format(self.blocks_to_process))
+            for lst in processed:
+                for block in lst:
+                    self.save_block(block)
+            self.blockchain = self.blockchain[self.blocks_to_process:]
 
     def get_blocks_collection(self):
         if TESTING:
@@ -185,14 +173,14 @@ class BlockchainDBMaintainer(object):
         print('AVG TIME: {}'.format(sum(res) / len(res)))
 
     def run(self):
-        #resource.setrlimit(resource.RLIMIT_AS, (4 * 10**9, 4 * 10**9))
         while True:
             if TESTING:
                 self.btc_data_dir_path = '/home/marcin/blocks'
-            self.refresh_block_data()
-            if TESTING:
+                self.refresh_block_data()
                 self.test_saving_parallel()
-                raise RuntimeError()
+                time.sleep(1000000)
+            self.refresh_block_data()
+            self.create_block_chain()
             self.save_blocks_parallel()
             log('current collection count: {}'.format(self.blocks_collection.count()))
             log('sleeps for 10 minutes')
