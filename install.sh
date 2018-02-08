@@ -32,5 +32,10 @@ docker build -t btc-blockchain-db-maintainer ./database-maintainer
 
 docker run -d --network=btcnet --name btc-blockchain-db-maintainer -v $btc_blocks_dir:/btc-blocks-data btc-blockchain-db-maintainer
 
+docker build -t btc-blockchain-web-api ./web-api
+
+docker run -d --network=btcnet --name btc-blockchain-web-api -p 80:80 btc-blockchain-web-api
+
+
 
 
