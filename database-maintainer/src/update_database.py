@@ -14,30 +14,7 @@ import random
 from multiprocessing import Pool
 import numpy
 
-from utils import split_list
-
-"""
-ok  zrobić w tej mojej strukturze tj block_hash_chain zamiast
-    hashu dać raw_block, albo chociaż numer bloku w blk,
-    generalnie optymalizacja pełną parą.
-
-
-
-Może nabrać kilka bloków, a potem Pool.map zrobić współbierznie
-tj mam listę hashy i nazw plików i może numerów bloku w pliku,
-wrzucam do p.map i dostaję dicty, a potem je wysyłam
-
-
-z tego słownika bloków można usówać wpisy po zapisaniu i otwarciu kolejnego
-
-Wyniki:
-8.435987043380738
-
-
-SPRAWDZIĆ ŁĄCZNY CZAS PRZETWARZANIA NA DICTA
-"""
-
-TESTING = False
+from utils import split_list, log, prepare_block_list
 
 
 class BlockchainDBMaintainer(object):
@@ -99,15 +76,12 @@ class BlockchainDBMaintainer(object):
                 self.n_processes
             ))
             log('saves {} blocks'.format(self.blocks_to_process))
-            for lst in processed:
-                for block in lst:
+            for blocks in processed:
+                for block in blocks:
                     self.save_block(block)
             self.blockchain = self.blockchain[self.blocks_to_process:]
 
     def get_blocks_collection(self):
-        if TESTING:
-            return FakeMongoCollection()
-
         mongo_container = 'btc-blockchain-db'
         log('connecting to mongo at: {}'.format(mongo_container))
         username = urllib.parse.quote_plus('root')
@@ -130,92 +104,14 @@ class BlockchainDBMaintainer(object):
     def save_block(self, block):
         self.blocks_collection.insert_one(block)
 
-    def test_saving(self):
-        """
-        AVG TIME: 16.905670595169067
-        AVG TIME: 14.144430899620057"""
-        blocks = list(self.block_hash_chain.values())
-        res = []
-        for _ in range(10):
-            try:
-                start = time.time()
-                for _ in range(100):
-                    rand_block = random.choice(blocks)
-                    self.save_one_block(rand_block)
-                res.append(time.time() - start)
-                print('PARTIAL TIME: {}, TO DICT: {}'.format(
-                    time.time() - start,
-                    self.t_block_to_dict
-                ))
-                self.t_block_to_dict = 0
-            except RuntimeError:
-                pass
-        print('AVG TIME: {}'.format(sum(res)/len(res)))
-
-    def test_saving_parallel(self):
-        """
-        AVG TIME: 14.166110968589782
-        AVG TIME: 17.581450843811034
-        """
-        blocks = list(self.block_hash_chain.values())
-        res = []
-        p = Pool(processes=self.n_processes)
-        for _ in range(10):
-            try:
-                start = time.time()
-                rand_blocks = [[random.choice(blocks) for _ in range(25)] for _ in range(4)]
-                p.map(prepare_block_list, rand_blocks)
-                p.map(prepare_block_list, self.split_list(rand_blocks[0], self.n_processes))
-                res.append(time.time() - start)
-                print('PARTIAL TIME: {}'.format(time.time() - start))
-            except RuntimeError:
-                pass
-        print('AVG TIME: {}'.format(sum(res) / len(res)))
-
     def run(self):
         while True:
-            if TESTING:
-                self.btc_data_dir_path = '/home/marcin/blocks'
-                self.refresh_block_data()
-                self.test_saving_parallel()
-                time.sleep(1000000)
             self.refresh_block_data()
             self.create_block_chain()
             self.save_blocks_parallel()
             log('current collection count: {}'.format(self.blocks_collection.count()))
             log('sleeps for 10 minutes')
             time.sleep(600)
-
-
-def prepare_block_list(block_info_list):
-    return list(map(lambda x: block_to_dict(get_block(x)), block_info_list))
-
-
-def log(msg):
-    if TESTING:
-        return
-    print('[db-maintainer][{}] {}'.format(
-        time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()),
-        msg
-    ))
-
-
-class FakeMongoCollection(object):
-
-    def insert_one(self, sth):
-        pass
-
-    def find(self, sth):
-        return self
-
-    def sort(self, sth):
-        return self
-
-    def limit(self, sth):
-        return self
-
-    def count(self):
-        return 0
 
 
 if __name__ == '__main__':
