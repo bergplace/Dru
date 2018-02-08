@@ -90,8 +90,8 @@ class BlockchainDBMaintainer(object):
         return connection.bitcoin.blocks
 
     def get_hash_of_last_saved_block(self):
-        hash_of_last = self.blocks_collection.find({}).sort([('height', -1)]).limit(1)
-        return hash_of_last[0]['hash'] if hash_of_last.count() != 0 else self.genesis_hash
+        last_block = self.blocks_collection.find().sort([('_id', -1)]).limit(1)
+        return last_block[0]['hash'] if last_block.count() != 0 else self.genesis_hash
 
     def save_one_block(self, block_info):
         b = get_block(block_info)
