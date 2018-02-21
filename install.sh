@@ -2,6 +2,7 @@
 
 btc_blocks_dir=/opt/platform/bitcoin-data/blocks
 database_dir=/opt/platform/mongo-data
+mongo_max_memory=10000   # in Mb
 
 if [ $btc_blocks_dir == "not_set" ]
     then echo "please set btc_blocks_dir variable, it should contain absolute path to directory containing bitcoin blkXXXXX.dat files"
@@ -26,7 +27,7 @@ docker network create btcnet
 
 docker build -t btc-blockchain-db ./database
 
-docker run -d --network=btcnet --name btc-blockchain-db -v $database_dir:/data/db btc-blockchain-db
+docker run -d --network=btcnet --name btc-blockchain-db -v $database_dir:/data/db btc-blockchain-db --memory=$mongo_max_memory
 
 docker build -t btc-blockchain-db-maintainer ./database-maintainer
 

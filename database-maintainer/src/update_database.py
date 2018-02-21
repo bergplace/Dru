@@ -68,6 +68,12 @@ class BlockchainDBMaintainer(object):
         self.blockchain = self.blockchain[:-self.verification_threshold]
 
     def save_blocks_parallel(self):
+        """
+        will this work after getting to the head?
+        or maybe when self.blockchain is 513 elements, will it work?
+
+        :return:
+        """
         log('blocks saving starts with {} processes'.format(self.n_processes))
         pool = Pool(processes=self.n_processes)
         while self.blockchain:
