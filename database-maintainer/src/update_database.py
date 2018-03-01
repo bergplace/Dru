@@ -119,34 +119,36 @@ class BlockchainDBMaintainer(object):
         log('{} blocks to upload'.format(len(self.blockchain)))
 
     def save_blocks_parallel_async(self):
+        """
+        starts fixed number of asynchronous parallel tasks processing blocks,
+        when task has finished, callback function is called
+        """
         log('processing starts')
         pool = Pool(processes=self.n_processes)
         for block_info in copy(self.blockchain):
             self.processes_count += 1
             pool.apply_async(
                 self.process_single_block,
-                (block_info, ),
+                (block_info, ),  # for some reason it has to be in tuple
                 callback=self.process_result_callback
             )
-            log('started task, {} running, {} ready'.format(
-                self.processes_count, len(self.processed_blocks)
-            ))
             while (self.processes_count > self.process_count_limit or
                    len(self.processed_blocks) > self.process_count_limit):
-                time.sleep(0.2)
+                time.sleep(0.1)
 
     @staticmethod
     def process_single_block(block_info):
         return block_info[0], block_to_dict(get_block(block_info))
 
     def process_result_callback(self, result):
-        log('task finished')
+        """
+        callback function for tasks started by 'save_blocks_parallel_async'
+        """
         self.processes_count -= 1
         block_hash, block = result
         self.processed_blocks[block_hash] = block
         block_to_save = self.processed_blocks.get(self.blockchain[0][0], None)
         while block_to_save:
-            log('saving 1 block')
             self.save_block_to_db(block_to_save)
             del self.processed_blocks[self.blockchain[0][0]]
             self.blockchain.popleft()
