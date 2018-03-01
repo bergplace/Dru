@@ -1,7 +1,10 @@
 import time
 import multiprocessing
+from collections import deque
+
 from blockchain_parser.blockchain import Blockchain, get_files, get_blocks
 from blockchain_parser.block import Block
+from copy import deepcopy, copy
 from pymongo import MongoClient
 from blockchain_parser_enchancements import block_to_dict, get_block
 import os
@@ -32,7 +35,7 @@ class BlockchainDBMaintainer(object):
         self.rounds = 0
         self.t_block_to_dict = 0
         self.blocks_to_process = 512
-        self.blockchain = []
+        self.blockchain = deque()
         # for new async processing
         self.processes_count = 0
         self.process_count_limit = 100
@@ -60,7 +63,7 @@ class BlockchainDBMaintainer(object):
         while True:
             self.refresh_block_data()
             self.create_block_chain()
-            self.save_blocks_parallel()
+            self.save_blocks_parallel_async()
             log('current collection count: {}'.format(self.blocks_collection.count()))
             log('sleeps for 10 minutes')
             time.sleep(600)
@@ -103,50 +106,44 @@ class BlockchainDBMaintainer(object):
         have at least 'self.verification_threshold' blocks
         after it
         """
-        self.blockchain = []
-        block = self.block_hash_chain.get(self.get_hash_of_last_saved_block(), None)
-        while block:
-            self.blockchain.append(block)
-            block = self.block_hash_chain.get(block[0], None)
+        self.blockchain = deque()
+        block_info = self.block_hash_chain.get(self.get_hash_of_last_saved_block(), None)
+        while block_info:
+            self.blockchain.append(block_info)
+            block_info = self.block_hash_chain.get(block_info[0], None)
             if len(self.blockchain) % 1000 == 0:
                 log('{} blocks in blockchain'.format(len(self.blockchain)))
-        self.blockchain = self.blockchain[:-self.verification_threshold]
-
-    def save_blocks_parallel(self):
-        """
-        will this work after getting to the head?
-        or maybe when self.blockchain is 513 elements, will it work?
-
-        parses blocks to json on every core machine have,
-        and then saves them in database
-        """
-        log('blocks saving starts with {} processes'.format(self.n_processes))
-        pool = Pool(processes=self.n_processes)
-        while self.blockchain:
-            processed = pool.map(prepare_block_list, split_list(
-                self.blockchain[:self.blocks_to_process],
-                self.n_processes
-            ))
-            log('saves {} blocks'.format(self.blocks_to_process))
-            for blocks in processed:
-                for block in blocks:
-                    self.save_block_to_db(block)
-            self.blockchain = self.blockchain[self.blocks_to_process:]
+        for _ in range(self.verification_threshold):
+            self.blockchain.pop()
 
     def save_blocks_parallel_async(self):
         pool = Pool()
-        while self.blockchain:
+        for block_info in copy(self.blockchain):
             self.processes_count += 1
-            pool.apply_async() # one block in one process
-            while (self.processes_count >= self.process_count_limit or
+            pool.apply_async(
+                self.process_single_block,
+                block_info,
+                callback=self.process_result_callback
+            )
+            while (self.processes_count > self.process_count_limit or
                    len(self.processed_blocks) > self.process_count_limit):
-                time.sleep(0.1)
+                time.sleep(0.2)
 
             self.blockchain = self.blockchain[self.blocks_to_process:]
 
+    @staticmethod
+    def process_single_block(block_info):
+        return block_info[0], block_to_dict(get_block(block_info))
+
     def process_result_callback(self, result):
-        hash, block = result
-        self.processed_blocks[hash] = block
+        self.processes_count -= 1
+        (block_hash, _, _), block = result
+        self.processed_blocks[block_hash] = block
+        block_to_save = self.processed_blocks.get(self.blockchain[0], None)
+        if block_to_save:
+            self.save_block_to_db(block_to_save)
+            del self.processed_blocks[self.blockchain[0]]
+            self.blockchain.popleft()
 
     def save_block_to_db(self, block):
         self.blocks_collection.insert_one(block)
