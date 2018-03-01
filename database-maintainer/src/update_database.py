@@ -29,7 +29,7 @@ class BlockchainDBMaintainer(object):
         self.verification_threshold = 6
         self.blocks_collection = self.get_blocks_collection()
         self.last_saved_block = self.get_hash_of_last_saved_block()
-        self.n_processes = multiprocessing.cpu_count()
+        self.n_processes = multiprocessing.cpu_count() * 4
         self.saving_time = 0
         self.rest_time = 0
         self.rounds = 0
@@ -114,10 +114,11 @@ class BlockchainDBMaintainer(object):
             if len(self.blockchain) % 1000 == 0:
                 log('{} blocks in blockchain'.format(len(self.blockchain)))
         for _ in range(self.verification_threshold):
-            self.blockchain.pop()
+            if len(self.blockchain) != 0:
+                self.blockchain.pop()
 
     def save_blocks_parallel_async(self):
-        pool = Pool()
+        pool = Pool(processes=self.n_processes)
         for block_info in copy(self.blockchain):
             self.processes_count += 1
             pool.apply_async(
