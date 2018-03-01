@@ -7,7 +7,7 @@ from blockchain_parser_enchancements import block_to_dict, get_block
 import os
 import urllib.parse
 from multiprocessing import Pool
-from utils import split_list, log, prepare_block_list
+from utils import split_list, log
 
 
 class BlockchainDBMaintainer(object):
@@ -33,6 +33,10 @@ class BlockchainDBMaintainer(object):
         self.t_block_to_dict = 0
         self.blocks_to_process = 512
         self.blockchain = []
+        # for new async processing
+        self.processes_count = 0
+        self.process_count_limit = 100
+        self.processed_blocks = dict()
 
     @staticmethod
     def get_blocks_collection():
@@ -129,8 +133,34 @@ class BlockchainDBMaintainer(object):
                     self.save_block_to_db(block)
             self.blockchain = self.blockchain[self.blocks_to_process:]
 
+    def save_blocks_parallel_async(self):
+        pool = Pool()
+        while self.blockchain:
+            self.processes_count += 1
+            pool.apply_async() # one block in one process
+            while (self.processes_count >= self.process_count_limit or
+                   len(self.processed_blocks) > self.process_count_limit):
+                time.sleep(0.1)
+
+            self.blockchain = self.blockchain[self.blocks_to_process:]
+
+    def process_result_callback(self, result):
+        hash, block = result
+        self.processed_blocks[hash] = block
+
     def save_block_to_db(self, block):
         self.blocks_collection.insert_one(block)
+
+
+def prepare_block_list(block_info_list):
+    """
+    this function is executed by every worker
+    it takes list of blocks to process, and returns list of processed blocks
+
+    elements the list of blocks it gets are in the form of file path to blk file
+    and position of block in that file
+    """
+    return list(map(lambda x: block_to_dict(get_block(x)), block_info_list))
 
 
 if __name__ == '__main__':

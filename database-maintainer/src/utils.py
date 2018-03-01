@@ -13,10 +13,6 @@ def split_list(lst, n):
     return splitted
 
 
-def prepare_block_list(block_info_list):
-    return list(map(lambda x: block_to_dict(get_block(x)), block_info_list))
-
-
 def log(msg):
     print('[db-maintainer][{}] {}'.format(
         time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()),
