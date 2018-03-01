@@ -6,3 +6,4 @@ python-bitcoin-blockchain-parser/blockchain_parser.egg-info/
 python-bitcoin-blockchain-parser/blockchain_parser/__pycache__/
 python-bitcoin-blockchain-parser/build/
 python-bitcoin-blockchain-parser/dist/
+__pycache*

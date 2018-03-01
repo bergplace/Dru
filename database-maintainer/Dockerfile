@@ -1,6 +1,7 @@
 FROM python:3
 
 COPY requirements.txt ./
+COPY data_load_progress_tracker.py ./
 COPY ./src/ /src/
 RUN pip install --no-cache-dir -r requirements.txt
 RUN mkdir /btc-blocks-data/
