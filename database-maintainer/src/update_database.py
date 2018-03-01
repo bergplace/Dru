@@ -138,6 +138,7 @@ class BlockchainDBMaintainer(object):
         return block_info[0], block_to_dict(get_block(block_info))
 
     def process_result_callback(self, result):
+        log('task finished')
         self.processes_count -= 1
         (block_hash, _, _), block = result
         self.processed_blocks[block_hash] = block
