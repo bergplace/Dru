@@ -130,8 +130,6 @@ class BlockchainDBMaintainer(object):
                    len(self.processed_blocks) > self.process_count_limit):
                 time.sleep(0.2)
 
-            self.blockchain = self.blockchain[self.blocks_to_process:]
-
     @staticmethod
     def process_single_block(block_info):
         return block_info[0], block_to_dict(get_block(block_info))
