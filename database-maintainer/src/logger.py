@@ -23,10 +23,11 @@ class Logger(object):
                 and total > self.minimal_total_count_to_bother_logging:
             self.last_time_progress_logged = time.time()
             self.update_avg_processing_tempo(i)
-            self.log('processing done in {0:.2f}%, {1} left'.format(
-                100 * i / total,
-                self.get_time_left(i, total)
-            ))
+            if i != self.last_processed:
+                self.log('processing done in {0:.2f}%, {1} left'.format(
+                    100 * i / total,
+                    self.get_time_left(i, total)
+                ))
             self.last_processed = i
 
     def update_avg_processing_tempo(self, i):

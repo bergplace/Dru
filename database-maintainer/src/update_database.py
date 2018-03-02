@@ -151,9 +151,9 @@ class BlockchainDBMaintainer(object):
         block_hash, block, err = result
 
         if err:
-            self.logger.log(err)
+            self.logger.log('ERROR IN BLOCK')
             self.logger.log(block_hash)
-            raise Exception
+            self.logger.log(err)
 
         self.processed_blocks[block_hash] = block
 
