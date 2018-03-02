@@ -20,23 +20,24 @@ class Logger(object):
     def log_processing(self, i, total):
         if time.time() - self.last_time_progress_logged > self.log_progress_every:
             self.last_time_progress_logged = time.time()
-            self.update_avg_processing_tempo(i, total)
-            self.log('processing done in {0:.4f}%, {1} left'.format(
-                i / total,
-                self.get_time_left(total)
+            self.update_avg_processing_tempo(i)
+            self.log('processing done in {0:.2f}%, {1} left'.format(
+                100 * i / total,
+                self.get_time_left(i, total)
             ))
             self.last_processed = i
 
-    def update_avg_processing_tempo(self, i, total):
-        self.avg_processing_tempo = ((
-            (self.avg_processing_tempo * (self.n_of_tempo_measures - 1) /
-             self.n_of_tempo_measures)
-            + (i - self.last_processed) / self.n_of_tempo_measures)
-            / self.log_progress_every)
+    def update_avg_processing_tempo(self, i):
+        self.avg_processing_tempo = (
+            (
+                self.avg_processing_tempo * (self.n_of_tempo_measures - 1)
+                + (i - self.last_processed)
+            ) / (self.log_progress_every * self.n_of_tempo_measures)
+        )  # this value is somehow 10x lower than should be
 
-    def get_time_left(self, total):
+    def get_time_left(self, i, total):
         if self.avg_processing_tempo > 0:
-            m, s = divmod(total / self.avg_processing_tempo, 60)
+            m, s = divmod((total - i) / self.avg_processing_tempo, 60)
             h, m = divmod(m, 60)
             return '%d:%02d:%02d' % (h, m, s)
         else:
