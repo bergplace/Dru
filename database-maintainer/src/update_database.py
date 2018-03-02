@@ -1,5 +1,6 @@
 import time
 import multiprocessing
+import traceback
 from collections import deque
 
 from blockchain_parser.blockchain import Blockchain, get_files, get_blocks
@@ -134,14 +135,26 @@ class BlockchainDBMaintainer(object):
     @staticmethod
     def process_single_block(block_info):
         """function to run in every worker"""
-        return block_info[0], block_to_dict(get_block(block_info))
+        result = None
+        try:
+            result = block_to_dict(get_block(block_info))
+        except:
+            return block_info[0], result, traceback.format_exc()
+
+        return block_info[0], result, None
 
     def process_result_callback(self, result):
         """
         callback function for tasks started by 'save_blocks_parallel_async'
         """
         self.processes_count -= 1
-        block_hash, block = result
+        block_hash, block, err = result
+
+        if err:
+            self.logger.log(err)
+            self.logger.log(block_hash)
+            raise Exception
+
         self.processed_blocks[block_hash] = block
 
         while True:
