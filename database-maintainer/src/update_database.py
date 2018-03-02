@@ -131,8 +131,8 @@ class BlockchainDBMaintainer(object):
             while (self.processes_count > self.process_count_limit or
                    len(self.processed_blocks) > self.process_count_limit):
                 time.sleep(0.1)
-        pool.join()
         pool.close()
+        pool.join()
 
     @staticmethod
     def process_single_block(block_info):
