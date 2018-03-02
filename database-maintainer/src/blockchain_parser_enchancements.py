@@ -1,5 +1,8 @@
+from bitcoin.core.script import CScriptTruncatedPushDataError
 from blockchain_parser.block import Block
 from blockchain_parser.blockchain import get_blocks
+
+import logger
 
 
 def get_block(block_info):
@@ -45,11 +48,25 @@ def input_to_dict(tx_input):
 
 
 def output_to_dict(output):
-    return {
-        'value': output.value,
-        'script': output.script.script,
-        'adresses': [adress_to_dict(addr) for addr in output.addresses],
-    }
+    try:
+        return {
+            'value': output.value,
+            'script': output.script.script,
+            'addresses': [adress_to_dict(addr) for addr in output.addresses],
+        }
+    except CScriptTruncatedPushDataError:
+        """
+        hard to say at this point what is the reason this exception is thrown
+        but it happened only once at block 
+        000000000000000000c81eeaa0e0274e0376a8ec21f801c4b78b3a6c71ef37e6
+        and is supposedly linked to not valid script value
+        """
+        logger.Logger.log('CScriptTruncatedPushDataError')
+        return {
+            'value': output.value,
+            'script': output.script.script,
+            'addresses': [],
+        }
 
 
 def adress_to_dict(addr):
