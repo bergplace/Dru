@@ -5,7 +5,7 @@ class Logger(object):
 
     def __init__(self):
         self.last_time_progress_logged = time.time()
-        self.log_progress_every = 5  # seconds
+        self.log_progress_every = 10  # seconds
         self.avg_processing_tempo = 0
         self.n_of_tempo_measures = 10
         self.last_processed = 0
@@ -13,7 +13,7 @@ class Logger(object):
     @staticmethod
     def log(msg):
         print('[db-maintainer][{}] {}'.format(
-            time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()),
+            time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime()),
             msg
         ))
 
@@ -35,7 +35,10 @@ class Logger(object):
             / self.log_progress_every)
 
     def get_time_left(self, total):
-        m, s = divmod(total / self.avg_processing_tempo, 60)
-        h, m = divmod(m, 60)
-        return "%d:%02d:%02d" % (h, m, s)
+        if self.avg_processing_tempo > 0:
+            m, s = divmod(total / self.avg_processing_tempo, 60)
+            h, m = divmod(m, 60)
+            return '%d:%02d:%02d' % (h, m, s)
+        else:
+            return 'infinite'
 

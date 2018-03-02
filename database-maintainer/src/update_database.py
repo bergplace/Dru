@@ -66,7 +66,7 @@ class BlockchainDBMaintainer(object):
                 self.block_hash_chain[b.header.previous_block_hash] = [
                     b.hash, blk_file, rb_i
                 ]
-            self.logger.log('{0:.2f}% ready'.format(100 * blk_i / len(files_to_check)))
+            self.logger.log('loading blockchain {0:.2f}% ready'.format(100 * blk_i / len(files_to_check)))
 
     def get_files_to_check(self):
         """
