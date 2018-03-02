@@ -4,13 +4,13 @@ from collections import deque
 
 from blockchain_parser.blockchain import Blockchain, get_files, get_blocks
 from blockchain_parser.block import Block
-from copy import deepcopy, copy
-from pymongo import MongoClient
+from copy import copy
+import mongo
 from blockchain_parser_enchancements import block_to_dict, get_block
 import os
-import urllib.parse
 from multiprocessing import Pool
-from utils import split_list, log
+
+from logger import Logger
 
 
 class BlockchainDBMaintainer(object):
@@ -21,14 +21,13 @@ class BlockchainDBMaintainer(object):
     """
 
     def __init__(self):
+        self.mongo = mongo.Mongo()
+        self.logger = Logger()
         self.btc_data_dir_path = '/btc-blocks-data'
         self.block_hash_chain = {}
         self.checked_blk_files = set()
         self.blk_files_previous_sizes = {}
-        self.genesis_hash = '0000000000000000000000000000000000000000000000000000000000000000'
         self.verification_threshold = 6
-        self.blocks_collection = self.get_blocks_collection()
-        self.last_saved_block = self.get_hash_of_last_saved_block()
         self.n_processes = multiprocessing.cpu_count() * 4
         self.saving_time = 0
         self.rest_time = 0
@@ -41,31 +40,15 @@ class BlockchainDBMaintainer(object):
         self.process_count_limit = 100
         self.processed_blocks = dict()
 
-    @staticmethod
-    def get_blocks_collection():
-        """
-        connects to databases and returns MongoDB collection
-        to work with
-        """
-        mongo_container = 'btc-blockchain-db'
-        log('connecting to mongo at: {}'.format(mongo_container))
-        username = urllib.parse.quote_plus('root')
-        password = urllib.parse.quote_plus('password')
-        connection = MongoClient('mongodb://{}:{}@{}'.format(username, password, mongo_container))
-        return connection.bitcoin.blocks
-
-    def get_hash_of_last_saved_block(self):
-        last_block = self.blocks_collection.find().sort([('_id', -1)]).limit(1)
-        return last_block[0]['hash'] if last_block.count() != 0 else self.genesis_hash
-
     def run(self):
         """execution starts here"""
         while True:
             self.refresh_block_data()
             self.create_block_chain()
+            self.check_data_validity()
             self.save_blocks_parallel_async()
-            log('current collection count: {}'.format(self.blocks_collection.count()))
-            log('sleeps for 10 minutes')
+            self.logger.log('current collection count: {}'.format(self.mongo.blocks_collection.count()))
+            self.logger.log('sleeps for 10 minutes')
             time.sleep(600)
 
     def refresh_block_data(self):
@@ -74,16 +57,16 @@ class BlockchainDBMaintainer(object):
         in witch blk file the block with specific block hash
         sits, and at witch position in blk file it is
         """
-        log('blocks data gathering starts')
+        self.logger.log('blocks data gathering starts')
         files_to_check = self.get_files_to_check()
-        log('files to check: {}'.format(files_to_check))
+        self.logger.log('files to check: {}'.format(files_to_check))
         for blk_i, blk_file in enumerate(files_to_check):
             for rb_i, raw_block in enumerate(get_blocks(blk_file)):
                 b = Block(raw_block)
                 self.block_hash_chain[b.header.previous_block_hash] = [
                     b.hash, blk_file, rb_i
                 ]
-            log('{}% ready'.format(100 * blk_i / len(files_to_check)))
+            self.logger.log('{0:.2f}% ready'.format(100 * blk_i / len(files_to_check)))
 
     def get_files_to_check(self):
         """
@@ -107,25 +90,37 @@ class BlockchainDBMaintainer(object):
         after it
         """
         self.blockchain = deque()
-        block_info = self.block_hash_chain.get(self.get_hash_of_last_saved_block(), None)
+        block_info = self.block_hash_chain.get(self.mongo.hash_of_last_saved_block, None)
         while block_info:
             self.blockchain.append(block_info)
             block_info = self.block_hash_chain.get(block_info[0], None)
             if len(self.blockchain) % 1000 == 0:
-                log('{} blocks in blockchain'.format(len(self.blockchain)))
+                self.logger.log('{} blocks in blockchain'.format(len(self.blockchain)))
         for _ in range(self.verification_threshold):
             if len(self.blockchain) != 0:
                 self.blockchain.pop()
-        log('{} blocks to upload'.format(len(self.blockchain)))
+        self.logger.log('{} blocks to upload'.format(len(self.blockchain)))
+
+    def check_data_validity(self):
+        """checks if block hashes are unique,
+        and if paths and indexes are unique"""
+        if (len(self.blockchain)
+                != len({block_hash for (block_hash, _, _) in self.blockchain})):
+            raise Exception('self.blockchain contains doubled hashes')
+        if (len(self.blockchain)
+                != len({(path, i) for (_, path, i) in self.blockchain})):
+            raise Exception('self.blockchain contains doubled path and index')
 
     def save_blocks_parallel_async(self):
         """
         starts fixed number of asynchronous parallel tasks processing blocks,
         when task has finished, callback function is called
         """
-        log('processing starts')
+        n_blocks_to_process = len(self.blockchain)
+        self.logger.log('processing of {} blocks starts'.format(n_blocks_to_process))
         pool = Pool(processes=self.n_processes)
-        for block_info in copy(self.blockchain):
+        for i, block_info in enumerate(copy(self.blockchain)):
+            self.logger.log_processing(i, n_blocks_to_process)
             self.processes_count += 1
             pool.apply_async(
                 self.process_single_block,
@@ -138,6 +133,7 @@ class BlockchainDBMaintainer(object):
 
     @staticmethod
     def process_single_block(block_info):
+        """function to run in every worker"""
         return block_info[0], block_to_dict(get_block(block_info))
 
     def process_result_callback(self, result):
@@ -147,26 +143,19 @@ class BlockchainDBMaintainer(object):
         self.processes_count -= 1
         block_hash, block = result
         self.processed_blocks[block_hash] = block
-        block_to_save = self.processed_blocks.get(self.blockchain[0][0], None)
-        while block_to_save:
-            self.save_block_to_db(block_to_save)
-            del self.processed_blocks[self.blockchain[0][0]]
+
+        while True:
+            block_to_save = self.processed_blocks.get(self.next_block_hash, None)
+            if block_to_save is None:
+                break
+            self.mongo.save_block(self.next_block_hash, block_to_save)
+            del self.processed_blocks[self.next_block_hash]
             self.blockchain.popleft()
-            block_to_save = self.processed_blocks.get(self.blockchain[0][0], None)
 
-    def save_block_to_db(self, block):
-        self.blocks_collection.insert_one(block)
-
-
-def prepare_block_list(block_info_list):
-    """
-    this function is executed by every worker
-    it takes list of blocks to process, and returns list of processed blocks
-
-    elements the list of blocks it gets are in the form of file path to blk file
-    and position of block in that file
-    """
-    return list(map(lambda x: block_to_dict(get_block(x)), block_info_list))
+    @property
+    def next_block_hash(self):
+        """returns hash of next block to save to db"""
+        return self.blockchain[0][0]
 
 
 if __name__ == '__main__':
