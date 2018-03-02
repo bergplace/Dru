@@ -9,6 +9,7 @@ class Logger(object):
         self.avg_processing_tempo = 0
         self.n_of_tempo_measures = 10
         self.last_processed = 0
+        self.minimal_total_count_to_bother_logging = 50
 
     @staticmethod
     def log(msg):
@@ -18,7 +19,8 @@ class Logger(object):
         ))
 
     def log_processing(self, i, total):
-        if time.time() - self.last_time_progress_logged > self.log_progress_every:
+        if time.time() - self.last_time_progress_logged > self.log_progress_every\
+                and total > self.minimal_total_count_to_bother_logging:
             self.last_time_progress_logged = time.time()
             self.update_avg_processing_tempo(i)
             self.log('processing done in {0:.2f}%, {1} left'.format(
@@ -31,9 +33,9 @@ class Logger(object):
         self.avg_processing_tempo = (
             (
                 self.avg_processing_tempo * (self.n_of_tempo_measures - 1)
-                + (i - self.last_processed)
-            ) / (self.log_progress_every * self.n_of_tempo_measures)
-        )  # this value is somehow 10x lower than should be
+                + (i - self.last_processed) / self.log_progress_every
+            ) / self.n_of_tempo_measures
+        )
 
     def get_time_left(self, i, total):
         if self.avg_processing_tempo > 0:
