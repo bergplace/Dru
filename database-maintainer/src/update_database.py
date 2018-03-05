@@ -91,9 +91,11 @@ class BlockchainDBMaintainer(object):
         after it
         """
         self.blockchain = deque()
-        block_info = self.block_hash_chain.get(self.mongo.hash_of_last_saved_block, None)
+        block_hash, height = self.mongo.hash_and_height_of_last_saved_block
+        block_info = self.block_hash_chain.get(block_hash, None)
         while block_info:
-            self.blockchain.append(block_info)
+            height += 1
+            self.blockchain.append(block_info + [height])
             block_info = self.block_hash_chain.get(block_info[0], None)
             if len(self.blockchain) % 1000 == 0:
                 self.logger.log('{} blocks in blockchain'.format(len(self.blockchain)))
@@ -106,10 +108,10 @@ class BlockchainDBMaintainer(object):
         """checks if block hashes are unique,
         and if paths and indexes are unique"""
         if (len(self.blockchain)
-                != len({block_hash for (block_hash, _, _) in self.blockchain})):
+                != len({block_hash for (block_hash, _, _, _) in self.blockchain})):
             raise Exception('self.blockchain contains doubled hashes')
         if (len(self.blockchain)
-                != len({(path, i) for (_, path, i) in self.blockchain})):
+                != len({(path, i) for (_, path, i, _) in self.blockchain})):
             raise Exception('self.blockchain contains doubled path and index')
 
     def save_blocks_parallel_async(self):
@@ -139,7 +141,7 @@ class BlockchainDBMaintainer(object):
         """function to run in every worker"""
         result = None
         try:
-            result = block_to_dict(get_block(block_info))
+            result = block_to_dict(*get_block(block_info))
         except:
             return block_info[0], result, traceback.format_exc()
 

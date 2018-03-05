@@ -52,9 +52,11 @@ class Mongo(object):
         return self.collection
 
     @property
-    def hash_of_last_saved_block(self):
+    def hash_and_height_of_last_saved_block(self):
         last_block = self.collection.find().sort([('_id', -1)]).limit(1)
-        return last_block[0]['hash'] if last_block.count() != 0 else self.genesis_hash
+        if last_block.count() != 0:
+            return last_block[0]['hash'], last_block[0]['height']
+        return self.genesis_hash, -1
 
     def save_block(self, block_hash, block):
         if block_hash in self.saved_blocks_hashes:

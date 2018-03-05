@@ -1,3 +1,8 @@
+"""
+TODO:
+- add block height
+- use Base58Check where appropriate
+"""
 from bitcoin.core.script import CScriptTruncatedPushDataError
 from blockchain_parser.block import Block
 from blockchain_parser.blockchain import get_blocks
@@ -6,17 +11,17 @@ import logger
 
 
 def get_block(block_info):
-    block_hash, file_path, i = block_info
+    block_hash, file_path, i, height = block_info
     for j, raw_block in enumerate(get_blocks(file_path)):
         if i == j:
-            return Block(raw_block)
+            return Block(raw_block), height
 
 
-def block_to_dict(block):
+def block_to_dict(block, height):
     return {
         'hash': block.hash,
         'version': block.header.version,
-        'height': block.height,
+        'height': height,
         'prev_hash': block.header.previous_block_hash,
         'merkle_root': block.header.merkle_root,
         'timestamp': block.header.timestamp,
@@ -57,7 +62,7 @@ def output_to_dict(output):
     except CScriptTruncatedPushDataError:
         """
         hard to say at this point what is the reason this exception is thrown
-        but it happened only once at block 
+        but it happened once at block 
         000000000000000000c81eeaa0e0274e0376a8ec21f801c4b78b3a6c71ef37e6
         and is supposedly linked to not valid script value
         """
