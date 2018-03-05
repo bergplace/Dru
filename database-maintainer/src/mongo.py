@@ -1,6 +1,8 @@
 import urllib.parse
 
 import time
+
+import os
 from pymongo import MongoClient
 from pymongo.errors import OperationFailure
 
@@ -22,6 +24,7 @@ class Mongo(object):
         self.collection = self.connection.bitcoin.blocks
         self.genesis_hash = '0000000000000000000000000000000000000000000000000000000000000000'
         self.saved_blocks_hashes = set()
+        self.add_readonly_user()
 
     @staticmethod
     def establish_connection():
@@ -29,13 +32,20 @@ class Mongo(object):
             try:
                 mongo_container = 'btc-blockchain-db'
                 log('connecting to mongo at: {}'.format(mongo_container))
-                username = urllib.parse.quote_plus('root')
-                password = urllib.parse.quote_plus('password')
+                username = urllib.parse.quote_plus(os.environ['MONGODB_ADMIN_USER'])
+                password = urllib.parse.quote_plus(os.environ['MONGODB_ADMIN_PASS'])
                 connection = MongoClient('mongodb://{}:{}@{}'.format(username, password, mongo_container))
                 return connection
             except OperationFailure as e:
                 log('error {}, retrying in 1s'.format(e))
                 time.sleep(1)
+
+    def add_readonly_user(self):
+        self.connection.bitcoin.add_user(
+            os.environ['MONGODB_READONLY_USER'],
+            os.environ['MONGODB_READONLY_PASS'],
+            roles=[{'role': 'read', 'db': 'bitcoin'}]
+        )
 
     @property
     def blocks_collection(self):
