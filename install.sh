@@ -31,7 +31,7 @@ docker run -d \
     -e MONGODB_ADMIN_USER=$db_root_username \
     -e MONGODB_ADMIN_PASS=$db_root_password \
     -e MONGODB_APPLICATION_DATABASE=bitcoin \
-    -p 27017:$db_port \
+    -p 0.0.0.0:$db_port:27017 \
     -v $database_dir:/data/db \
     --network=btcnet \
     aashreys/mongo-auth:latest

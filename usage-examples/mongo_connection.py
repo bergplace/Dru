@@ -3,13 +3,11 @@ import urllib.parse
 from pymongo import MongoClient
 from sshtunnel import SSHTunnelForwarder
 import pymongo
+from mongo_credentials import MONGO_PASS, MONGO_USER, MONGO_PORT
+
 
 MONGO_HOST = "156.17.248.236"
-MONGO_HOST = "127.0.0.1"
-MONGO_PORT = 27017
 MONGO_DB = "bitcoin"
-MONGO_USER = "root"
-MONGO_PASS = "password"
 
 
 class MongoConnection(object):
