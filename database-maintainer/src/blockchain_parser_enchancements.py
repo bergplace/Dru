@@ -3,7 +3,7 @@ TODO:
 - add block height
 - use Base58Check where appropriate
 """
-from bitcoin.core.script import CScriptTruncatedPushDataError
+from bitcoin.core.script import CScriptTruncatedPushDataError, CScriptInvalidError
 from blockchain_parser.block import Block
 from blockchain_parser.blockchain import get_blocks
 
@@ -67,11 +67,14 @@ def output_to_dict(output):
         and is supposedly linked to not valid script value
         """
         logger.Logger.log('CScriptTruncatedPushDataError')
-        return {
-            'value': output.value,
-            'script': output.script.script,
-            'addresses': [],
-        }
+    except CScriptInvalidError:
+        """I guess it means that script is invalid..."""
+        logger.Logger.log('CScriptInvalidError')
+    return {
+        'value': output.value,
+        'script': output.script.script,
+        'addresses': [],
+    }
 
 
 def adress_to_dict(addr):
