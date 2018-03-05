@@ -40,7 +40,7 @@ def transaction_to_dict(tx):
         'version': tx.version,
         'locktime': tx.locktime,
         'inputs': [input_to_dict(tx_input) for tx_input in tx.inputs],
-        'outputs': [output_to_dict(output) for output in tx.outputs],
+        'outputs': [output_to_dict(output, tx.hash) for output in tx.outputs],
     }
 
 
@@ -52,7 +52,7 @@ def input_to_dict(tx_input):
     }
 
 
-def output_to_dict(output):
+def output_to_dict(output, tx_hash):
     try:
         return {
             'value': output.value,
@@ -66,10 +66,14 @@ def output_to_dict(output):
         000000000000000000c81eeaa0e0274e0376a8ec21f801c4b78b3a6c71ef37e6
         and is supposedly linked to not valid script value
         """
-        logger.Logger.log('CScriptTruncatedPushDataError')
+        logger.Logger.log('CScriptTruncatedPushDataError for tx hash: {}'.format(
+            tx_hash
+        ))
     except CScriptInvalidError:
         """I guess it means that script is invalid..."""
-        logger.Logger.log('CScriptInvalidError')
+        logger.Logger.log('CScriptInvalidError for tx hash: {}'.format(
+            tx_hash
+        ))
     return {
         'value': output.value,
         'script': output.script.script,
