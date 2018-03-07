@@ -28,6 +28,7 @@ class BlockchainDBMaintainer(object):
         self.block_hash_chain = {}
         self.checked_blk_files = set()
         self.blk_files_previous_sizes = {}
+        self.files_with_unverified_blocks = set()
         self.verification_threshold = 6
         self.n_processes = multiprocessing.cpu_count() * 4
         self.saving_time = 0
@@ -69,6 +70,7 @@ class BlockchainDBMaintainer(object):
                     b.hash, blk_file, rb_i
                 ]
             self.logger.log('loading blockchain {0:.2f}% ready'.format(100 * blk_i / len(files_to_check)))
+        self.logger.log('{} blocks to check'.format(len(self.block_hash_chain)))
 
     def get_files_to_check(self):
         """
@@ -82,6 +84,8 @@ class BlockchainDBMaintainer(object):
             if size != self.blk_files_previous_sizes.get(file, 0):
                 files_to_check.append(file)
         self.blk_files_previous_sizes = new_file_sizes
+        files_to_check = list(set(files_to_check) | self.files_with_unverified_blocks)
+        self.files_with_unverified_blocks = set()
         return files_to_check
 
     def create_block_chain(self):
@@ -102,7 +106,7 @@ class BlockchainDBMaintainer(object):
                 self.logger.log('{} blocks in blockchain'.format(len(self.blockchain)))
         for _ in range(self.verification_threshold):
             if len(self.blockchain) != 0:
-                self.blockchain.pop()
+                self.files_with_unverified_blocks.add(self.blockchain.pop()[1])
         self.logger.log('{} blocks to upload'.format(len(self.blockchain)))
 
     def check_data_validity(self):

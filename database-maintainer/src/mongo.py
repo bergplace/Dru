@@ -71,6 +71,8 @@ class Mongo(object):
     def create_indexes(self):
         if self.collection.count() > 500000 and not self.indexes_created:
             self.logger.log('creating height db index')
+            # I think it is possible to create couple indexes at once
+            # and it might be mor efficient
             self.collection.create_index([('height', ASCENDING)])
             self.logger.log('creating timestamp db index')
             self.collection.create_index([('timestamp', ASCENDING)])
