@@ -3,10 +3,8 @@ import urllib.parse
 import time
 
 import os
-from pymongo import MongoClient
+from pymongo import MongoClient, ASCENDING
 from pymongo.errors import OperationFailure
-
-from utils import log
 
 
 class DBIntegrityException(Exception):
@@ -19,25 +17,26 @@ class Mongo(object):
     keeping data valid
     """
 
-    def __init__(self):
+    def __init__(self, logger):
+        self.logger = logger
         self.connection = self.establish_connection()
         self.collection = self.connection.bitcoin.blocks
         self.genesis_hash = '0000000000000000000000000000000000000000000000000000000000000000'
         self.saved_blocks_hashes = set()
         self.add_readonly_user()
+        self.indexes_created = False
 
-    @staticmethod
-    def establish_connection():
+    def establish_connection(self):
         while True:
             try:
                 mongo_container = 'btc-blockchain-db'
-                log('connecting to mongo at: {}'.format(mongo_container))
+                self.logger.log('connecting to mongo at: {}'.format(mongo_container))
                 username = urllib.parse.quote_plus(os.environ['MONGODB_ADMIN_USER'])
                 password = urllib.parse.quote_plus(os.environ['MONGODB_ADMIN_PASS'])
                 connection = MongoClient('mongodb://{}:{}@{}'.format(username, password, mongo_container))
                 return connection
             except OperationFailure as e:
-                log('error {}, retrying in 1s'.format(e))
+                self.logger.log('error {}, retrying in 1s'.format(e))
                 time.sleep(1)
 
     def add_readonly_user(self):
@@ -68,3 +67,12 @@ class Mongo(object):
 
     def check_hash_uniqueness(self, block_hash):
         return block_hash not in self.saved_blocks_hashes
+
+    def create_indexes(self):
+        if self.collection.count() > 500000 and not self.indexes_created:
+            self.logger.log('creating height db index')
+            self.collection.create_index([('height', ASCENDING)])
+            self.logger.log('creating timestamp db index')
+            self.collection.create_index([('timestamp', ASCENDING)])
+            self.indexes_created = True
+

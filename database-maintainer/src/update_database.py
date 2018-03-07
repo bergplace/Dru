@@ -22,8 +22,8 @@ class BlockchainDBMaintainer(object):
     """
 
     def __init__(self):
-        self.mongo = mongo.Mongo()
         self.logger = Logger()
+        self.mongo = mongo.Mongo(self.logger)
         self.btc_data_dir_path = '/btc-blocks-data'
         self.block_hash_chain = {}
         self.checked_blk_files = set()
@@ -49,6 +49,7 @@ class BlockchainDBMaintainer(object):
             self.check_data_validity()
             self.save_blocks_parallel_async()
             self.logger.log('current collection count: {}'.format(self.mongo.blocks_collection.count()))
+            self.mongo.create_indexes()
             self.logger.log('sleeps for 10 minutes')
             time.sleep(600)
 

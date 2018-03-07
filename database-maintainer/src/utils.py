@@ -13,13 +13,6 @@ def split_list(lst, n):
     return splitted
 
 
-def log(msg):
-    print('[db-maintainer][{}] {}'.format(
-        time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()),
-        msg
-    ))
-
-
 class FakeMongoCollection(object):
 
     def insert_one(self, sth):
