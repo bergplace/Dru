@@ -7,6 +7,7 @@ creates and maintains MongoDB with Bitcoin blocks, contained in docker
 1. linux system
 1. full bitcoin node
 1. docker
+1. about 500Gb free space (full node + DB)
 
 ### installation
 1. add your user to group docker on your system
