@@ -1,7 +1,7 @@
 import time
 import multiprocessing
 import traceback
-from collections import deque
+from collections import deque, defaultdict
 
 from blockchain_parser.blockchain import Blockchain, get_files, get_blocks
 from blockchain_parser.block import Block
@@ -25,7 +25,7 @@ class BlockchainDBMaintainer(object):
         self.logger = Logger()
         self.mongo = mongo.Mongo(self.logger)
         self.btc_data_dir_path = '/btc-blocks-data'
-        self.block_hash_chain = {}
+        self.block_hash_chain = defaultdict(set)
         self.checked_blk_files = set()
         self.blk_files_previous_sizes = {}
         self.files_with_unverified_blocks = set()
@@ -66,9 +66,9 @@ class BlockchainDBMaintainer(object):
         for blk_i, blk_file in enumerate(files_to_check):
             for rb_i, raw_block in enumerate(get_blocks(blk_file)):
                 b = Block(raw_block)
-                self.block_hash_chain[b.header.previous_block_hash] = [
-                    b.hash, blk_file, rb_i
-                ]
+                self.block_hash_chain[b.header.previous_block_hash].add(
+                    (b.hash, blk_file, rb_i)
+                )
             self.logger.log('loading blockchain {0:.2f}% ready'.format(100 * blk_i / len(files_to_check)))
         self.logger.log('{} blocks to check'.format(len(self.block_hash_chain)))
 
@@ -97,17 +97,41 @@ class BlockchainDBMaintainer(object):
         """
         self.blockchain = deque()
         block_hash, height = self.mongo.hash_and_height_of_last_saved_block
-        block_info = self.block_hash_chain.get(block_hash, None)
-        while block_info:
+        block_info_set = self.block_hash_chain.get(block_hash, None)
+        while block_info_set:
             height += 1
-            self.blockchain.append(block_info + [height])
-            block_info = self.block_hash_chain.get(block_info[0], None)
-            if len(self.blockchain) % 1000 == 0:
-                self.logger.log('{} blocks in blockchain'.format(len(self.blockchain)))
+            block_info = self.chose_non_orphan(block_info_set)
+            self.blockchain.append(list(block_info) + [height])
+            block_info_set = self.block_hash_chain.get(block_info[0], None)
+
         for _ in range(self.verification_threshold):
             if len(self.blockchain) != 0:
-                self.files_with_unverified_blocks.add(self.blockchain.pop()[1])
+                self.blockchain.pop()
         self.logger.log('{} blocks to upload'.format(len(self.blockchain)))
+
+    def chose_non_orphan(self, block_info_set):
+        """
+        returns block_info of block that have at least self.verification_threshold
+        following blocks, or block with longest branch
+        """
+        if len(block_info_set) == 1:
+            return block_info_set.pop()
+        depths = []
+        for block_info in block_info_set:
+            depths.append((block_info, self.get_max_branch_length(set(block_info), 0)))
+        return max(depths, key=lambda x: x[1])[0]
+
+    def get_max_branch_length(self, block_info_set, depth):
+        max_depth = 0
+        if depth > self.verification_threshold or block_info_set is None:
+            return depth - 1
+        for block_info in block_info_set:
+            next_block_info_set = self.block_hash_chain.get(block_info[0])
+            max_depth = max(
+                max_depth,
+                self.get_max_branch_length(next_block_info_set, depth + 1)
+            )
+        return max_depth
 
     def check_data_validity(self):
         """checks if block hashes are unique,
