@@ -8,6 +8,10 @@ creates and maintains MongoDB with Bitcoin blocks, contained in docker
 1. full bitcoin node
 1. docker
 
-### installation
+### Installation
 1. download this repository to your hard drive
-1. cre
+1. rename 'template_config.conf' to 'config.conf'
+1. set variables in 'config.conf'
+1. run 'install.sh'
+
+
