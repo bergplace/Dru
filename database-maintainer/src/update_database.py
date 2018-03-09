@@ -82,7 +82,7 @@ class BlockchainDBMaintainer(object):
 
         self.processed_blocks[block_hash] = block
 
-        while True:
+        while self.blockchain:
             block_to_save = self.processed_blocks.get(self.blockchain[0].hash)
             if block_to_save is None:
                 break
