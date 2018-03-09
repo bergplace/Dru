@@ -5,6 +5,8 @@ import os
 from blockchain_parser.block import Block
 from blockchain_parser.blockchain import get_files, get_blocks
 
+from block_info import BlockInfo
+
 
 class BLKFilesReader(object):
 
@@ -15,7 +17,6 @@ class BLKFilesReader(object):
         self.block_hash_chain = defaultdict(set)
         self.checked_blk_files = set()
         self.blk_files_previous_sizes = {}
-        self.files_with_unverified_blocks = set()
         self.verification_threshold = 6
         self.blockchain = deque()
 
@@ -42,10 +43,11 @@ class BLKFilesReader(object):
             for rb_i, raw_block in enumerate(get_blocks(blk_file)):
                 b = Block(raw_block)
                 self.block_hash_chain[b.header.previous_block_hash].add(
-                    (b.hash, blk_file, rb_i)
+                    BlockInfo(hash=b.hash, path=blk_file,
+                              index=rb_i, height=-1)
                 )
-            self.logger.log('loading blockchain {0:.2f}% ready'.format(100 * blk_i / len(files_to_check)))
-        self.logger.log('{} blocks to check'.format(len(self.block_hash_chain)))
+            self.logger.log('loading blk files {0:.2f}% ready'.format(100 * blk_i / len(files_to_check)))
+        self.logger.log('{} blocks in blocks directory'.format(len(self.block_hash_chain)))
 
     def get_files_to_check(self):
         """
@@ -59,8 +61,6 @@ class BLKFilesReader(object):
             if size != self.blk_files_previous_sizes.get(file, 0):
                 files_to_check.append(file)
         self.blk_files_previous_sizes = new_file_sizes
-        files_to_check = list(set(files_to_check) | self.files_with_unverified_blocks)
-        self.files_with_unverified_blocks = set()
         return files_to_check
 
     def create_block_chain(self):
@@ -72,12 +72,13 @@ class BLKFilesReader(object):
         """
         self.blockchain = deque()
         block_hash, height = self.mongo.hash_and_height_of_last_saved_block
-        block_info_set = self.block_hash_chain.get(block_hash, None)
+        block_info_set = self.block_hash_chain.get(block_hash)
         while block_info_set:
             height += 1
             block_info = self.chose_non_orphan(block_info_set)
-            self.blockchain.append(list(block_info) + [height])
-            block_info_set = self.block_hash_chain.get(block_info[0], None)
+            block_info.height = height
+            self.blockchain.append(block_info)
+            block_info_set = self.block_hash_chain.get(block_info.hash)
 
         for _ in range(self.verification_threshold):
             if len(self.blockchain) != 0:
@@ -105,7 +106,7 @@ class BLKFilesReader(object):
         if depth > self.verification_threshold or block_info_set is None:
             return depth - 1
         for block_info in block_info_set:
-            next_block_info_set = self.block_hash_chain.get(block_info[0])
+            next_block_info_set = self.block_hash_chain.get(block_info.hash)
             max_depth = max(
                 max_depth,
                 self.get_max_branch_length(next_block_info_set, depth + 1)

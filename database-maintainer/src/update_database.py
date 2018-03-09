@@ -62,19 +62,17 @@ class BlockchainDBMaintainer(object):
     @staticmethod
     def process_single_block(block_info):
         """function to run in every worker"""
-        result = None
         try:
-            result = block_to_dict(*get_block(block_info))
+            return block_info.hash, block_to_dict(*get_block(block_info)), None
         except:
-            return block_info[0], result, traceback.format_exc()
-
-        return block_info[0], result, None
+            return block_info.hash, None, traceback.format_exc()
 
     def process_result_callback(self, result):
         """
         callback function for tasks started by 'save_blocks_parallel_async'
         """
         self.processes_count -= 1
+
         block_hash, block, err = result
 
         if err:
@@ -85,17 +83,12 @@ class BlockchainDBMaintainer(object):
         self.processed_blocks[block_hash] = block
 
         while True:
-            block_to_save = self.processed_blocks.get(self.next_block_hash, None)
+            block_to_save = self.processed_blocks.get(self.blockchain[0].hash)
             if block_to_save is None:
                 break
-            self.mongo.save_block(self.next_block_hash, block_to_save)
-            del self.processed_blocks[self.next_block_hash]
+            self.mongo.save_block(self.blockchain[0].hash, block_to_save)
+            del self.processed_blocks[self.blockchain[0].hash]
             self.blockchain.popleft()
-
-    @property
-    def next_block_hash(self):
-        """returns hash of next block to save to db"""
-        return self.blockchain[0][0]
 
 
 if __name__ == '__main__':

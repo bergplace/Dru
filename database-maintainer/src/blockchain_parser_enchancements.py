@@ -11,10 +11,9 @@ import logger
 
 
 def get_block(block_info):
-    block_hash, file_path, i, height = block_info
-    for j, raw_block in enumerate(get_blocks(file_path)):
-        if i == j:
-            return Block(raw_block), height
+    for i, raw_block in enumerate(get_blocks(block_info.path)):
+        if block_info.index == i:
+            return Block(raw_block), block_info.height
 
 
 def block_to_dict(block, height):
