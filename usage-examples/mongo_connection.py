@@ -1,9 +1,8 @@
 import urllib.parse
 
 from pymongo import MongoClient
-from mongo_credentials import MONGO_PASS, MONGO_USER, MONGO_PORT
+from mongo_credentials import MONGO_PASS, MONGO_USER, MONGO_PORT, MONGO_HOST
 
-MONGO_HOST = "156.17.248.236"
 MONGO_DB = "bitcoin"
 
 
