@@ -33,3 +33,10 @@ then to authenticate, type into the shell
 ## Usage in python
 
 ### connect to database
+
+to connect to database you can use 'mongo_connection.py' from usage-examples directory
+than create mongo_credentials.py to hold variables like MONGO_USER, MONGO_PASS etc.
+and now you are ready to use your database!
+
+### getting last block
+`last_block = db.blocks.find().sort([('height', -1)])[0]`
