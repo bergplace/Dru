@@ -19,10 +19,15 @@ creates and maintains MongoDB with Bitcoin blocks, contained in docker
 ## Management
 
 ### connect to mongo shell
+
 `docker exec -it btc-blockchain-db mongo auth`
+
 then to authenticate, type into the shell
+
 `db.auth('username', 'password')`
+
 ### folow logs of db maintainer
+
 `docker logs -f btc-blockchain-db-maintainer`
 
 ## Usage in python
