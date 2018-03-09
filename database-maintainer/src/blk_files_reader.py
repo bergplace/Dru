@@ -2,6 +2,7 @@ from collections import deque, defaultdict
 
 import os
 
+import time
 from blockchain_parser.block import Block
 from blockchain_parser.blockchain import get_files, get_blocks
 
@@ -15,7 +16,7 @@ class BLKFilesReader(object):
         self.mongo = mongo
         self.btc_data_dir_path = '/btc-blocks-data'
         self.block_hash_chain = defaultdict(set)
-        self.checked_blk_files = set()
+        self.time_of_last_file_checking = 0
         self.blk_files_previous_sizes = {}
         self.verification_threshold = 6
         self.blockchain = deque()
@@ -51,16 +52,13 @@ class BLKFilesReader(object):
 
     def get_files_to_check(self):
         """
-        returns file paths of blk files that still need to be checked,
-        it knows that by looking witch blk files had grown by size since
-        last execution
+        returns file paths of blk files that still need to be checked
         """
-        new_file_sizes = {path: os.path.getsize(path) for path in get_files(self.btc_data_dir_path)}
         files_to_check = []
-        for file, size in new_file_sizes.items():
-            if size != self.blk_files_previous_sizes.get(file, 0):
-                files_to_check.append(file)
-        self.blk_files_previous_sizes = new_file_sizes
+        for path in get_files(self.btc_data_dir_path):
+            if os.path.getmtime(path) > self.time_of_last_file_checking:
+                files_to_check.append(path)
+        self.time_of_last_file_checking = time.time()
         return files_to_check
 
     def create_block_chain(self):

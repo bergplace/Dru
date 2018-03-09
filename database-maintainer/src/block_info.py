@@ -18,3 +18,12 @@ class BlockInfo(object):
         return self.__getattribute__(
             ('hash', 'path', 'index', 'height')[self.__next_counter]
         )
+
+    def __eq__(self, other):
+        """Overrides the default implementation"""
+        if isinstance(self, other.__class__):
+            return self.hash == other.hash
+        return False
+
+    def __hash__(self):
+        return hash(self.hash)
