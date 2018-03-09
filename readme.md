@@ -39,6 +39,9 @@ than create mongo_credentials.py to hold variables like MONGO_USER, MONGO_PASS e
 and now you are ready to use your database!
 
 ### getting last block
-```from mongo_connection import get_db_connection
+
+`from mongo_connection import get_db_connection
+
 db = get_db_connection()
-last_block = db.blocks.find().sort([('height', -1)])[0]```
+
+last_block = db.blocks.find().sort([('height', -1)])[0]`
