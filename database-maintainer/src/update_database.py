@@ -118,7 +118,7 @@ class BlockchainDBMaintainer(object):
             return block_info_set.pop()
         depths = []
         for block_info in block_info_set:
-            depths.append((block_info, self.get_max_branch_length(set(block_info), 0)))
+            depths.append((block_info, self.get_max_branch_length([block_info], 0)))
         return max(depths, key=lambda x: x[1])[0]
 
     def get_max_branch_length(self, block_info_set, depth):
