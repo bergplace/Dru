@@ -49,4 +49,14 @@ docker run -d \
     --network=btcnet \
     btc-blockchain-db-maintainer
 
+docker build -t btc-blockchain-web-api ./web-api
+
+docker run -d \
+    --name btc-blockchain-web-api \
+    -e MONGODB_READONLY_USER=$db_readonly_username \
+    -e MONGODB_READONLY_PASS=$db_readonly_password \
+    -p 0.0.0.0:80:80 \
+    --network=btcnet \
+    btc-blockchain-web-api
+
 
