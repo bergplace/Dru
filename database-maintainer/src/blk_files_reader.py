@@ -54,11 +54,12 @@ class BLKFilesReader(object):
         """
         returns file paths of blk files that still need to be checked
         """
+        new_time_of_last_file_checking = time.time()
         files_to_check = []
         for path in get_files(self.btc_data_dir_path):
             if os.path.getmtime(path) > self.time_of_last_file_checking:
                 files_to_check.append(path)
-        self.time_of_last_file_checking = time.time()
+        self.time_of_last_file_checking = new_time_of_last_file_checking
         return files_to_check
 
     def create_block_chain(self):
