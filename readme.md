@@ -7,6 +7,7 @@ creates and maintains MongoDB with Bitcoin blocks, contained in docker
 1. linux system
 1. full bitcoin node
 1. docker
+1. about 500Gb free space (full node + DB)
 
 ### installation
 1. add your user to group docker on your system
@@ -33,3 +34,15 @@ then to authenticate, type into the shell
 ## Usage in python
 
 ### connect to database
+
+to connect to database you can use 'mongo_connection.py' from usage-examples directory
+than create mongo_credentials.py to hold variables like MONGO_USER, MONGO_PASS etc.
+and now you are ready to use your database!
+
+### getting last block
+
+```python
+from mongo_connection import get_db_connection
+db = get_db_connection()
+last_block = db.blocks.find().sort([('height', -1)])[0]
+```
