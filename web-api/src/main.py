@@ -1,7 +1,8 @@
 import os
 from bson.json_util import dumps
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_pymongo import PyMongo
+from functions import count_separate_graphs
 
 app = Flask(__name__, static_url_path='/static')
 
@@ -21,6 +22,13 @@ def index():
 @app.route('/api/last_block')
 def last_block():
     return dumps(mongo.db.blocks.find().sort([('height', -1)])[0])
+
+
+@app.route('/api/count_separate_graphs')
+def count_separate_graphs():
+    height_from = request.args.get('height_from')
+    height_to = request.args.get('height_to')
+    return dumps(count_separate_graphs.count(mongo, height_from, height_to))
 
 
 if __name__ == '__main__':

@@ -36,18 +36,10 @@ def block_to_dict(block, height):
 def transaction_to_dict(tx):
     return {
         'hash': tx.hash,
-        'version': tx.version,
+        # 'version': tx.version,
         'locktime': tx.locktime,
-        'inputs': [input_to_dict(tx_input) for tx_input in tx.inputs],
         'outputs': [output_to_dict(output, tx.hash) for output in tx.outputs],
-    }
-
-
-def input_to_dict(tx_input):
-    return {
-        'sequence_number': tx_input.sequence_number,
-        'script': tx_input.script.script,
-        'value': tx_input.script.value,
+        'inputs': [input_to_dict(tx_input) for tx_input in tx.inputs],
     }
 
 
@@ -55,7 +47,7 @@ def output_to_dict(output, tx_hash):
     try:
         return {
             'value': output.value,
-            'script': output.script.script,
+            # 'script': output.script.script,
             'addresses': [adress_to_dict(addr) for addr in output.addresses],
         }
     except CScriptTruncatedPushDataError:
@@ -75,8 +67,18 @@ def output_to_dict(output, tx_hash):
         ))
     return {
         'value': output.value,
-        'script': output.script.script,
+        # 'script': output.script.script,
         'addresses': [],
+    }
+
+
+def input_to_dict(tx_input):
+    return {
+        # 'sequence_number': tx_input.sequence_number,
+        # 'script': tx_input.script.script,
+        # 'value': tx_input.script.value,
+        'transaction_hash': tx_input.transaction_hash,
+        'transaction_index': tx_input.transaction_index,
     }
 
 
