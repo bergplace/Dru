@@ -1,0 +1,31 @@
+1. Dlaczego to robimy
+
+2. Konkurencja - opis i różnice
+
+3. Projekt:
+    czyli mniejwięcej tak jak ta obecna dokumentacja, rozwinąć oczywiście może uml
+
+4. Implementacja: kodu nie wrzucać
+    wersje bibliotek, która wersja protokołu blockchaina jest wspierana
+    można skopiować co ciekawsze snippety kodu - zupełne maksimum to 2 - 3 strony kodu
+
+    konfiguracja kontenerów - można by opisać głębjej
+
+5. Testy funkcjonalne czyli jak szybko to idzie z blokami
+
+6. Podsumowanie - postarać się zrobić takie summary, takie które przeprowadza przez całość
+                  dołożyć też przyszłość systemu
+
+
+Narazie nie pisać wstępu o tym co to bitcoin
+
+
+Autokrytyka - można być bardziej wiarygodnym
+
+Można dowiedzieć się kto jest recenzentem i zaproponować tej osobie pokazanie systemu, chyba na boardzie
+
+Podlinkować repo w pracy
+
+
+UWAGA, dować pole w tranzakcji z kiedy pochodzą te środki, czyli timestamp bloku z tą wejściową tranzakcją
+    
