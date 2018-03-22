@@ -1,6 +1,8 @@
 *.gz
 *.aux
 *.log
+*.dvi
+*.pdf
 .idea/*
 mongo_credentials.py
 config.conf

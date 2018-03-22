@@ -2,12 +2,57 @@
  
 \begin{document}
 \title{
-	Blockchain data API \\
-	\large design decisions and documentation
+	An application for tracking the flow of resources for Bitcoin cryptocurrency \\
 }
 \date{}
 \author{Marcin Pieczka}
 \maketitle
+
+\section{Goals}
+Every process of analyzing data starts with accessing the data, when analyzing Bitcoin blockchain, this first step might be the hardest one. Currently Bitcoin blockchain contains over 160GB of raw, binary data and everyone who attempts to analyze it will have to have an efficient and reliable way to work with it.
+\\
+\\
+My goal is to create application that: 
+\begin{itemize}
+
+\item
+allows fast access to blockchain data
+\item
+allows access over the network
+\item
+updates its data in constant manner
+\item
+provides API for Python and R
+\item
+is easy to install
+
+\end{itemize}
+
+\section{Alternative software providing similar features}
+\subsubsection*{blockchain.info}
+
+Web application blockchain.info provides free access to Bitcoin blockchain data by either website, JSON API or API's dedicated to specific languages including Python, but without support for R. Number of requests is limited.
+\\
+\\
+Relevant API's provided by blockchain.info:
+\begin{itemize}
+\item
+getting single block, by block hash
+\item
+getting single block, by hight
+\item
+getting multiple block headers
+\item
+getting single transaction, by transaction hash
+\item
+getting all transactions of single or multiple addresses
+
+
+\end{itemize}
+
+Most common usage scenario in analytic context is getting range of blocks, for example all block from 10.04.2017 to 20.04.2017 nonetheless blockchain.info does not provide simple way to get such data. To achieve this we would have to make thousands of requests to API providing us with single block data, and this wouldn't be fast enough.
+
+Other problem is the API call limit that can make usage not only slow, but impossible. 
 
 \section{Deployment and packaging}
 \subsubsection*{Docker - for and against}

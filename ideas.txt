@@ -1,8 +1,0 @@
-The main page of website should have description of what it is,
-api reference, link to github, documentation, system status for debugging
-and to know when blockchain will be ready and maybe place to write
-arbitrary mongodb querys
-
-Also make it possible to run query witch mongoDb statistics
-
-
