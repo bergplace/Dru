@@ -32,6 +32,7 @@ class OutputAddresses(object):
         else:
             projection = self.mongo.get_tx(tx_hash)
             self.logger.register_tx_cache_miss()
+            self.logger.register_cache_length(len(self.dict_keys_queue))
             return (
                 projection['timestamp'],
                 projection['transactions'][0]['outputs'][index]['addresses']

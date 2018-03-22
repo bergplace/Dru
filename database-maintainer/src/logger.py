@@ -11,6 +11,7 @@ class Logger(object):
         self.last_processed = 0
         self.minimal_total_count_to_bother_logging = 50
         self.tx_cache_miss_count = 0
+        self.tx_cache_length = 0
 
     @staticmethod
     def log(msg):
@@ -25,10 +26,11 @@ class Logger(object):
             self.last_time_progress_logged = time.time()
             self.update_avg_processing_tempo(i)
             if i != self.last_processed:
-                self.log('{0:.2f}% done, {1} left, txMiss: {2}'.format(
+                self.log('{0:.2f}% done, {1} left, txCache: {2}/{3}'.format(
                     100 * i / total,
                     self.get_time_left(i, total),
-                    self.tx_cache_miss_count
+                    self.tx_cache_miss_count,
+                    self.tx_cache_length,
                 ))
                 self.tx_cache_miss_count = 0
             self.last_processed = i
@@ -51,4 +53,7 @@ class Logger(object):
 
     def register_tx_cache_miss(self):
         self.tx_cache_miss_count += 1
+
+    def register_cache_length(self, length):
+        self.tx_cache_length = length
 
