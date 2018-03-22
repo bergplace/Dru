@@ -19,7 +19,7 @@ class BlockchainDBMaintainer(object):
         self.logger = Logger()
         self.mongo = mongo.Mongo(self.logger)
         self.blk_files_reader = BLKFilesReader(self.logger, self.mongo)
-        self.output_addresses = OutputAddresses(limit=1000000)
+        self.output_addresses = OutputAddresses(limit=10**5, mongo=self.mongo)
         self.block_to_dict = BlockToDict(self.output_addresses)
         self.blockchain = None
 

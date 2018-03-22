@@ -6,8 +6,9 @@ import constants
 
 class OutputAddresses(object):
 
-    def __init__(self, limit):
+    def __init__(self, limit, mongo):
         self.limit = limit
+        self.mongo = mongo
         self.addresses = dict()
         self.dict_keys_queue = deque()
 
@@ -20,10 +21,15 @@ class OutputAddresses(object):
 
     def get(self, tx_hash, index):
         if tx_hash == constants.genesis_hash:
-            return None, None
+            return None, [None]
         addresses = self.addresses.get(tx_hash)
         if addresses:
             timestamp, outputs = addresses
             return timestamp, outputs[index]
-        print(tx_hash)
-        print('NOT FOUND, FUCK!')
+        else:
+            projection = self.mongo.get_tx(tx_hash)
+            print(len(self.dict_keys_queue), 'db_hit')
+            return (
+                projection['timestamp'],
+                projection['transactions'][0]['outputs'][index]['addresses']
+            )

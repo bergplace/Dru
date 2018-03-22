@@ -19,12 +19,13 @@ class Mongo(object):
 
     def __init__(self, logger):
         self.logger = logger
-        self.connection = self.establish_connection()
-        self.collection = self.connection.bitcoin.blocks
+        self.db = self.establish_connection()
+        self.collection = self.db.blocks
         self.genesis_hash = '0000000000000000000000000000000000000000000000000000000000000000'
         self.saved_blocks_hashes = set()
         self.add_readonly_user()
         self.indexes_created = False
+        self.output_addresses_index_created = False
 
     def establish_connection(self):
         while True:
@@ -34,13 +35,14 @@ class Mongo(object):
                 username = urllib.parse.quote_plus(os.environ['MONGODB_ADMIN_USER'])
                 password = urllib.parse.quote_plus(os.environ['MONGODB_ADMIN_PASS'])
                 connection = MongoClient('mongodb://{}:{}@{}'.format(username, password, mongo_container))
-                return connection
+                db = connection['bitcoin']
+                return db
             except OperationFailure as e:
                 self.logger.log('error {}, retrying in 1s'.format(e))
                 time.sleep(1)
 
     def add_readonly_user(self):
-        self.connection.bitcoin.add_user(
+        self.db.add_user(
             os.environ['MONGODB_READONLY_USER'],
             os.environ['MONGODB_READONLY_PASS'],
             roles=[{'role': 'read', 'db': 'bitcoin'}]
@@ -77,4 +79,20 @@ class Mongo(object):
             self.logger.log('creating timestamp db index')
             self.collection.create_index([('timestamp', ASCENDING)])
             self.indexes_created = True
+
+    def create_tx_hash_index(self):
+        self.logger.log('creating tx hash db index')
+        self.collection.create_index([('transactions.hash', ASCENDING)])
+        self.output_addresses_index_created = True
+
+    def get_tx(self, tx_hash):
+        if not self.output_addresses_index_created:
+            self.create_tx_hash_index()
+        return self.collection.find_one(
+            {'transactions.hash': tx_hash},
+            {'transactions.$': 1, 'timestamp': 1}
+        )
+
+
+
 
