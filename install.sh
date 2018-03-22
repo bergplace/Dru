@@ -45,6 +45,7 @@ docker run -d \
     -e MONGODB_ADMIN_PASS=$db_root_password \
     -e MONGODB_READONLY_USER=$db_readonly_username \
     -e MONGODB_READONLY_PASS=$db_readonly_password \
+    -e TX_ADDRESS_CACHE_LIMIT=$tx_address_cache_limit \
     -v $btc_blocks_dir:/btc-blocks-data \
     --network=btcnet \
     btc-blockchain-db-maintainer

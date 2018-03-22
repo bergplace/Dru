@@ -1,14 +1,17 @@
 from collections import deque
 from pprint import pprint
 
+import sys
+
 import constants
 
 
 class OutputAddresses(object):
 
-    def __init__(self, limit, mongo):
+    def __init__(self, limit, mongo, logger):
         self.limit = limit
         self.mongo = mongo
+        self.logger = logger
         self.addresses = dict()
         self.dict_keys_queue = deque()
 
@@ -28,7 +31,7 @@ class OutputAddresses(object):
             return timestamp, outputs[index]
         else:
             projection = self.mongo.get_tx(tx_hash)
-            print(len(self.dict_keys_queue), 'db_hit')
+            self.logger.log('tx cache miss')
             return (
                 projection['timestamp'],
                 projection['transactions'][0]['outputs'][index]['addresses']

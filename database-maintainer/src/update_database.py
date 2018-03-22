@@ -1,5 +1,7 @@
 import time
 
+import os
+
 import mongo
 from blk_files_reader import BLKFilesReader
 from blockchain_parser_enchancements import BlockToDict, get_block
@@ -19,7 +21,11 @@ class BlockchainDBMaintainer(object):
         self.logger = Logger()
         self.mongo = mongo.Mongo(self.logger)
         self.blk_files_reader = BLKFilesReader(self.logger, self.mongo)
-        self.output_addresses = OutputAddresses(limit=10**5, mongo=self.mongo)
+        self.output_addresses = OutputAddresses(
+            limit=int(os.environ['TX_ADDRESS_CACHE_LIMIT']),
+            mongo=self.mongo,
+            logger=self.logger
+        )
         self.block_to_dict = BlockToDict(self.output_addresses)
         self.blockchain = None
 
