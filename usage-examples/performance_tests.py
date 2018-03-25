@@ -17,4 +17,4 @@ def test_getting_blocks_with_height_between(db, lower_bound, upper_bound):
 
 if __name__ == '__main__':
     db = get_db_connection()
-    print(test_getting_blocks_with_height_between(db, 400000, 400099))
+    print(test_getting_blocks_with_height_between(db, 200000, 200099))

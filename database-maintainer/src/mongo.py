@@ -71,7 +71,7 @@ class Mongo(object):
         return block_hash not in self.saved_blocks_hashes
 
     def create_indexes(self):
-        if self.collection.count() > 500000 and not self.indexes_created:
+        if not self.indexes_created:
             self.logger.log('creating height db index')
             # I think it is possible to create couple indexes at once
             # and it might be mor efficient

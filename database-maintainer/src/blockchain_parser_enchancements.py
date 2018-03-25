@@ -52,31 +52,11 @@ class BlockToDict(object):
         }
 
     def output_to_dict(self, output, tx_hash):
-        try:
-            return {
-                'value': output.value,
-                # 'script': output.script.script,
-                'addresses': [self.adress_to_dict(addr) for addr in output.addresses],
-            }
-        except CScriptTruncatedPushDataError:
-            """
-            hard to say at this point what is the reason this exception is thrown
-            but it happened once at block 
-            000000000000000000c81eeaa0e0274e0376a8ec21f801c4b78b3a6c71ef37e6
-            and is supposedly linked to not valid script value
-            """
-            logger.Logger.log('CScriptTruncatedPushDataError for tx hash: {}'.format(
-                tx_hash
-            ))
-        except CScriptInvalidError:
-            """I guess it means that script is invalid..."""
-            logger.Logger.log('CScriptInvalidError for tx hash: {}'.format(
-                tx_hash
-            ))
         return {
             'value': output.value,
             # 'script': output.script.script,
-            'addresses': [],
+            'addresses': [self.adress_to_dict(addr, tx_hash, i)
+                          for i, addr in enumerate(output.addresses)],
         }
 
     def input_to_dict(self, tx_input):
@@ -93,10 +73,40 @@ class BlockToDict(object):
             'output_timestamp': output_timestamp,
         }
 
-    def adress_to_dict(self, addr):
+    def adress_to_dict(self, addr, tx_hash, i):
+        addr_hash = None
+        addr_pub_key = None
+        address = None
+        addr_type = None
+        try:
+            addr_hash = addr.hash
+            addr_pub_key = addr.public_key
+            address = addr.address
+            addr_type = addr.type
+            return {
+                'hash': addr.hash,
+                'public_key': addr.public_key,
+                'address': addr.address,
+                'type': addr.type,
+            }
+        except CScriptTruncatedPushDataError:
+            """
+            hard to say at this point what is the reason this exception is thrown
+            but it happened once at block 
+            000000000000000000c81eeaa0e0274e0376a8ec21f801c4b78b3a6c71ef37e6
+            and is supposedly linked to not valid script value
+            """
+            logger.Logger.log('CScriptTruncatedPushDataError for tx hash: {}/{}'.format(
+                tx_hash, i
+            ))
+        except CScriptInvalidError:
+            """I guess it means that script is invalid..."""
+            logger.Logger.log('CScriptInvalidError for tx hash: {}/{}'.format(
+                tx_hash, i
+            ))
         return {
-            'hash': addr.hash,
-            'public_key': addr.public_key,
-            'address': addr.address,
-            'type': addr.type,
+            'hash': addr_hash,
+            'public_key': addr_pub_key,
+            'address': address,
+            'type': addr_type,
         }
