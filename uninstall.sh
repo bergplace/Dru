@@ -5,10 +5,8 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
-docker stop btc-blockchain-web-api
-docker rm btc-blockchain-web-api
-docker stop btc-blockchain-db
-docker rm btc-blockchain-db
-docker stop btc-blockchain-db-maintainer
-docker rm btc-blockchain-db-maintainer
+source ./startup-scripts/uninstall_web_api
+source ./startup-scripts/uninstall_db_maintainer
+source ./startup-scripts/uninstall_db
+
 docker network rm btcnet
