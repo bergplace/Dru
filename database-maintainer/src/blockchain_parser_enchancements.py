@@ -39,17 +39,21 @@ class BlockToDict(object):
         }
 
     def transaction_to_dict(self, tx, timestamp):
-        outputs = [self.output_to_dict(output, tx.hash) for output in tx.outputs]
-        tx_hash = tx.hash
-        self.output_addresses.add_from_outputs(tx_hash, timestamp, outputs)
+        try:
+            outputs = [self.output_to_dict(output, tx.hash) for output in tx.outputs]
+            tx_hash = tx.hash
+            self.output_addresses.add_from_outputs(tx_hash, timestamp, outputs)
 
-        return {
-            'hash': tx_hash,
-            # 'version': tx.version,
-            'locktime': tx.locktime,
-            'outputs': outputs,
-            'inputs': [self.input_to_dict(tx_input) for tx_input in tx.inputs],
-        }
+            return {
+                'hash': tx_hash,
+                # 'version': tx.version,
+                'locktime': tx.locktime,
+                'outputs': outputs,
+                'inputs': [self.input_to_dict(tx_input) for tx_input in tx.inputs],
+            }
+        except:
+            logger.Logger.log('unknown exception when processing tx: {}'.format(tx.hash))
+            raise 
 
     def output_to_dict(self, output, tx_hash):
         try:
