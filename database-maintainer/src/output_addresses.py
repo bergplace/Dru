@@ -6,6 +6,10 @@ import sys
 import constants
 
 
+class NonExistingTransactionOutputException(Exception):
+    pass
+
+
 class OutputAddresses(object):
 
     def __init__(self, limit, mongo, logger):
@@ -31,6 +35,8 @@ class OutputAddresses(object):
             return timestamp, outputs[index]
         else:
             projection = self.mongo.get_tx(tx_hash)
+            if not projection:
+                raise NonExistingTransactionOutputException
             self.logger.register_tx_cache_miss()
             self.logger.register_cache_length(len(self.dict_keys_queue))
             return (

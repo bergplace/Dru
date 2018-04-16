@@ -6,6 +6,7 @@ TODO:
 from bitcoin.core.script import CScriptTruncatedPushDataError, CScriptInvalidError
 from blockchain_parser.block import Block
 from blockchain_parser.blockchain import get_blocks
+from output_addresses import NonExistingTransactionOutputException
 
 import logger
 
@@ -53,7 +54,7 @@ class BlockToDict(object):
                 # 'version': tx.version,
                 'locktime': tx.locktime,
                 'outputs': outputs,
-                'inputs': [self.input_to_dict(tx_input) for tx_input in tx.inputs],
+                'inputs': [self.input_to_dict(tx_input, tx_hash) for tx_input in tx.inputs],
             }
         except:
             logger.Logger.log('unknown exception when processing tx: {}'.format(tx.hash))
@@ -84,19 +85,25 @@ class BlockToDict(object):
             'addresses': [],
         }
 
-    def input_to_dict(self, tx_input):
+    def input_to_dict(self, tx_input, parent_tx_hash):
         tx_hash = tx_input.transaction_hash
         tx_index = tx_input.transaction_index
-        output_timestamp, addresses = self.output_addresses.get(tx_hash, tx_index)
-        return {
-            # 'sequence_number': tx_input.sequence_number,
-            # 'script': tx_input.script.script,
-            # 'value': tx_input.script.value,
-            'transaction_hash': tx_hash,
-            'transaction_index': tx_index,
-            'addresses': addresses,
-            'output_timestamp': output_timestamp,
-        }
+        try:
+            output_timestamp, addresses = self.output_addresses.get(tx_hash, tx_index)
+            return {
+                'transaction_hash': tx_hash,
+                'transaction_index': tx_index,
+                'addresses': addresses,
+                'output_timestamp': output_timestamp,
+            }
+        except NonExistingTransactionOutputException:
+            logger.Logger.log('tx with non existing input: {}'.format(parent_tx_hash))
+            return {
+                'transaction_hash': tx_hash,
+                'transaction_index': tx_index,
+                'addresses': [],
+                'output_timestamp': None,
+            }
 
     def adress_to_dict(self, addr):
         return {
