@@ -52,9 +52,35 @@ getting all transactions of single or multiple addresses
 
 Most common usage scenario in analytic context is getting range of blocks, for example all block from 10.04.2017 to 20.04.2017 nonetheless blockchain.info does not provide simple way to get such data. To achieve this we would have to make thousands of requests to API providing us with single block data, and this wouldn't be fast enough.
 
-Other problem is the API call limit that can make usage not only slow, but impossible. 
+Other and the biggest problem is the API call limit that would make working with this application impossible for larger query's
 
-\section{Deployment and packaging}
+\subsubsection*{blockexplorer.com}
+
+This web application is very similar to blockchain.info in almost every aspect, although there are some differences. Data is accessible either by website or by JSON API, but there is no Python or R API provided. Set of API's is almost identical to blockchain.info, and does not provide easy way to get multiple blocks. The main difference is that there is no official API call limit, but using tool that is not controlled by us means that such limit can appear every moment.
+
+\subsubsection*{libbitcoin-database}
+
+\subsubsection*{BitcoinDatabaseGenerator}
+
+
+\section{Design}
+
+\subsection{System inputs and outputs}
+
+In this section I will specify inputs and outputs of the system, witch will then help me to discover what transformation the input data will undergo, and what components are needed to provide outputs efficiently
+
+\subsubsection{Inputs}
+\paragraph{Bitcoind BLK files}
+The only source of bitcoin block data will be BLK files stored by full bitcoin node. Daemon process bitcoind gets blocks from neighboring nodes and stores them in data directory. The blk files in default configuration store up to 128MB of raw network format block data, and blocks are stored in order in witch they came from network. There exist multiple library's that handle parsing these files, so accessing this data will not be a problem.
+\\
+\\
+One important thing to mention about bitcoin transactions stored in blocks is the fact that address from witch the transaction comes from is described as output of some previous transaction.
+
+\paragraph{Request for blocks} will be the way user communicates with the system. In this request user will specify witch blocks he wants to receive, usually it will be blocks from specified range of time, or range of height.
+
+\subsubsection{Outputs}
+\paragraph{Response on request for blocks} will contain block data in format understandable by user 
+
 \subsubsection*{Docker - for and against}
 
 The main things that can be accomplished with well chosen deployment and packaging are simplicity of use and cross-platform possibilities witch can positively influence adoption rate of this solution in perspective of both usage and further open source development.
