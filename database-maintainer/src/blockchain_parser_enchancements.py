@@ -22,21 +22,25 @@ class BlockToDict(object):
         self.output_addresses = output_addresses
 
     def transform(self, block, height):
-        timestamp = block.header.timestamp
-        return {
-            'hash': block.hash,
-            'version': block.header.version,
-            'height': height,
-            'prev_hash': block.header.previous_block_hash,
-            'merkle_root': block.header.merkle_root,
-            'timestamp': timestamp,
-            'n_tx': block.n_transactions,
-            'size': block.size,
-            'bits': block.header.bits,
-            'nonce': block.header.nonce,
-            'difficulty': block.header.difficulty,
-            'transactions': [self.transaction_to_dict(tx, timestamp) for tx in block.transactions]
-        }
+        try:
+            timestamp = block.header.timestamp
+            return {
+                'hash': block.hash,
+                'version': block.header.version,
+                'height': height,
+                'prev_hash': block.header.previous_block_hash,
+                'merkle_root': block.header.merkle_root,
+                'timestamp': timestamp,
+                'n_tx': block.n_transactions,
+                'size': block.size,
+                'bits': block.header.bits,
+                'nonce': block.header.nonce,
+                'difficulty': block.header.difficulty,
+                'transactions': [self.transaction_to_dict(tx, timestamp) for tx in block.transactions]
+            }
+        except:
+            logger.Logger.log("exception for block: {}".format(block.hash))
+            raise
 
     def transaction_to_dict(self, tx, timestamp):
         try:
@@ -53,7 +57,7 @@ class BlockToDict(object):
             }
         except:
             logger.Logger.log('unknown exception when processing tx: {}'.format(tx.hash))
-            raise 
+            raise
 
     def output_to_dict(self, output, tx_hash):
         try:
