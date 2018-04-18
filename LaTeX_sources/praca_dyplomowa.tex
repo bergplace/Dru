@@ -122,21 +122,24 @@ One important thing to mention about bitcoin transactions stored in blocks is th
 \paragraph{Response on request for blocks} will contain block data in format understandable by user 
 
 
-\section{Persistence}
+\subsection{Persistence}
 The fact that transaction sender address is not stored in bitcoin blocks directly, but by reference to other transaction, creates responsibility for the system to discover this address by finding this referred transaction, and getting the address of recipient of this transaction. This of course requires substantial amount of time with should not be added to the time of user waiting for his response. 
 \\
 Additional thing to consider is the time needed to transform raw binary bitcoin block to widely used data format such as JSON. Knowing this we will get to the conclusion that we will need some type of persistence, and although some custom way to store this data might be better suited for our needs, I will be using a database because of constraint of time I have to build this solution.
 
-\subsection{Database operations}
+\subsubsection{Database operations}
 Lets consider database operations that will need to be fast, and those that are not so important in this regard.
+\\
 \\
 Least important operation will be data addition, end user will not be performing these, and its performance will be my last priority.
 \\
+\\
 Most important operation will be querying blocks, by its hash, time, and other attributes, specifically querying for range of consecutive blocks described by time frame and height range.
+\\
 \\
 Another important operation is operation of getting transactions by hash, this will be needed for discovering address of transaction sender, and although this operation will not be in regular scenarios started by user, the number of such operations needed to discover sender address of every bitcoin transaction makes it crucial for this operation to be fast.
 
-\subsection{Database choice}
+\subsubsection{Database choice}
 At the beginning lets simplify the choice between RDBMS and NoSQL databases. Out of many NoSQL possibilities I have chosen MongoDB database based on some quick research of different NoSQL systems strengths and weaknesses.
 
 Lets lay out some facts that will help to decide whether to use relational database, or MongoDB
@@ -157,16 +160,53 @@ MongoDB have API's for Python and R that makes data available as objects.
 Based on these facts I will use as my database MongoDB. This problem seams like a perfect usage for database of such type because of its denormalized nature and native support for Python and R.
 
 
-\subsection{Database structure}
+\subsubsection{Database structure}
  
  At this point I propose having one collection of blocks, each document containing all block attributes like hashes, time, transactions list and others
  
 Indexing increases performance of querying the data and hinders the performance of operations like adding and removing data witch in this case looks like a great bargain. There might be additional memory cost associated with indexes, but this should not be a problem.
 
 The indexes will be added to fields like block hash, time or height, adding indexing to transaction list is also a possibility and will be considered and tested. With indexes on transaction list it should be possible to quickly query for blocks containing transactions in witch given address receives or sends bitcoin, but its hard for me to speculate about this matter without thorough testing in live system.
-\end{document}
 
-\section{Docker for and against}
+\subsection{High level architecture}
+This system will consist of separate entities, that will have their own, well defined responsibilities with will make them and overall system easy to understand and maintain.
+\\
+\\
+System will consist of:
+\begin{itemize}
+\item
+Bitcoin node with its data directory
+\item
+Database for storing processed blocks
+\item
+Process constantly updating database with new blocks that are gathered by bitcoin node
+\item
+Web application ready to be used to create complex functionalities
+\end{itemize}
+
+TUTAJ WSTAWIĆ JAKIŚ PIĘKNY DIAGRAM!!!
+\\
+TUTAJ WSTAWIĆ JAKIŚ PIĘKNY DIAGRAM!!!
+\\
+TUTAJ WSTAWIĆ JAKIŚ PIĘKNY DIAGRAM!!!
+\\
+TUTAJ WSTAWIĆ JAKIŚ PIĘKNY DIAGRAM!!!
+\\
+TUTAJ WSTAWIĆ JAKIŚ PIĘKNY DIAGRAM!!!
+\\
+TUTAJ WSTAWIĆ JAKIŚ PIĘKNY DIAGRAM!!!
+\\
+TUTAJ WSTAWIĆ JAKIŚ PIĘKNY DIAGRAM!!!
+\\
+TUTAJ WSTAWIĆ JAKIŚ PIĘKNY DIAGRAM!!!
+\\
+TUTAJ WSTAWIĆ JAKIŚ PIĘKNY DIAGRAM!!!
+\\
+TUTAJ WSTAWIĆ JAKIŚ PIĘKNY DIAGRAM!!!
+\\
+
+
+\subsection{Deployment}
 
 The main things that can be accomplished with well chosen deployment and packaging are simplicity of use and cross-platform possibilities witch can positively influence adoption rate of this solution in perspective of both usage and further open source development.
 
@@ -178,3 +218,4 @@ python -m http.server 8000 --bind 127.0.0.1
 \end{verbatim}
 With that we can keep the advantages of using docker, and provide a new possibility to the user - keeping Bitcoin Core on separate machine witch when considering that both parts of the application, Bitcoin Core and database with API will be well over 100Gb in size might be a big advantage.
 
+\end{document}
