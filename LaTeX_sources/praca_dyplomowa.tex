@@ -1,15 +1,18 @@
-\documentclass{article}
+\documentclass[12pt, en, eng]{mgr}
  
 \begin{document}
-\title{
+\engtitle{
 	An application for tracking the flow of resources for Bitcoin cryptocurrency \\
 }
-\date{}
+\title{Program do śledzenia przepływu środków w sieci Bitcoin}
+\date{2018}
 \author{Marcin Pieczka}
+\supervisor{Dr inż., Radosław Michalski, Katedre Inteligencji Obliczeniowej}
+\field{Informatyka (INF)}
 \maketitle
 
 \section{Goals}
-Every process of analyzing data starts with accessing the data, when analyzing Bitcoin blockchain, this first step might be the hardest one. Currently Bitcoin blockchain contains over 160GB of raw, binary data and everyone who attempts to analyze it will have to have an efficient and reliable way to work with it.
+Every process of analyzing data starts with accessing the data, when analyzing Bitcoin blockchain, this first step might be the hardest one. Currently Bitcoin blockchain contains over 160GB of raw, binary data and everyone who attempts to analyze it will have to have an efficient and reliable way to work with it. Moreover users should have obvious place for creating additional API's that will be placed on the same server as the data, so that operations that for instance require big amounts of data, but return results of significantly smaller size can be implemented efficiently, gathered in one place, and blend in with the system. 
 \\
 \\
 My goal is to create application that: 
@@ -60,10 +63,50 @@ This web application is very similar to blockchain.info in almost every aspect, 
 
 \subsubsection*{libbitcoin-database}
 
+This piece of software, after installation builds in-memory database of Bitcoin blockchain, its description promises high performance. Because of almost non existing documentation it is hard to write much about it.
+\\
+\\
+Although this software is actively developed, and at first sight it might seam like solution that fits needs of our users, there are couple problems that make use of it problematic. One drawback is coming from its biggest selling point - it, being in-memory database makes it require large amounts of RAM, probably over 160GB, witch makes it not viable for hardware that is accessible for me. Next problem is it's API, with allows connecting to this db via C/C++ library, witch would make usage in R and Python at least problematic. Another problem is lack of useful documentation, witch would make usage a really hard experience.
+
 \subsubsection*{BitcoinDatabaseGenerator}
+
+BitcoinDatabaseGenerator is data transfer tool that can feed SQL database with blockchain data. It was written in C\# and as its author states it is only meant to be run on Windows machines. From the documentation we know that this software should be ran every time we want to update our database. Database schema that is created after operation consists of separate tables for blocks, transactions, transaction inputs and so forth, witch would require joining those tables in multitude of usage scenarios.
+\\
+\\
+Although you can easily connect to SQL database from both R and Python, I find working with SQL databases in such case cumbersome, it would require abstracting away relational structure of data to more object like one. 
 
 
 \section{Design}
+
+\subsection{User requirements}
+\subsubsection{User stories}
+As a user, I want to access blockchain data from my Python/R script so that data analysis and data accessing can be made in the same code.
+\\
+\\
+As a user, I want the data be in a format idiomatic to Python/R so that I don't have to convert it after.
+\\
+\\
+As a user, I want easy access to block data from range of time or block height so that I can spend my time working with the data, and not with accessing it.
+\\
+\\
+As a user, I want the installation not to require complicated operations so that I can do it without specialized knowledge.
+\\
+\\
+As a user, I want to be able to run this software on my linux server so that I don't have to learn new operating system to use it.
+\\
+\\
+As a user, I want fast access to the data so that my analytic scripts will be pleasurable to work with.
+\\
+\\
+As a future maintainer, I want to have obvious place to create my own API's on server so that my new data hungry features can be placed on the same server as data for better performance.
+\\
+\\
+As a future maintainer, I want some goal so that some reason.
+\\
+\\
+As a user, I want some goal so that some reason.
+\\
+\\
 
 \subsection{System inputs and outputs}
 
