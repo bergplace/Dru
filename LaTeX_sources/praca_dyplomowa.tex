@@ -165,7 +165,10 @@ Based on these facts I will use as my database MongoDB. This problem seams like 
 
 \subsubsection{Database structure}
  
- At this point I propose having one collection of blocks, each document containing all block attributes like hashes, time, transactions list and others
+Collections in MongoDB don't have structure defined upfront, if you want to have mandatory attribute in document, your application has to enforce it. Because of this, saying about database structure is not to accurate, it is easier to think about it as structure of data, and in my system the structure of data will not change a lot compared to form I will obtain it in. 
+
+One document in MongoDB collection will be one bitcoin block, with its attributes like timestamp, hash, etc. and list of transactions, each with its own attributes like hash, inputs, outputs.
+
  
 Indexing increases performance of querying the data and hinders the performance of operations like adding and removing data witch in this case looks like a great bargain. There might be additional memory cost associated with indexes, but this should not be a problem.
 
@@ -187,7 +190,12 @@ Process constantly updating database with new blocks that are gathered by bitcoi
 Web application ready to implement complex functionalities in
 \end{itemize}
 
+\subsubsection{Database Updater}
+This component will have responsibility for parsing raw bitcoin blocks collected from BLK files, discovering transaction sender address by transaction output referred in its input, adding blocks to database and administering the database, namely adding indexes in the best moment.
 
+Although this components performance does not add to user wait time, it adds to time needed to get to the point at witch most of the recent blocks are in the database. Because of large amount of data that needs to be processed and inserted to database, optimizations are necessary to finish initial data load in reasonable time.
+
+The main bottleneck is discovering sender address, nowadays, one block holds about 2000 transactions, so to process one block with simplest design, database updater would have to ask the database about 2000 times for transaction for every processed block witch would lead to very poor performance. Because it would require to much memory for database updater to remember every transaction it processed, it will remember some constant number of last processed transactions.
 
 
 \begin{figure}[H]
@@ -202,12 +210,10 @@ Web application ready to implement complex functionalities in
 
 The main things that can be accomplished with well chosen deployment and packaging are simplicity of use and cross-platform possibilities witch can positively influence adoption rate of this solution in perspective of both usage and further open source development.
 
-Docker is known for achieving those goals, but not everything about Docker will be helpful. My main concern is running Bitcoin Core in Docker Image, it would be a great inconvenience to people who already have full node on their machine and this problem has to be dealt with.
+For this project I will use docker containers, witch will help in keeping components decoupled, and will make installation process not to require multiple complex steps. 
 
-My proposal is to have Bitcoin Core installed separately, and create simple HTTP server that would provide access to block data, the rest of the application would by in Docker. Creation of such server can be achieved with running command  
-\begin{verbatim}
-python -m http.server 8000 --bind 127.0.0.1
-\end{verbatim}
-With that we can keep the advantages of using docker, and provide a new possibility to the user - keeping Bitcoin Core on separate machine witch when considering that both parts of the application, Bitcoin Core and database with API will be well over 100Gb in size might be a big advantage.
+Installation process that I want to achieve should consist only of installing full bitcoin node, docker, running one custom script and setting up simple configuration (database credentials, etc.).
+
+All the containers will be connected to the same private network, so that communications between them will be as simple to achieve as possible.
 
 \end{document}
