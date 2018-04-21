@@ -216,4 +216,59 @@ Installation process that I want to achieve should consist only of installing fu
 
 All the containers will be connected to the same private network, so that communications between them will be as simple to achieve as possible.
 
+\section{Implementation}
+
+\subsection{Install.sh}
+I have decided to start with the installation script, because knowing its content will guide us by how containers are set up, how data flows between them, an will give us overview of whole system.
+
+Install.sh starts with reading configuration from file "config.conf" in witch following things are set up:
+
+\begin{itemize}
+\item
+Database credentials for administrator, and user with only read privileges
+\item
+Port at witch the database will be reachable
+\item
+Data directory of bitcoin node
+\item
+Directory at witch we want to store our database data
+\item
+Transaction cache size
+\end{itemize} 
+
+After configuration is loaded, network is being created, and building and starting of containers starts.
+
+\subsubsection{Database container setup}
+For this container I will show how such configuration looks, so that readers without experience with docker will have chance to see how it looks.
+
+\begin{verbatim}
+docker run -d \
+    --name btc-blockchain-db \
+    -e AUTH=yes \
+    -e MONGODB_ADMIN_USER=$db_root_username \
+    -e MONGODB_ADMIN_PASS=$db_root_password \
+    -e MONGODB_APPLICATION_DATABASE=bitcoin \
+    -p 0.0.0.0:$db_port:27017 \
+    -v $database_dir:/data/db \
+    --network=btcnet \
+    aashreys/mongo-auth:latest
+\end{verbatim}
+
+Database container is build on "aashreys/mongo-auth:latest" docker image, witch lets us create MongoDB database with enabled authentication (by default in MongoDB authentication is not enabled).
+Admin user credentials are being set, but credentials of user with read-only privilege cant be set here, because before-mentioned image does not support such action.
+
+There are couple other things in this configuration worth noting, namely "-v" flag creates volume for container and its purpose comes from the fact that docker containers should be possible to kill without any loss, so with volume set up, when we kill our database container and run it again, the database data will not be lost.
+
+Another important thing is setting up common network for all the containers, here it is accomplished with flag "--network". With network configured, DNS is set up automatically and it is possible to refer other containers by their names. For instance running 
+\begin{verbatim}
+ping btc-blockchain-db
+\end{verbatim}  
+from within other container connected to the same network will send messages correctly
+
+
+
+\section{Functionality testing}
+
+\section{Summary}
+
 \end{document}
