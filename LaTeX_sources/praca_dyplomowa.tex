@@ -225,7 +225,7 @@ Install.sh starts with reading configuration from file "config.conf" in witch fo
 
 \begin{itemize}
 \item
-Database credentials for administrator, and user with only read privileges
+Database credentials for administrator, and user with read-only privileges
 \item
 Port at witch the database will be reachable
 \item
@@ -239,7 +239,7 @@ Transaction cache size
 After configuration is loaded, network is being created, and building and starting of containers starts.
 
 \subsubsection{Database container setup}
-For this container I will show how such configuration looks, so that readers without experience with docker will have chance to see how it looks.
+For database container I will show how configuration looks, so that readers without experience with docker will have chance to see it.
 
 \begin{verbatim}
 docker run -d \
@@ -255,7 +255,7 @@ docker run -d \
 \end{verbatim}
 
 Database container is build on "aashreys/mongo-auth:latest" docker image, witch lets us create MongoDB database with enabled authentication (by default in MongoDB authentication is not enabled).
-Admin user credentials are being set, but credentials of user with read-only privilege cant be set here, because before-mentioned image does not support such action.
+Admin user credentials are being set, but credentials of user with read-only privilege can't be set here, because before-mentioned image does not support such action.
 
 There are couple other things in this configuration worth noting, namely "-v" flag creates volume for container and its purpose comes from the fact that docker containers should be possible to kill without any loss, so with volume set up, when we kill our database container and run it again, the database data will not be lost.
 
@@ -264,6 +264,66 @@ Another important thing is setting up common network for all the containers, her
 ping btc-blockchain-db
 \end{verbatim}  
 from within other container connected to the same network will send messages correctly
+
+\subsubsection{Database updater container setup}
+For database updater docker image needs to be created first. To create docker image we need to write our configuration in file called "Dockerfile", than use command docker build to build image, and with image ready we can run it in the same way previously described image was run.
+
+Let's go through dockerfile for database updater and see what it looks like:
+\begin{verbatim}
+FROM python:3
+
+COPY requirements.txt ./
+COPY ./src/ /src/
+RUN pip install --no-cache-dir -r requirements.txt
+
+# forked version from 22.03.2018
+RUN pip install https://github.com/MarcinPieczka/python-bitcoin-blockchain-parser/archive/master.zip
+
+RUN mkdir /btc-blocks-data/
+
+EXPOSE 27017
+
+CMD [ "python", "-u", "/src/update_database.py" ]
+\end{verbatim}
+
+Dockerfile starts with base image that is being used, here it is "python:3" image that contains as its name suggests python3.
+Next two lines copy needed files to the container, than libraries are installed, containers port is exposed for communication with database, and in the last line my application is being started.
+\\
+\\
+Using docker makes it easy to create installation process repeatable and independent from environment, so that running software will have the same effect on every machine it is being ran (to some extend naturally). 
+
+\subsection{Database updater}
+This container as stated before is responsible for database, and in more detail it is responsible for both putting data to it and for managing its configuration. In regards of managing configuration of database, this module takes responsibility for everything that could not be achieved in docker command, and that is:
+
+\begin{itemize}
+\item
+Creating user with privilege to read the database, but not to modify it. This account will be used by end user.
+\item
+Creating database indexes for block height, block timestamp and transaction hash
+\end{itemize}
+
+All this is being done in separate module responsible only for database - "mongo.py", other than caring for database configuration, it abstracts away connecting and loading data to the database. This module uses library "pymongo" in version 3.6 to connect to database.
+\\
+\\  
+Data insertion took the most effort to develop, and is the most complex part of the system.
+
+All of bitcoin BLK files processing is done with "blockchain-parser" library, but not the official release, but version straight from their git repository. The reason for this is that changes in bitcoin are far more frequent than releases of this software, and some things ware not supported in official version. The version I am using does not support BIP-0173 (BIP stands for bitcoin improvement proposal) so discovering addresses from transactions using techniques described in it cannot be done. 
+\\
+\\
+Processing and loading data can be broken into these steps:
+\begin{itemize}
+\item
+Initial parsing of BLK files contained in bitcoin data directory, only headers of blocks are parsed, to get hash of block, and hash of previous block.
+\itme
+Representation of blockchain is created, to get to know the order of blocks, and to know witch blocks are in the main chain.
+\item
+One by one, starting from the block next after last inserted blocks are fully parsed, their transactions are cached, and input addresses are being discovered first by looking into cache, than if cache does not contain that transaction, the database is being asked.
+\item
+last step is inserting processed block into database.
+\end{itemize}
+
+Of course there is more complexity hidden inside those steps, like handling exceptions from blockchain-parser library. The reason there are exceptions while parsing bitcoin blocks is that bitcoin transactions do not have to be fully valid. Many transactions exist with errors, and although they are of no interest for my system, they need to be recognized, and handled properly.
+
 
 
 
