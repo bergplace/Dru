@@ -25,15 +25,6 @@ def _last_block():
     return dumps(mongo.db.blocks.find().sort([('height', -1)])[0])
 
 
-@app.route('/api/test')
-def test():
-    msg = dict()
-    msg['collection count'] = mongo.db.blocks.find().count()
-    msg['query count from csg'] = mongo.db.blocks.find({'height': {'$gte': 0, '$lte': 100}})
-
-    return dumps(msg)
-
-
 @app.route('/api/count_separate_graphs')
 def _count_separate_graphs():
     try:
