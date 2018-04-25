@@ -11,6 +11,7 @@ app.config['MONGO_USERNAME'] = os.environ['MONGODB_READONLY_USER']
 app.config['MONGO_PASSWORD'] = os.environ['MONGODB_READONLY_PASS']
 app.config['MONGO_DBNAME'] = 'bitcoin'
 
+
 mongo = PyMongo(app)
 
 
@@ -20,15 +21,28 @@ def index():
 
 
 @app.route('/api/last_block')
-def last_block():
+def _last_block():
     return dumps(mongo.db.blocks.find().sort([('height', -1)])[0])
 
 
+@app.route('/api/test')
+def test():
+    msg = dict()
+    msg['collection count'] = mongo.db.blocks.find().count()
+    msg['query count from csg'] = mongo.db.blocks.find({'height': {'$gte': 0, '$lte': 100}})
+
+    return dumps(msg)
+
+
 @app.route('/api/count_separate_graphs')
-def count_separate_graphs():
-    height_from = request.args.get('height_from')
-    height_to = request.args.get('height_to')
-    return dumps(count_separate_graphs.count(mongo, height_from, height_to))
+def _count_separate_graphs():
+    try:
+        height_from = int(request.args.get('height_from'))
+        height_to = int(request.args.get('height_to'))
+    except ValueError:
+        return dumps('specified height range is not valid')
+    result = count_separate_graphs.count(mongo.db, height_from, height_to)
+    return dumps(result)
 
 
 if __name__ == '__main__':

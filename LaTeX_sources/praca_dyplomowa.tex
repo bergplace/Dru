@@ -14,7 +14,10 @@
 \field{Informatyka (INF)}
 \maketitle
 
+\tableofcontents
+
 \section{Goals}
+
 Every process of analyzing data starts with accessing the data, when analyzing Bitcoin blockchain, this first step might be the hardest one. Currently Bitcoin blockchain contains over 160GB of raw, binary data and everyone who attempts to analyze it will have to have an efficient and reliable way to work with it. Moreover users should have obvious place for creating additional API's that will be placed on the same server as the data, so that operations that for instance require big amounts of data, but return results of significantly smaller size can be implemented efficiently, gathered in one place, and blend in with the system. 
 \\
 \\
@@ -167,7 +170,31 @@ Based on these facts I will use as my database MongoDB. This problem seams like 
  
 Collections in MongoDB don't have structure defined upfront, if you want to have mandatory attribute in document, your application has to enforce it. Because of this, saying about database structure is not to accurate, it is easier to think about it as structure of data, and in my system the structure of data will not change a lot compared to form I will obtain it in. 
 
-One document in MongoDB collection will be one bitcoin block, with its attributes like timestamp, hash, etc. and list of transactions, each with its own attributes like hash, inputs, outputs.
+One document in MongoDB collection will be one bitcoin block, its attributes are:
+\begin{itemize}
+\item
+bits - current target in compact format \cite{bitcoin-wiki-bha}
+\item
+difficulty
+\item
+hash - hash of this block
+\item
+height - number of blocks before this block in blockchain
+\item
+merkle\_root - hash based on all transactions of block
+\item
+n\_tx - number of transactions
+\item
+nonce - value set by miner to achieve needed block hash
+\item
+prev\_hash - hash of previous block
+\item
+size
+\item
+timestamp
+\item
+transactions - list of transactions
+\end{itemize}
 
  
 Indexing increases performance of querying the data and hinders the performance of operations like adding and removing data witch in this case looks like a great bargain. There might be additional memory cost associated with indexes, but this should not be a problem.
@@ -314,7 +341,7 @@ Processing and loading data can be broken into these steps:
 \begin{itemize}
 \item
 Initial parsing of BLK files contained in bitcoin data directory, only headers of blocks are parsed, to get hash of block, and hash of previous block.
-\itme
+\item
 Representation of blockchain is created, to get to know the order of blocks, and to know witch blocks are in the main chain.
 \item
 One by one, starting from the block next after last inserted blocks are fully parsed, their transactions are cached, and input addresses are being discovered first by looking into cache, than if cache does not contain that transaction, the database is being asked.
@@ -330,5 +357,12 @@ Of course there is more complexity hidden inside those steps, like handling exce
 \section{Functionality testing}
 
 \section{Summary}
+
+\begin{thebibliography}{9}
+ 
+\bibitem{bitcoin-wiki-bha} 
+Block hashing algorithm,
+\\\texttt{https://en.bitcoin.it/wiki/Block\_hashing\_algorithm}
+\end{thebibliography}
 
 \end{document}

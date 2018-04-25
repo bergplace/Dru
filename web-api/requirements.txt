@@ -1,1 +1,2 @@
 Flask-PyMongo
+python-igraph
