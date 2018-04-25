@@ -164,7 +164,7 @@ Based on these facts I will use as my database MongoDB. This problem seams like 
 
 \subsubsection{Database structure}
  
-Collections in MongoDB don't have structure defined upfront, if you want to have mandatory attribute in document, your application has to enforce it. Because of this, saying about database structure is not to accurate, it is easier to think about it as structure of data, and in my system the structure of data will not change a lot compared to form I will obtain it in. 
+Collections in MongoDB don't have structure defined upfront, if you want to have mandatory attribute in document, your application has to enforce it. Because of this, saying about database structure is not to accurate, it is easier to think about it as structure of data, and in my system the structure of data will not change a lot compared to form I will obtain it in. The only difference is that by default bitcoin transactions don't specify address of sender, and additionally I have added additional value witch is the time that had gone between receiving resources that were used in this transaction by sender and this transaction.
 
 One document in MongoDB collection will be one bitcoin block, its attributes are:
 \begin{itemize}
@@ -177,25 +177,78 @@ hash - hash of this block
 \item
 height - number of blocks before this block in blockchain
 \item
-merkle\_root - hash based on all transactions of block
+merkle root - hash based on all transactions of block
 \item
-n\_tx - number of transactions
+n tx - number of transactions
 \item
 nonce - value set by miner to achieve needed block hash
 \item
-prev\_hash - hash of previous block
+prev hash - hash of previous block
 \item
 size
 \item
-timestamp
+timestamp - time at witch block had been mined
 \item
-transactions - list of transactions
+transactions - list of transactions with each transaction consisting of:
+\begin{itemize}
+\item
+hash - transaction hash
+\item
+inputs - list of data regarding addresses from witch resources had been transfered, consisting of:
+\begin{itemize}
+\item
+transaction hash - hash of transaction in witch sender of this transaction got resources spent in this transaction
+\item
+transaction index - points to certain output in transaction described by previous attribute
+\item
+output timestamp - additional value described before this list of attributes
+\item addresses - list of addresses, each containing:
+\begin{itemize}
+\item
+address
+\item
+hash
+\item
+public key
+\item
+type
+\end{itemize}
+\end{itemize}	
+\item
+outputs - list of data regarding addresses to witch resources had been transfered, consisting of:	
+\begin{itemize}
+\item
+value
+\item addresses - list of addresses, each containing just like in inputs:
+\begin{itemize}
+\item
+address
+\item
+hash
+\item
+public key
+\item
+type
+\end{itemize}
+\end{itemize} 	
+\end{itemize}
 \end{itemize}
 
  
-Indexing increases performance of querying the data and hinders the performance of operations like adding and removing data witch in this case looks like a great bargain. There might be additional memory cost associated with indexes, but this should not be a problem.
 
-The indexes will be added to fields like block hash, time or height, adding indexing to transaction list is also a possibility and will be considered and tested. With indexes on transaction list it should be possible to quickly query for blocks containing transactions in witch given address receives or sends bitcoin, but its hard for me to speculate about this matter without thorough testing in live system.
+\subsubsection{Database indexes}
+
+Database indexes serve purpose of making queries faster and more efficient on cost of space and slower data insertion time.
+Because performance of queries is one of key user needs, and space and data insertion time are very low on priority list the indexes will be added to all of the fields that data will be queried by.
+
+Indexed attributes:
+\begin{itemize}
+\item
+block hash
+block timestamp
+transaction hash - needed internally for discovering input addresses
+\end{itemize} 
+
 
 \subsection{High level architecture}
 This system will consist of separate entities, that will have their own, well defined responsibilities with will make them and overall system easy to understand and maintain.
@@ -366,10 +419,29 @@ def _last_block():
     return dumps(mongo.db.blocks.find().sort([('height', -1)])[0])
 \end{verbatim}
 In this code first line specifies address at witch service will be available, second one is declaration of function, and the last one is its implementation. This function connects to the database with previously created "mongo" object, finds last block in the database, converts it to JSON with "dumps" function and returns.
+\\
+\\
+The second functionality is surely more complex. First of all lets notice that we can see bitcoin transactions as graph. Every transaction has its input and output, the addresses of inputs and outputs are vertices of the graph, and transactions are the edges between them. My second functionality as input takes two parameters witch specify block range by hight, than creates graph out of transactions found in specified blocks using iGraph library, and at the end separates unconnected graphs and returns array of count of vertices in each graph.
+
+The choice of this functionality was not random. Operations on graphs are very common when analyzing bitcoin transactions.
+
+At the end I have to say that although I think that application by itself is easy to understand and in this regard it will be easy for users to add their code to it, the deployment with docker makes it not so easy to use as a developer. Biggest drawback of docker is relatively slow startup, so when we write some portion of code and we want to run it and see how things are going, we need to wait about 15 seconds (time measured on my personal computer) before process of re-installation completes.
 
 \section{Functionality testing}
 
+\subsection{Getting blocks by height}
+Getting bitcoin blocks by their height has been identified by me to be one of the most useful way to query blockchain, and its performance is of high priority. 
+\subsubsection{testing on the same machine as database} 
+
+\subsubsection{testing with accessing database by network}
+
+
 \section{Summary}
+In this work I have designed and implemented system providing easy access to bitcoin blockchain data. There is big problem of unnecessary work being done among bitcoin researchers, many of them would develop their own way of accessing blockchain data, others would use web services witch usually have API call limits. To combat this problem there needed to be free, easy to use and maintain solution that provides access to bitcoin data. 
+Nonetheless accessing data is not the only field on witch researchers have problem witch mutual code reuse, thats why platform that is ready to implement functionalities on needed to exist as well. 
+
+Success in development of this system if partial, because libraries that make parsing binary bitcoin data have problem with keeping up with changes in bitcoin, the data of newest bitcoin blocks is not fully available through my system.    
+   
 
 \begin{thebibliography}{9}
  

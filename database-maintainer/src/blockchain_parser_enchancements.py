@@ -97,7 +97,7 @@ class BlockToDict(object):
                 'output_timestamp': output_timestamp,
             }
         except NonExistingTransactionOutputException:
-            logger.Logger.log('tx with non existing input: {}'.format(parent_tx_hash))
+            #logger.Logger.log('tx with non existing input: {}'.format(parent_tx_hash))
             return {
                 'transaction_hash': tx_hash,
                 'transaction_index': tx_index,
