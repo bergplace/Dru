@@ -104,12 +104,8 @@ As a user, I want to be able to run this software on my linux server so that I d
 As a user, I want fast access to the data so that my analytic scripts will be pleasurable to work with.
 \\
 \\
-As a future maintainer, I want to have obvious place to create my own API's on server so that my new data hungry features can be placed on the same server as data for better performance.
-\\
-\\
-As a user, I want some goal so that some reason.
-\\
-\\
+As a user, I want to have obvious place to create my own API's on server so that my new data hungry features can be placed on the same server as data for better performance.
+
 
 \subsection{System inputs and outputs}
 
@@ -217,6 +213,12 @@ Process constantly updating database with new blocks that are gathered by bitcoi
 Web application ready to implement complex functionalities in
 \end{itemize}
 
+\begin{figure}[H]
+  \includegraphics[width=0.8\linewidth]{component-diagram.png}
+  \caption{System components and their communication}
+  \label{fig:system-components-and-their-communication}
+\end{figure}
+
 \subsubsection{Database Updater}
 This component will have responsibility for parsing raw bitcoin blocks collected from BLK files, discovering transaction sender address by transaction output referred in its input, adding blocks to database and administering the database, namely adding indexes in the best moment.
 
@@ -224,14 +226,12 @@ Although this components performance does not add to user wait time, it adds to 
 
 The main bottleneck is discovering sender address, nowadays, one block holds about 2000 transactions, so to process one block with simplest design, database updater would have to ask the database about 2000 times for transaction for every processed block witch would lead to very poor performance. Because it would require to much memory for database updater to remember every transaction it processed, it will remember some constant number of last processed transactions.
 
+\subsubsection{Complex Operations API}
+At the beginning I will explain why this component was requested to be implemented. Reason for this was the fact that when there is a group of people researching common field, there is big overlap in needed functionalities. When researcher gets to the point where he needs functionality that he doesn't have, he will implement it himself. The problem is that very often the same functionality was implemented by one of his peers, and this component is meant to solve this problem. 
 
-\begin{figure}[H]
-  \includegraphics[width=0.8\linewidth]{component-diagram.png}
-  \caption{System components and their communication}
-  \label{fig:system-components-and-their-communication}
-\end{figure}
+If we want users to use this API it needs to be not much harder to do than when doing it locally, and this will be crucial thing to think about during design.
 
-
+Complex Operations API will be web service, witch in response to its users request will return JSON data. At the main page will be located descriptions of implemented functionalities with URL's needed to access them. There will be one functionality implemented in this service witch purpose will be to handle to the users a well working example of something similar to what they will be implementing.   
 
 \subsection{Deployment}
 
@@ -319,6 +319,9 @@ Next two lines copy needed files to the container, than libraries are installed,
 \\
 Using docker makes it easy to create installation process repeatable and independent from environment, so that running software will have the same effect on every machine it is being ran (to some extend naturally). 
 
+\subsubsection{Complex Operation API container setup}
+This container is based on "tiangolo/uwsgi-nginx-flask:python3.6" witch have all the basic elements needed to run flask application already configured. The only non standard configuration that needed to be done was setting timeout in Nginx web server to larger value. By default timeout is 60 seconds, but because of type of operations that this application is made for this was not enough  
+
 \subsection{Database updater}
 This container as stated before is responsible for database, and in more detail it is responsible for both putting data to it and for managing its configuration. In regards of managing configuration of database, this module takes responsibility for everything that could not be achieved in docker command, and that is:
 
@@ -351,8 +354,18 @@ last step is inserting processed block into database.
 
 Of course there is more complexity hidden inside those steps, like handling exceptions from blockchain-parser library. The reason there are exceptions while parsing bitcoin blocks is that bitcoin transactions do not have to be fully valid. Many transactions exist with errors, and although they are of no interest for my system, they need to be recognized, and handled properly.
 
+\subsection{Complex Operation API}
+This component was implemented in Flask framework witch was chosen for its simplicity witch is well needed in application that people who very often don't have experience with web applications will extend with their code. 
 
+Main page is made purely in HTML and CSS, and the argument for simplicity that I have made holds here as well.
 
+I have implemented two exemplary functionalities, one of them is really simple and will be a good way to show simplicity of Flask, implementation:
+\begin{verbatim}
+@app.route('/api/last_block')
+def _last_block():
+    return dumps(mongo.db.blocks.find().sort([('height', -1)])[0])
+\end{verbatim}
+In this code first line specifies address at witch service will be available, second one is declaration of function, and the last one is its implementation. This function connects to the database with previously created "mongo" object, finds last block in the database, converts it to JSON with "dumps" function and returns.
 
 \section{Functionality testing}
 
