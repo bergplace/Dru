@@ -38,8 +38,8 @@ if __name__ == '__main__':
     # performance of fetching blocks by timestamp
     print(test_getting_blocks_with_time_between(
         db,
-        datetime(2017, 1, 1),
-        datetime(2017, 1, 2)
+        datetime(2016, 2, 25, 16, 24, 0),
+        datetime(2016, 2, 26, 7, 23, 0)
     ))
 
     # performance of consecutive blocks fetching

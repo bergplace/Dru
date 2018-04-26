@@ -430,10 +430,95 @@ At the end I have to say that although I think that application by itself is eas
 \section{Functionality testing}
 
 \subsection{Getting blocks by height}
-Getting bitcoin blocks by their height has been identified by me to be one of the most useful way to query blockchain, and its performance is of high priority. 
+Getting bitcoin blocks by their height has been identified by me to be one of the most useful way to query blockchain, and its performance is of high priority.
+ 
 \subsubsection{testing on the same machine as database} 
 
+\paragraph{consecutive blocks test}
+results:
+\\
+blocks between height 0 - 99: \quad \quad \quad \hspace*{2em} 0.0035 s\\
+blocks between height 100000 - 100099: \quad 0.0065 s\\
+blocks between height 200000 - 200099: \quad 0.48 s\\
+blocks between height 300000 - 300099: \quad 1.7 s\\
+blocks between height 400000 - 400099: \quad 7.9 s\\
+
+\paragraph{spread blocks test}
+results:
+\\
+100 blocks spread between height 0 - 100000: \quad \quad \quad 0.49 s\\
+100 blocks spread between height 100000 - 200000: \quad 1.2 s\\
+100 blocks spread between height 200000 - 300000: \quad 1.6 s\\
+100 blocks spread between height 300000 - 400000: \quad 3.5 s\\
+
 \subsubsection{testing with accessing database by network}
+
+\paragraph{consecutive blocks test}
+results:
+\\
+blocks between height 0 - 99: \quad \quad \quad \hspace*{2em} 0.097 s\\
+blocks between height 100000 - 100099: \quad 0.15 s\\
+blocks between height 200000 - 200099: \quad 5.1 s\\
+blocks between height 300000 - 300099: \quad 13 s\\
+blocks between height 400000 - 400099: \quad 51 s\\
+
+\paragraph{spread blocks test}
+results:
+\\
+100 blocks spread between height 0 - 100000: \quad \quad \quad 2.9 s\\
+100 blocks spread between height 100000 - 200000: \quad 5.7 s\\
+100 blocks spread between height 200000 - 300000: \quad 15 s\\
+100 blocks spread between height 300000 - 400000: \quad 42 s\\
+
+\subsubsection{Result interpretation}
+When we compare results for tests ran locally and over network, we can see about ten fold difference in time, witch means that performance of database is not a bottleneck and there is no need for further optimizations.
+
+Another thing we can see is that query time highly depends on height of blocks we are getting. The reason for this is the fact that because of gradual adoption of bitcoin the average number of transactions in blocks had grown over years. 
+
+\subsection{Getting blocks by timestamp}
+Because querying by hight and by timestamp should not be different i will perform only one test.
+\\
+\\
+result of run over network:
+\\
+blocks between timestamp 2016-02-25 16:24 - 2016-02-26 07:23: \quad 58 s
+
+\subsubsection{Result interpretation}
+Because range of time that was tested fully corresponds to getting blocks by hight with range of height being from 400000 to 400099 we can compare those results. There is no significant difference in performance between getting by height and by timestamp.
+
+\subsection{Complex operations API}
+In this component performance is not main goal, i will only run available services and see if results satisfying
+
+\subsubsection{Getting last block}
+service is located at http://base-address/api/last\_block and calling it returns JSON data:
+\begin{verbatim}
+{
+    "_id": {
+        "$oid": "5ae122209043650001213f12"
+    },
+    "hash": "000000000000000000c0af3be64d9a335968225b35f9fb102d4962c0ff2558c2",
+    "version": 536870912,
+    "height": 496509,
+    "prev_hash": "000000000000000000384595a7dc898a505d5c131dffa1c55431dc73cffe2355",
+    "merkle_root": "9df11de2a46b352591f5980d63929c68d9af01bc2e494f4b350ae697809773ac",
+    "timestamp": {
+        "$date": 1511869304000
+    },
+    "n_tx": 2425,
+    "size": 1079456,
+    "bits": 402706678,
+    .
+    .
+    .
+}
+\end{verbatim}
+
+\subsubsection{Getting count of maximal connected graphs by height}
+service is requester with address
+\\ \verb|http://base-address/api/count_separate_graphs?height_from=100000&height_to=100500|
+and in this case it returns [1701,74,42,39,21,20,20,19,17,...] witch means that biggest connected graph that can be made from transactions with height from 100000 to 100150 has 1701 vertices and so forth.
+
+
 
 
 \section{Summary}
