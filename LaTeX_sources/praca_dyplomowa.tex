@@ -567,7 +567,26 @@ service is requester with address
 and in this case it returns [1701,74,42,39,21,20,20,19,17,...] which means that biggest connected graph that can be made from transactions with height from 100000 to 100150 has 1701 vertices and so forth.
 
 
+\chapter{Beyond implementation}
 
+\section{Usage}
+After implementation finished, described software was used by Eng. Marcin Twardak in research he conducted for his master thesis. In his research he performed cluster analysis of bitcoin transactions. His opinion of this software, as he stated, hat fully met his needs, but he expressed his concern for security of current authentication system. In his opinion if someone unauthorized would acquire credentials, denial of service attack could be performed.
+
+\section{Problems}
+In this section, several issues this software have will be addressed.
+
+\paragraph{Lack of support for newest blocks} is the problem with biggest impact on usability of this software. Without sorting it out some users will find this system incapable of finding their needs. 
+
+\paragraph{Authentication by one set of credentials} can lead to security issues. At current version, every end user is provided with credentials to access functionalities. Those credentials are identical for every user, and provide read only access. One problem with that solution is that when one user uses to much resources, it is hard to find who this user is. Another problem arises when administrator of system wants to restrict access for some users. In this case he would need to create new credentials and distribute them to all users that should have access to the system.
+
+\paragraph{Maintenance} can become problematic if first problem will not be addressed. At this point library that is used to parse bitcoin data is used in version from fork of master branch of its repository. Periodically new fork needs to be created, to include newest features of this library. Because this is not release version, some bugs might appear, which would lead to failure in database updater. All of this leads to need for regular updates by someone who knows this system to some extent. 
+
+\paragraph{Complex operations API} to be extended with new functionalities, need to be administered. Currently there is no way, other than by pull request, to include new functionalities by users from outside of the project. This in return will lead to users not sharing their work so often, and maintenance of these new functionalities could not be easily done by original creators.
+
+\section{Future directions}
+As for the database updater, full support of bitcoin protocol is needed, so that most recent data can be accessed. One way to achieve full bitcoin support is by implementing lacking features in libraries that had been used. Doing so would add constant maintenance burden which could lead to eventual abandonment of this project. Another solution might be researching different libraries to bigger extent, with hope of finding more complete one than the one that had been used.
+
+Direction in which the complex operations API should be heading are depending on feedback from its users. Adding new functionalities might need to become simpler. In current situation, to add new functionality and to share it with others, the code needs to be added to main repository. This of course creates need for reviewing proposed functionalities by administrator of repository. Possible solution might be creating plug-in system that can run arbitrary modules, which would be maintained by their creators. 
 
 \chapter{Summary}
 In this work I have designed and implemented system providing easy access to bitcoin blockchain data. There is big problem of unnecessary work being done among bitcoin researchers, many of them would develop their own way of accessing blockchain data, others would use web services which usually have API call limits. To combat this problem there needed to be free, easy to use and maintain solution that provides access to bitcoin data. 
