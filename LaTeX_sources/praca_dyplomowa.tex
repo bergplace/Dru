@@ -75,7 +75,11 @@ Bitcoin uses cryptography in many of its mechanisms, in this section this usage 
 
 
 \chapter{Alternative software providing similar features}
-\subsection*{blockchain.info}
+
+\section{Overview}
+This chapter describes software that is similar to what will be designed and implemented in this paper. These descriptions go through features, advantages and disadvantages. 
+
+\section{blockchain.info}
 
 Web application blockchain.info provides free access to Bitcoin blockchain data by either website, JSON API or APIs dedicated to specific languages including Python, but without support for R. Number of requests is limited.
 \\
@@ -100,11 +104,11 @@ Most common usage scenario in analytic context is getting range of blocks, for e
 
 Another and the biggest problem is the API call limit that would make working with this application impossible for larger query's.
 
-\subsection*{blockexplorer.com}
+\section{blockexplorer.com}
 
 This web application is very similar to blockchain.info in almost every aspect, although there are some differences. Data is accessible either by website or by JSON API, but there is no Python or R API provided. Set of APIs is almost identical to blockchain.info and does not provide easy way to get multiple blocks. The main difference is that there is no official API call limit, but using tool that is not controlled by us means that such limit can appear every moment.
 
-\subsection*{libbitcoin-database}
+\section{libbitcoin-database}
 
 \begin{verbatim}
 https://github.com/libbitcoin/libbitcoin-database Last visited 25.04
@@ -115,7 +119,7 @@ This piece of software, after installation builds in-memory database of Bitcoin 
 \\
 Although this software is actively developed, and at first sight it might seam like solution that fits needs of our users, some problems can be found. One drawback is coming from its biggest selling point - being in-memory database makes it requiring large amounts of RAM. This problem makes it not viable for hardware that is accessible for the average user. Next problem lies in its API that allows connecting to the database via C/C++ library, which would make usage in R and Python at least problematic. Another problem is lack of useful documentation, which would make the usage largely troublesome.
 
-\subsection*{BitcoinDatabaseGenerator}
+\section{BitcoinDatabaseGenerator}
 
 \begin{verbatim}
 https://github.com/ladimolnar/BitcoinDatabaseGenerator Last visited 25.04
@@ -129,6 +133,9 @@ Although you can easily connect to SQL database from both R and Python, I find w
 
 \chapter{Design}
 
+\section{Overview}
+This chapter goes through design process in detail. Design starts with describing users and their needs. Than system is described as black box, with its inputs and outputs. After that design flows as questions and issues arise. 
+
 \section{User requirements}
 
 \subsection{Users description}
@@ -139,25 +146,23 @@ Requester of this software is Ph.D. working at university. He is interested in n
 
 The following sentences sum up the discussions with people that consider using this system.
 
+\begin{itemize}
+\item
 As a user, I want to access blockchain data from my Python/R script so that data analysis and data accessing can be made in the same code.
-\\
-\\
+\item
 As a user, I want the data be in a format idiomatic to Python/R so that I don't have to convert it myself.
-\\
-\\
+\item
 As a user, I want easy access to block data from range of time or block height so that I can spend my time working with the data, and not with accessing it.
-\\
-\\
+\item
 As a user, I want the installation not to require complicated operations so that I can do it without specialized knowledge.
-\\
-\\
+\item
 As a user, I want to be able to run this software on my linux server so that I don't have to learn new operating system to be able to use it.
-\\
-\\
+\item
 As a user, I want fast access to the data so that my analytic scripts will be pleasurable to work with.
-\\
-\\
+\item
 As a user, I want to have obvious place to create my own APIs on server so that my new data hungry features can be placed on the same server as data for better performance.
+\end{itemize}
+
 
 
 \section{System inputs and outputs}
@@ -350,6 +355,9 @@ Installation process that I want to achieve should consist only of installing fu
 All the containers will be connected to the same private network, so that communications between them will be as simple to achieve as possible.
 
 \chapter{Implementation}
+
+\section{Overview}
+This chapter shows most notable implementation details, selected by their importance to the system. Implementation starts with deployment which usually is the last concern, but in this case it has guided whole implementation process. Later, implementation of system components is described.
 
 \section{Install.sh}
 I have decided to start with the installation script, because knowing its content will guide us by how containers are set up, how data flows between them, an will give us overview of whole system.
