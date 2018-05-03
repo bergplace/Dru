@@ -3,7 +3,6 @@
 *.log
 *.toc
 *.dvi
-*.pdf
 .idea/*
 mongo_credentials.py
 config.conf
