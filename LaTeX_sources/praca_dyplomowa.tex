@@ -64,8 +64,15 @@ Asymmetrical - Information is encrypted with different key than the key that is 
 
 Public key cryptography was developed in 1970s and is widely used to ensure security of information today. Mathematical functions ware discovered that are easy to calculate, but nearly impossible to reverse. Bitcoin uses elliptic-curve functions as a base of calculating public key.\cite{bartek}
 
+Aside of encryption, bitcoin uses cryptographic hash functions in its inner workings. Cryptographic hash functions map strings of arbitrary length to constant number of bits called digest, typically from 128 to 512. 
+
+One of the main properties of hash functions is that they work one-way only. This means that for given hash digest it is impossible to find original message, but other way around it is possible. Another important property of hash functions is that for different messages, output should be different. This property does not hold in theory. Because output space of hash function is finite, and input space being virtually infinite, there must exist such messages that while being different, their hashes are identical. In practice output space is so large that finding so called collisions is nearly impossible. Therefore when hash digest are identical for two messages, those messages are assumed to be identical as well.  \cite{hash-functions}
+
 \section{Cryptography in Bitcoin} 
-text
+Bitcoin uses cryptography in many of its mechanisms, in this section this usage will be described.
+
+\subsection{Usage of hash functions in bitcoin}
+
 
 \chapter{Alternative software providing similar features}
 \subsection*{blockchain.info}
@@ -573,7 +580,19 @@ Success in development of this system if partial, because libraries that make pa
  
 \bibitem{bitcoin-wiki-bha} 
 Block hashing algorithm,
-\\\texttt{https://en.bitcoin.it/wiki/Block\_hashing\_algorithm}
+\texttt{https://en.bitcoin.it/wiki/Block\_hashing\_algorithm}
+
+\bibitem{crypto-def} 
+Definition of cryptocurrency,
+\texttt{https://en.oxforddictionaries.com/definition/cryptocurrency}
+
+\bibitem{bartek} 
+Bartosz Zychal, Analiza łańcucha tranzakcji w sieci Bitcoin
+\texttt{https://en.oxforddictionaries.com/definition/cryptocurrency}
+
+\bibitem{hash-functions} 
+Thomsen, Søren Steffen; Knudsen, Lars Ramkilde, 2009, Cryptographic Hash Functions
+
 \end{thebibliography}
 
 \end{document}

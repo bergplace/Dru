@@ -1,13 +1,27 @@
-In Progress:
+Progress:
+
 Przejżane do High level architecture
 
-To Do:
 
-nie byłem w stanie dobrze skompilować aby nie było problemu z polskimi
-znakami diakrytycznymi, proszę rzucić okiem co jest nie tak
+
+
+New content:
 
 proszę dopisać wprowadzenie do blockchaina, bitcoina, opis jak
 powstają nowe bloki, jakie są relacje między wyjściem a wejściami
+
+proszę także dopisać kto już tego używa, jakie są przewidywane
+kierunki rozwoju a także sekcję o problemach na jakie Pan natrafił
+
+napisać opis użytkownika
+
+dodać overview do (prawie) każdego rozdziału
+
+
+Editing:
+
+nie byłem w stanie dobrze skompilować aby nie było problemu z polskimi
+znakami diakrytycznymi, proszę rzucić okiem co jest nie tak
 
 proszę się zastanowić czy niektórych zdań nie poskracać (nie podzielić
 na osobne zdania), kilka przerobiłem, ale jednak trochę zostało w
@@ -29,8 +43,9 @@ tego typu pracach: "Collections in MongoDB don't have structure defined
 upfront, if you want to have mandatory attribute in document, your
 application has to enforce it." - to nie brzmi najlepiej
 
-proszę także dopisać kto już tego używa, jakie są przewidywane
-kierunki rozwoju a także sekcję o problemach na jakie Pan natrafił
+posprawdzać cytowania
+
+
 
 
 Done:
