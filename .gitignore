@@ -1,6 +1,7 @@
 *.gz
 *.aux
 *.log
+*.toc
 *.dvi
 *.pdf
 .idea/*
