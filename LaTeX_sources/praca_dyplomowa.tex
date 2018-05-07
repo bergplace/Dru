@@ -10,7 +10,7 @@
 \title{Program do śledzenia przepływu środków w sieci Bitcoin}
 \date{2018}
 \author{Marcin Pieczka}
-\supervisor{Dr inż., Radosław Michalski, Katedre Inteligencji Obliczeniowej}
+\supervisor{Dr inż., Radosław Michalski, Katedra Inteligencji Obliczeniowej}
 \field{Informatyka (INF)}
 \maketitle
 
@@ -49,6 +49,7 @@ Cryptocurrency is a digital currency in which encryption techniques are used to 
 Every currency operates within its defined set of rules, and has to have means to ensure these rules are obeyed. For regular money as we know it today security is provided by central authorities in way of creating banknotes that are hard to counterfeit, creating law that penalizes creating counterfeits, creating banking systems for digital money transfer that ensures those rules and is secure from malicious actors. Cryptocurrencies have their own way of ensuring their rules, but instead of central authority, those rules are ensured by cryptography and probability.
 
 \section{Properties of cryptocurrencies}
+tutaj zacytować pracę
 
 \section{Cryptography}
 Cryptocurrencies are in big part based on cryptography to ensure the rules at witch it operates. Cryptography helps not only to ensure that fraudulent and malicious operations can't have their place, but as well to encode rules of creating new units of those currencies 
@@ -70,9 +71,8 @@ Aside of encryption, bitcoin uses cryptographic hash functions in its inner work
 
 One of the main properties of hash functions is that they work one-way only. This means that for given hash digest it is impossible to find original message, but other way around it is possible. Another important property of hash functions is that for different messages, output should be different. This property does not hold in theory. Because output space of hash function is finite, and input space being virtually infinite, there must exist such messages that while being different, their hashes are identical. In practice output space is so large that finding so called collisions is nearly impossible. Therefore when hash digest are identical for two messages, those messages are assumed to be identical as well.  \cite{hash-functions}
 
-\section{Cryptography in Bitcoin} 
-Bitcoin uses cryptography in many of its mechanisms, in this section this usage will be described.
 
+ 
 \subsection{Usage of hash functions in bitcoin}
 
 \chapter{Bitcoin}
@@ -82,12 +82,28 @@ Bitcoin uses cryptography in many of its mechanisms, in this section this usage 
 This chapter explains bitcoin protocol, communication between nodes and creation of blocks
 
 \section{Network}
-Bitcoin is distributed network and there are no authoritative nodes. The exception are servers that are used by new bitcoin nodes to discover other nodes, but they will not be discussed. Reason for it is that essentially they are not part of bitcoin network, and if those servers fail, node will use other method for discovery. 
+Bitcoin is distributed network and there are no authoritative nodes. The exception are servers that are used by new bitcoin nodes to discover other nodes, but they will not be discussed. Reason for it is that essentially they are not part of bitcoin network, and if those servers fail, nodes will use other methods for discovery. 
 
 There are two types of information that nodes share between them: transactions and blocks. \cite{bitcoin-paper-1} Those entities will be discussed in separate sections.
 
-\section{Transaction}
+\section{Transactions}
+Transactions in bitcoin are used to transfer value between owners. Single transaction describes inputs from which resources are being transfered, and outputs to which those resources are being transfered. All the resources from the inputs are being transfered to the outputs, unused resources are transfered to the miner which is known as miners fee.
 
+Inputs are described by reference to output of previous transaction. To reference output of transaction, hash of transaction is needed as well as index of output, numbering of outputs starts with 0. Additionally for each input, value is specified, that makes it possible to verify that resources are transferred by their rightful owner.
+
+Outputs of transaction specify value that is being transfered to that output, and a script that defines way of accessing those resources.
+
+As have been stated outputs define way of accessing resources, and inputs provide values that unlock those resources. This is done with scripting system.
+
+\section{Scripts}
+In bitcoin providing access verification is done with scripting system. Scripts in bitcoin are programs, written in non turing complete language, that when processed determine weather access to resources protected by script is granted or not.
+
+Because this system is very versatile, granting access to resources can require e.g. providing multiple keys, providing password, can be granted to everyone etc. 
+
+\section{Blockchain}
+Blockchain in bitcoin is data structure that holds every transaction that had taken place since beginning. It consists of blocks of transactions, with each block holding in itself hash of previous block. One notable property of this data structure is that modification of single block would require modification of every block that followed. Because of restrictions imposed on block creation, creating blocks is computationally complex operation, thus modification of block that had been followed by 6 other blocks is considered impossible.
+
+      
 
 
 
@@ -644,6 +660,10 @@ Thomsen, Søren Steffen; Knudsen, Lars Ramkilde, 2009, Cryptographic Hash Functi
 
 \bibitem{bitcoin-paper-1}
 Starry Peng, 2013, BITCOIN: Cryptography, Economics, and the Future
+
+\bibitem{elliptic-curves}
+Definition of elliptic curves
+\texttt{https://en.wikipedia.org/wiki/Elliptic\_curve}
 
 \end{thebibliography}
 
