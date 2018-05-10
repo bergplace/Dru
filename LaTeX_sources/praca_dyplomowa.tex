@@ -40,16 +40,13 @@ is easy to install
 \chapter{Cryptocurrencies}
 
 \section{Overview}
-This chapter will explain concept of cryptocurrencies, in many cases based on example of Bitcoin. The connection between cryptography and cryptocurencies will be shown, as well as means that are used to ensure correctness.
+This chapter will explain concept of cryptocurrencies, in some cases based on example of Bitcoin. The connection between cryptography and cryptocurrencies will be shown, as well as means that are used to ensure correctness and safety of transactions.
 
 \section{Definition}
 Cryptocurrency is a digital currency in which encryption techniques are used to regulate the generation of units of currency and verify the transfer of funds, operating independently of a central bank. \cite{crypto-def}
 
 \section{Security}
 Every currency operates within its defined set of rules, and has to have means to ensure these rules are obeyed. For regular money as we know it today security is provided by central authorities in way of creating banknotes that are hard to counterfeit, creating law that penalizes creating counterfeits, creating banking systems for digital money transfer that ensures those rules and is secure from malicious actors. Cryptocurrencies have their own way of ensuring their rules, but instead of central authority, those rules are ensured by cryptography and probability.
-
-\section{Properties of cryptocurrencies}
-tutaj zacytować pracę
 
 \section{Cryptography}
 Cryptocurrencies are in big part based on cryptography to ensure the rules at witch it operates. Cryptography helps not only to ensure that fraudulent and malicious operations can't have their place, but as well to encode rules of creating new units of those currencies 
@@ -65,15 +62,12 @@ Symmetrical - Information is encrypted and decrypted with the same key, this cre
 Asymmetrical - Information is encrypted with different key than the key that is used for decryption. One key is usually called the public key, and is used to encrypt messages. Because public key cannot be used to decrypt message it can be shared freely without concern. Second key is called private key an is used to decrypt messages. Private key should never be shared, because everyone possessing this key can decrypt messages addressed to original owner of this key.
 \end{itemize} 
 
-Public key cryptography was developed in 1970s and is widely used to ensure security of information today. Mathematical functions ware discovered that are easy to calculate, but nearly impossible to reverse. Bitcoin uses elliptic-curve functions as a base of calculating public key.\cite{bartek}
+Public key cryptography was developed in 1970s and is widely used to ensure security of information today. Mathematical functions were discovered that are easy to calculate in one way, but nearly impossible to calculate in reverse. Bitcoin uses elliptic-curve functions as a base of calculating public key.\cite{bartek}
 
-Aside of encryption, bitcoin uses cryptographic hash functions in its inner workings. Cryptographic hash functions map strings of arbitrary length to constant number of bits called digest, typically from 128 to 512. 
+Aside of encryption, Bitcoin uses cryptographic hash functions in its inner workings. Cryptographic hash functions map strings of arbitrary length to constant number of bits called digest, typically from 128 to 512. 
 
 One of the main properties of hash functions is that they work one-way only. This means that for given hash digest it is impossible to find original message, but other way around it is possible. Another important property of hash functions is that for different messages, output should be different. This property does not hold in theory. Because output space of hash function is finite, and input space being virtually infinite, there must exist such messages that while being different, their hashes are identical. In practice output space is so large that finding so called collisions is nearly impossible. Therefore when hash digest are identical for two messages, those messages are assumed to be identical as well.  \cite{hash-functions}
 
-
- 
-\subsection{Usage of hash functions in bitcoin}
 
 \chapter{Bitcoin}
 
@@ -96,7 +90,7 @@ Outputs of transaction specify value that is being transfered to that output, an
 As have been stated outputs define way of accessing resources, and inputs provide values that unlock those resources. This is done with scripting system.
 
 \section{Scripts}
-In bitcoin providing access verification is done with scripting system. Scripts in bitcoin are programs, written in non turing complete language, that when processed determine weather access to resources protected by script is granted or not.
+In bitcoin providing access verification is done with scripting system. Scripts in bitcoin are programs, written in non Turing complete language, that when processed determine weather access to resources protected by script is granted or not.
 
 Because this system is very versatile, granting access to resources can require e.g. providing multiple keys, providing password, can be granted to everyone etc. 
 
@@ -133,10 +127,6 @@ Naturally, process described above is simplified. There are nuances e.g. "nonce"
 Incentives for mining blocks are transaction fees and block rewards. Transaction fee is any unspent output in a transaction. For instance when 0.9 BTC is sent from output that holds 1 BTC, unspent output equals 0.1 BTC and this can be transfered to address controlled by miner.  
 Another incentive, block reward is last transaction in the block which creates new coins and transfers them to address specified by miner. Amount of BTC in block reward started at 50 BTC, and halfs every 210000 blocks \cite{currency-supply}
 
-\section{Block}
-Block in bitcoin network is structure that hold transactions as well as other data needed for this network to operate.
-
-Block consists of header and transactions. As transactions were described before, whats left is explaining content of block header 
 
 \chapter{Alternative software providing similar features}
 
@@ -172,7 +162,7 @@ Another and the biggest problem is the API call limit that would make working wi
 
 This web application is very similar to blockchain.info in almost every aspect, although there are some differences. Data is accessible either by website or by JSON API, but there is no Python or R API provided. Set of APIs is almost identical to blockchain.info and does not provide easy way to get multiple blocks. The main difference is that there is no official API call limit, but using tool that is not controlled by us means that such limit can appear every moment.
 
-\section{libbitcoin-database}
+\section{libBitcoin-database}
 
 \begin{verbatim}
 https://github.com/libbitcoin/libbitcoin-database Last visited 25.04
@@ -204,7 +194,7 @@ This chapter goes through design process in detail. Design starts with describin
 
 \subsection{Users description}
 
-Requester of this software is Ph.D. working at university. He is interested in networks that emerge between cryptocurrencies users. The cryptocurrency that he researches the most is bitcoin, because of its wide adoption which leads to his research having biggest impact. He believes that science is group activity, and thus he wants knowledge to be shared in efficient way. He has created group of people working on this subject at his university, and actively pursues better communication and collaboration with similar groups at other universities. Problem he and his peers faces is lack of standard way to share common analytic solutions, which would encourage accumulation of knowledge. With such place, as he believes, common analytic tasks would not have to be implemented over and over by separate researchers. One of common tasks that he sees to be implemented over and over is acquiring bitcoin data.  
+Requester of this software is Ph.D. working at university. He is interested in networks that emerge between cryptocurrencies users. The cryptocurrency that he researches the most is Bitcoin, because of its wide adoption which leads to his research having biggest impact. He believes that science is group activity, and thus he wants knowledge to be shared in efficient way. He has created group of people working on this subject at his university, and actively pursues better communication and collaboration with similar groups at other universities. Problem he and his peers faces is lack of standard way to share common analytic solutions, which would encourage accumulation of knowledge. With such place, as he believes, common analytic tasks would not have to be implemented over and over by separate researchers. One of common tasks that he sees to be implemented over and over is acquiring Bitcoin data.  
 
 \subsection{User stories}
 
@@ -235,10 +225,10 @@ In this section I will specify inputs and outputs of the system. This will then 
 
 \subsection{Inputs}
 \subsubsection{Bitcoind BLK files}
-The only source of bitcoin block data will be BLK files stored by full bitcoin node. Daemon process bitcoind gets blocks from neighboring nodes and stores them in data directory. The blk files in default configuration store up to 128MB of raw network format block data. Blocks are stored in order in which they come from network. Library's that handle parsing BLK files exist, so accessing this data should not be a problem.
+The only source of Bitcoin block data will be BLK files stored by full Bitcoin node. Daemon process bitcoind gets blocks from neighboring nodes and stores them in data directory. The blk files in default configuration store up to 128MB of raw network format block data. Blocks are stored in order in which they come from network. Library's that handle parsing BLK files exist, so accessing this data should not be a problem.
 \\
 \\
-One important thing to mention about bitcoin transactions stored in blocks is the fact that address of the sender is described as output of previous transaction.
+One important thing to mention about Bitcoin transactions stored in blocks is the fact that address of the sender is described as output of previous transaction.
 
 \subsubsection{Request for blocks} will be the way user communicates with the system. In this request user will specify which blocks he wants to receive. Usually those will be blocks from specified range of time, or range of height.
 
@@ -247,9 +237,9 @@ One important thing to mention about bitcoin transactions stored in blocks is th
 
 
 \section{Persistence}
-The fact that transaction sender address is not stored in bitcoin blocks directly, but by reference to other transaction, creates responsibility for the system. This responsibility is to discover addresses by finding referred transaction, and getting the address of recipient. This of course requires substantial amount of time which should not be added to the time of user waiting for his response. 
+The fact that transaction sender address is not stored in Bitcoin blocks directly, but by reference to other transaction, creates responsibility for the system. This responsibility is to discover addresses by finding referred transaction, and getting the address of recipient. This of course requires substantial amount of time which should not be added to the time of user waiting for his response. 
 \\
-Additional thing to consider is the time needed to transform raw binary bitcoin block to widely used data format such as JSON. Knowing this we will get to the conclusion that we will need some type of persistence. Although some custom way to store this data might be better suited for our needs, I will be using a database because of constraint of time I have available to build this solution.
+Additional thing to consider is the time needed to transform raw binary Bitcoin block to widely used data format such as JSON. Knowing this we will get to the conclusion that we will need some type of persistence. Although some custom way to store this data might be better suited for our needs, I will be using a database because of constraint of time I have available to build this solution.
 
 \subsection{Database operations}
 Lets consider database operations that will need to be fast, and those that are not so important in this regard.
@@ -261,7 +251,7 @@ Least important operation will be data addition. End user will not be performing
 Most important operation will be querying blocks, by its hash, time, and other attributes, especially querying for range of consecutive blocks described by time frame and height range.
 \\
 \\
-Another important operation is operation of getting transactions by hash. This operation will be needed for discovering address of transaction sender. Although this operation will not be in usage scenarios started by end user, the number of such operations needed to discover sender address of every bitcoin transaction makes it crucial for this operation to be fast.
+Another important operation is operation of getting transactions by hash. This operation will be needed for discovering address of transaction sender. Although this operation will not be in usage scenarios started by end user, the number of such operations needed to discover sender address of every Bitcoin transaction makes it crucial for this operation to be fast.
 
 \subsection{Database choice}
 At the beginning let's simplify the choice between RDBMS and NoSQL databases. Out of many NoSQL possibilities I have chosen MongoDB database based on some research of different NoSQL systems strengths and weaknesses.
@@ -286,9 +276,9 @@ Based on these facts, the database I will use will be MongoDB. Because of that c
 
 \subsection{Database structure}
  
-Collections in MongoDB don't have structure defined upfront. To have mandatory attributes, actor responsible for data insertion needs to enforce it. Because of this, writing about database structure is not most accurate term. It is easier to think about it as structure of data, and in my system the structure of data will not change in big degree compared to form I will obtain it in. The only difference is, that by default, bitcoin transactions don't specify address of sender. Additionally I have added value that is the time that had passed between receiving resources which were input of transaction, and that transaction.
+Collections in MongoDB don't have structure defined upfront. To have mandatory attributes, actor responsible for data insertion needs to enforce it. Because of this, writing about database structure is not most accurate term. It is easier to think about it as structure of data, and in my system the structure of data will not change in big degree compared to form I will obtain it in. The only difference is, that by default, Bitcoin transactions don't specify address of sender. Additionally I have added value that is the time that had passed between receiving resources which were input of transaction, and that transaction.
 
-One document in MongoDB collection will be one bitcoin block, its attributes are:
+One document in MongoDB collection will be one Bitcoin block, its attributes are:
 \begin{itemize}
 \item
 bits - current target in compact format \cite{bitcoin-wiki-bha}
@@ -383,7 +373,7 @@ Bitcoin node with its data directory
 \item
 Database for storing processed blocks
 \item
-Process constantly updating database with new blocks that are gathered by bitcoin node which I will refer to as database updater
+Process constantly updating database with new blocks that are gathered by Bitcoin node which I will refer to as database updater
 \item
 Web application ready to implement complex functionalities in
 \end{itemize}
@@ -395,28 +385,28 @@ Web application ready to implement complex functionalities in
 \end{figure}
 
 \subsection{Database Updater}
-This component will have responsibility for parsing raw bitcoin blocks collected from BLK files, discovering transaction sender address by transaction output referred in its input, adding blocks to database and administering the database, namely adding indexes in the best moment.
+This component will be responsible for parsing raw Bitcoin blocks collected from BLK files, discovering transaction sender address by transaction output referred in its input, adding blocks to database, and administering the database, namely adding indexes in the best moment.
 
-Although this components performance does not add to user wait time, it adds to time needed to get to the point at which most of the recent blocks are in the database. Because of large amount of data that needs to be processed and inserted to database, optimizations are necessary to finish initial data load in reasonable time.
+Although this components performance does not influence user wait time, it influences time needed to get to the point at which most of the recent blocks are in the database. Because of large amount of data that needs to be processed and inserted to database, optimizations are necessary to finish initial data load in reasonable time.
 
-The main bottleneck is discovering sender address, nowadays, one block holds about 2000 transactions, so to process one block with simplest design, database updater would have to ask the database about 2000 times for transaction for every processed block which would lead to very poor performance. Because it would require to much memory for database updater to remember every transaction it processed, it will remember some constant number of last processed transactions.
+The main bottleneck is discovering sender address. Nowadays, one block holds about 2000 transactions, so to process one block with simplest algorithm, database updater would have to ask the database about 2000 times for transaction for every processed block. This would lead to very poor performance. Because it would require to much memory for database updater to remember every transaction it have processed, it will remember some constant number of last processed transactions.
 
 \subsection{Complex Operations API}
-At the beginning I will explain why this component was requested to be implemented. Reason for this was the fact that when there is a group of people researching common field, there is big overlap in needed functionalities. When researcher gets to the point where he needs functionality that he doesn't have, he will implement it himself. The problem is that very often the same functionality was implemented by one of his peers, and this component is meant to solve this problem. 
+Reason for this component to be requested is the fact that when there is a group of people researching common field, there is big overlap in needed functionalities. When researcher gets to the point where he needs functionality that he doesn't have, he will implement it himself. The problem is that very often the same functionality was implemented by one of his peers, and this component is meant to solve this problem. 
 
-If we want users to use this API it needs to be not much harder to do than when doing it locally, and this will be crucial thing to think about during design.
+In order to incentivise users to use this API, in regard of developing new functionalities, it needs to be at similar level of complexity as developing those functionalities locally, and it is crucial to consider it during design.
 
 Complex Operations API will be web service, which in response to its users request will return JSON data. At the main page will be located descriptions of implemented functionalities with URL's needed to access them. There will be one functionality implemented in this service which purpose will be to handle to the users a well working example of something similar to what they will be implementing.   
 
 \section{Deployment}
 
-The main things that can be accomplished with well chosen deployment and packaging are simplicity of use and cross-platform possibilities which can positively influence adoption rate of this solution in perspective of both usage and further open source development.
+The main property of software, that can be accomplished with well chosen deployment and packaging, are simplicity of use and cross-platform possibilities. Those can positively influence adoption rate of this solution in perspective of both usage and further open source development.
 
-For this project I will use docker containers, which will help in keeping components decoupled, and will make installation process not to require multiple complex steps. 
+For this project docker containers will be used, which will help in keeping components decoupled, and will make installation process easy to follow. 
 
-Installation process that I want to achieve should consist only of installing full bitcoin node, docker, running one custom script and setting up simple configuration (database credentials, etc.).
+Installation process should consist only of installing full Bitcoin node, docker, running one custom script and setting up simple configuration (database credentials, etc.).
 
-All the containers will be connected to the same private network, so that communications between them will be as simple to achieve as possible.
+All the containers will be connected to the same private network, so that communications between them will lack any complexity.
 
 \chapter{Implementation}
 
@@ -424,27 +414,27 @@ All the containers will be connected to the same private network, so that commun
 This chapter shows most notable implementation details, selected by their importance to the system. Implementation starts with deployment which usually is the last concern, but in this case it has guided whole implementation process. Later, implementation of system components is described.
 
 \section{Install.sh}
-I have decided to start with the installation script, because knowing its content will guide us by how containers are set up, how data flows between them, an will give us overview of whole system.
+This tour of implementation starts with the installation script, because knowing its content will provide knowledge of containers set up, data flow between containers, an overview of whole system.
 
-Install.sh starts with reading configuration from file "config.conf" in which following things are set up:
+Install.sh starts with reading configuration from file "config.conf" in which following things are being set up:
 
 \begin{itemize}
 \item
-Database credentials for administrator, and user with read-only privileges
+database credentials for administrator and user with read-only privileges
 \item
-Port at which the database will be reachable
+port at which the database will be reachable
 \item
-Data directory of bitcoin node
+data directory of Bitcoin node
 \item
-Directory at which we want to store our database data
+directory at which database data will be stored
 \item
-Transaction cache size
+transaction cache size
 \end{itemize} 
 
-After configuration is loaded, network is being created, and building and starting of containers starts.
+After configuration is loaded, network is being created, and building and starting of containers begins.
 
 \subsection{Database container setup}
-For database container I will show how configuration looks, so that readers without experience with docker will have chance to see it.
+For database container configuration will be shown, so that readers without experience with docker will have chance to see how such configuration looks.
 
 \begin{verbatim}
 docker run -d \
@@ -462,7 +452,7 @@ docker run -d \
 Database container is build on "aashreys/mongo-auth:latest" docker image, which lets us create MongoDB database with enabled authentication (by default in MongoDB authentication is not enabled).
 Admin user credentials are being set, but credentials of user with read-only privilege can't be set here, because before-mentioned image does not support such action.
 
-There are couple other things in this configuration worth noting, namely "-v" flag creates volume for container and its purpose comes from the fact that docker containers should be possible to kill without any loss, so with volume set up, when we kill our database container and run it again, the database data will not be lost.
+There are couple other things in this configuration worth noting, namely "-v" flag creates volume for container and its purpose comes from the fact that docker containers should be possible to be killed without any loss. With volume set up, when we kill our database container and run it again, the database data will persist.
 
 Another important thing is setting up common network for all the containers, here it is accomplished with flag "--network". With network configured, DNS is set up automatically and it is possible to refer other containers by their names. For instance running 
 \begin{verbatim}
@@ -471,9 +461,9 @@ ping btc-blockchain-db
 from within other container connected to the same network will send messages correctly
 
 \subsection{Database updater container setup}
-For database updater docker image needs to be created first. To create docker image we need to write our configuration in file called "Dockerfile", than use command docker build to build image, and with image ready we can run it in the same way previously described image was run.
+Before database updater docker image can be ran, it needs to be created first. To create docker image, configuration needs to be written in file named "Dockerfile", than command "docker build" is used to build image. With image ready it can be ran in the same way previously described image was.
 
-Let's go through dockerfile for database updater and see what it looks like:
+Dockerfile for database updater:
 \begin{verbatim}
 FROM python:3
 
@@ -491,14 +481,14 @@ EXPOSE 27017
 CMD [ "python", "-u", "/src/update_database.py" ]
 \end{verbatim}
 
-Dockerfile starts with base image that is being used, here it is "python:3" image that contains as its name suggests python3.
+Dockerfile starts with base image that is being used, here it is "python:3" image that contains as its name suggests python3 installed.
 Next two lines copy needed files to the container, than libraries are installed, containers port is exposed for communication with database, and in the last line my application is being started.
 \\
 \\
 Using docker makes it easy to create installation process repeatable and independent from environment, so that running software will have the same effect on every machine it is being ran (to some extend naturally). 
 
 \subsection{Complex Operation API container setup}
-This container is based on "tiangolo/uwsgi-nginx-flask:python3.6" which have all the basic elements needed to run flask application already configured. The only non standard configuration that needed to be done was setting timeout in Nginx web server to larger value. By default timeout is 60 seconds, but because of type of operations that this application is made for this was not enough  
+This container is based on "tiangolo/uwsgi-nginx-flask:python3.6" which have all the basic elements needed to run flask application already configured. The only non standard configuration that needed to be done is setting timeout in Nginx web server to larger value. By default timeout is 60 seconds, but because of type of operations that this application is made for, this is not enough.  
 
 \section{Database updater}
 This container as stated before is responsible for database, and in more detail it is responsible for both putting data to it and for managing its configuration. In regards of managing configuration of database, this module takes responsibility for everything that could not be achieved in docker command, and that is:
@@ -507,37 +497,37 @@ This container as stated before is responsible for database, and in more detail 
 \item
 Creating user with privilege to read the database, but not to modify it. This account will be used by end user.
 \item
-Creating database indexes for block height, block timestamp and transaction hash
+Creating database indexes for block height, block timestamp and transaction hash.
 \end{itemize}
 
-All this is being done in separate module responsible only for database - "mongo.py", other than caring for database configuration, it abstracts away connecting and loading data to the database. This module uses library "pymongo" in version 3.6 to connect to database.
+All this is being done in separate module responsible only for database - "mongo.py". Other than caring for database configuration, it abstracts away connecting and loading data to the database. This module uses library "pymongo" in version 3.6 to connect to database.
 \\
 \\  
 Data insertion took the most effort to develop, and is the most complex part of the system.
 
-All of bitcoin BLK files processing is done with "blockchain-parser" library, but not the official release, but version straight from their git repository. The reason for this is that changes in bitcoin are far more frequent than releases of this software, and some things ware not supported in official version. The version I am using does not support BIP-0173 (BIP stands for bitcoin improvement proposal) so discovering addresses from transactions using techniques described in it cannot be done. 
+All of Bitcoin BLK files processing is done with "blockchain-parser" library, but not the official release, but version straight from their git repository. The reason for this is that changes in Bitcoin are far more frequent than releases of this software, and some features of Bitcoin were not supported in official version. The version that is being used does not support BIP-0173 (BIP stands for Bitcoin improvement proposal) so discovering addresses from transactions using techniques described in it cannot be done. 
 \\
 \\
 Processing and loading data can be broken into these steps:
 \begin{itemize}
 \item
-Initial parsing of BLK files contained in bitcoin data directory, only headers of blocks are parsed, to get hash of block, and hash of previous block.
+Initial parsing of BLK files contained in Bitcoin data directory. Only headers of blocks are parsed, to get hash of block, and hash of previous block.
 \item
 Representation of blockchain is created, to get to know the order of blocks, and to know which blocks are in the main chain.
 \item
-One by one, starting from the block next after last inserted blocks are fully parsed, their transactions are cached, and input addresses are being discovered first by looking into cache, than if cache does not contain that transaction, the database is being asked.
+One by one, starting from the block next after last inserted, blocks are fully parsed. Their transactions are cached, and input addresses are being discovered. Those addresses are being discovered first by looking into cache, than if cache does not contain needed transaction, the database is being asked.
 \item
 last step is inserting processed block into database.
 \end{itemize}
 
-Of course there is more complexity hidden inside those steps, like handling exceptions from blockchain-parser library. The reason there are exceptions while parsing bitcoin blocks is that bitcoin transactions do not have to be fully valid. Many transactions exist with errors, and although they are of no interest for my system, they need to be recognized, and handled properly.
+Of course there is more complexity hidden inside those steps, like handling exceptions from blockchain-parser library. The reason there are exceptions while parsing Bitcoin blocks is that Bitcoin transactions do not have to be fully valid. Many transactions exist with errors, and although they are of no interest to the system, they need to be recognized and handled properly.
 
 \section{Complex Operation API}
-This component was implemented in Flask framework which was chosen for its simplicity which is well needed in application that people who very often don't have experience with web applications will extend with their code. 
+This component was implemented in Flask framework, which was chosen for its simplicity. Simplicity is well needed in application that users, who very often don't have experience with web applications, will extend with their code. 
 
-Main page is made purely in HTML and CSS, and the argument for simplicity that I have made holds here as well.
+Main page is made purely in HTML and CSS, for the sake of before mentioned simplicity.
 
-I have implemented two exemplary functionalities, one of them is really simple and will be a good way to show simplicity of Flask, implementation:
+Two exemplary functionalities have been implemented, one of which, because of its lack of complexity, will be a good way to show advantages of Flask.
 \begin{verbatim}
 @app.route('/api/last_block')
 def _last_block():
@@ -546,16 +536,16 @@ def _last_block():
 In this code first line specifies address at which service will be available, second one is declaration of function, and the last one is its implementation. This function connects to the database with previously created "mongo" object, finds last block in the database, converts it to JSON with "dumps" function and returns.
 \\
 \\
-The second functionality is surely more complex. First of all lets notice that we can see bitcoin transactions as graph. Every transaction has its input and output, the addresses of inputs and outputs are vertices of the graph, and transactions are the edges between them. My second functionality as input takes two parameters which specify block range by hight, than creates graph out of transactions found in specified blocks using iGraph library, and at the end separates unconnected graphs and returns array of count of vertices in each graph.
+The second functionality is surely more complex. First of all lets notice that we can look at Bitcoin transactions as graph. Every transaction has its input and output, the addresses of inputs and outputs are vertices of the graph, and transactions are the edges between them. My second functionality as input takes two parameters which specify block range by hight, than creates graph out of transactions found in specified blocks using iGraph library. After creating graph it separates unconnected graphs and returns array of count of vertices in each graph.
 
-The choice of this functionality was not random. Operations on graphs are very common when analyzing bitcoin transactions.
+The choice of this functionality was not random. Operations on graphs are very common when analyzing Bitcoin transactions.
 
-At the end I have to say that although I think that application by itself is easy to understand and in this regard it will be easy for users to add their code to it, the deployment with docker makes it not so easy to use as a developer. Biggest drawback of docker is relatively slow startup, so when we write some portion of code and we want to run it and see how things are going, we need to wait about 15 seconds (time measured on my personal computer) before process of re-installation completes.
+At the end it needs to be said that although that application by itself is easy to understand and in this regard it will be easy for users to add their code to it, the deployment with docker makes it not so easy to use as a developer. Biggest drawback of docker is relatively slow startup. When some portion of code is written into this container, and it needs to be ran for testing, process of building image will take about 15 s (time based on personal observations) 
 
 \chapter{Functionality testing}
 
 \section{Getting blocks by height}
-Getting bitcoin blocks by their height has been identified by me to be one of the most useful way to query blockchain, and its performance is of high priority.
+Getting Bitcoin blocks by their height has been identified to be one of the most needed way to query blockchain, and its performance is of high priority.
  
 \subsection{testing on the same machine as database} 
 
@@ -596,12 +586,12 @@ results:
 100 blocks spread between height 300000 - 400000: \quad 42 s\\
 
 \subsection{Result interpretation}
-When we compare results for tests ran locally and over network, we can see about ten fold difference in time, which means that performance of database is not a bottleneck and there is no need for further optimizations.
+When comparing results for tests ran locally and over network, about ten fold difference in time can be noticed. This means that performance of database is not a bottleneck and there is no need for further optimizations.
 
-Another thing we can see is that query time highly depends on height of blocks we are getting. The reason for this is the fact that because of gradual adoption of bitcoin the average number of transactions in blocks had grown over years. 
+Another noticeable thing is that query time highly depends on height of blocks requested. The reason for this is the fact that, because of gradual adoption of Bitcoin, the average number of transactions in blocks had grown over years. 
 
 \section{Getting blocks by timestamp}
-Because querying by hight and by timestamp should not be different i will perform only one test.
+Because querying by hight and by timestamp should not give different results, only one test will be performed.
 \\
 \\
 result of run over network:
@@ -609,10 +599,10 @@ result of run over network:
 blocks between timestamp 2016-02-25 16:24 - 2016-02-26 07:23: \quad 58 s
 
 \subsection{Result interpretation}
-Because range of time that was tested fully corresponds to getting blocks by hight with range of height being from 400000 to 400099 we can compare those results. There is no significant difference in performance between getting by height and by timestamp.
+Because range of time that was tested fully corresponds to getting blocks by hight with range of height being from 400000 to 400099 we can compare those results. There seams to be no significant difference in performance between getting by height and by timestamp.
 
 \section{Complex operations API}
-In this component performance is not main goal, i will only run available services and see if results satisfying
+In functionalities prepared in this component, performance is not main goal. All available services will be requested, to see if results are satisfying.
 
 \subsection{Getting last block}
 service is located at http://base-address/api/last\_block and calling it returns JSON data:
@@ -641,13 +631,13 @@ service is located at http://base-address/api/last\_block and calling it returns
 \subsection{Getting count of maximal connected graphs by height}
 service is requester with address
 \\ \verb|http://base-address/api/count_separate_graphs?height_from=100000&height_to=100500|
-and in this case it returns [1701,74,42,39,21,20,20,19,17,...] which means that biggest connected graph that can be made from transactions with height from 100000 to 100150 has 1701 vertices and so forth.
+and in this case it returns [1701,74,42,39,21,20,20,19,17,...] which means that biggest connected graph that can be made from transactions with height from 100000 to 100150 has 1701 vertices, and so forth.
 
 
 \chapter{Beyond implementation}
 
 \section{Usage}
-After implementation finished, described software was used by Eng. Marcin Twardak in research he conducted for his master thesis. In his research he performed cluster analysis of bitcoin transactions. His opinion of this software, as he stated, hat fully met his needs, but he expressed his concern for security of current authentication system. In his opinion if someone unauthorized would acquire credentials, denial of service attack could be performed.
+After implementation finished, described software was used by Eng. Marcin Twardak in research he conducted for his master thesis. In his research he performed cluster analysis of Bitcoin transactions. His opinion of this software, as he stated, had fully met his needs, but he expressed his concern for security of current authentication system. In his opinion if someone unauthorized would acquire credentials, denial of service attack could be performed.
 
 \section{Problems}
 In this section, several issues this software have will be addressed.
@@ -656,20 +646,20 @@ In this section, several issues this software have will be addressed.
 
 \paragraph{Authentication by one set of credentials} can lead to security issues. At current version, every end user is provided with credentials to access functionalities. Those credentials are identical for every user, and provide read only access. One problem with that solution is that when one user uses to much resources, it is hard to find who this user is. Another problem arises when administrator of system wants to restrict access for some users. In this case he would need to create new credentials and distribute them to all users that should have access to the system.
 
-\paragraph{Maintenance} can become problematic if first problem will not be addressed. At this point library that is used to parse bitcoin data is used in version from fork of master branch of its repository. Periodically new fork needs to be created, to include newest features of this library. Because this is not release version, some bugs might appear, which would lead to failure in database updater. All of this leads to need for regular updates by someone who knows this system to some extent. 
+\paragraph{Maintenance} can become problematic if first problem will not be addressed. At this point library that is used to parse Bitcoin data is used in version being fork of master branch of its repository. Periodically new fork needs to be created, to include newest features of this library. Because this is not release version, some bugs might appear, which would lead to failure in database updater. All of this leads to need for regular updates by someone who knows this system to some extent. 
 
 \paragraph{Complex operations API} to be extended with new functionalities, need to be administered. Currently there is no way, other than by pull request, to include new functionalities by users from outside of the project. This in return will lead to users not sharing their work so often, and maintenance of these new functionalities could not be easily done by original creators.
 
 \section{Future directions}
-As for the database updater, full support of bitcoin protocol is needed, so that most recent data can be accessed. One way to achieve full bitcoin support is by implementing lacking features in libraries that had been used. Doing so would add constant maintenance burden which could lead to eventual abandonment of this project. Another solution might be researching different libraries to bigger extent, with hope of finding more complete one than the one that had been used.
+As for the database updater, full support of Bitcoin protocol is needed, so that most recent data can be accessed. One way to achieve full Bitcoin support is by implementing lacking features in libraries that had been used. Doing so would add constant maintenance burden which could lead to eventual abandonment of this project. Another solution might be researching different libraries to bigger extent, with hope of finding more complete one than the one that had been used.
 
 Direction in which the complex operations API should be heading are depending on feedback from its users. Adding new functionalities might need to become simpler. In current situation, to add new functionality and to share it with others, the code needs to be added to main repository. This of course creates need for reviewing proposed functionalities by administrator of repository. Possible solution might be creating plug-in system that can run arbitrary modules, which would be maintained by their creators. 
 
 \chapter{Summary}
-In this work I have designed and implemented system providing easy access to bitcoin blockchain data. There is big problem of unnecessary work being done among bitcoin researchers, many of them would develop their own way of accessing blockchain data, others would use web services which usually have API call limits. To combat this problem there needed to be free, easy to use and maintain solution that provides access to bitcoin data. 
-Nonetheless accessing data is not the only field on which researchers have problem which mutual code reuse, thats why platform that is ready to implement functionalities on needed to exist as well. 
+In this work system providing easy access to Bitcoin blockchain data have been designed and implemented . There is big problem of unnecessary work being done among Bitcoin researchers, many of them would develop their own way of accessing blockchain data, others would use web services, which usually have API call limits. To combat this problem there needed to be free, easy to use and maintain solution that provides access to Bitcoin data. 
+Nonetheless accessing data is not the only field on which researchers have problem which mutual code reuse, thats why platform, that is ready to implement functionalities on, needed to exist as well. 
 
-Success in development of this system if partial, because libraries that make parsing binary bitcoin data have problem with keeping up with changes in bitcoin, the data of newest bitcoin blocks is not fully available through my system.    
+Success in development of this system if partial, because libraries that make parsing binary Bitcoin data have problem with keeping up with changes in Bitcoin, the data of newest Bitcoin blocks is not fully available through my system.    
    
 
 \begin{thebibliography}{9}
@@ -697,7 +687,7 @@ Definition of elliptic curves
 \texttt{https://en.wikipedia.org/wiki/Elliptic\_curve}
 
 \bibitem{currency-supply}
-Description of supply on bitcoin
+Description of supply on Bitcoin
 \texttt{https://en.bitcoin.it/wiki/Controlled\_supply}
 
 \end{thebibliography}
