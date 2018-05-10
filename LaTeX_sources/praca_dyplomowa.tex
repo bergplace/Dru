@@ -192,7 +192,7 @@ https://github.com/ladimolnar/BitcoinDatabaseGenerator Last visited 25.04
 BitcoinDatabaseGenerator is a data transfer tool that can feed SQL database with blockchain data. It was written in C\# and as its author states, it is only meant to be run on Windows machines. From the documentation we know that this software should be ran every time we want to update our database. Database schema that is created after update operation, consists of separate tables for blocks, transactions, transaction inputs and so forth. Such database schema would require joining tables in multitude of usage scenarios, which is known to be slow operation.
 \\
 \\
-Although you can easily connect to SQL database from both R and Python, I find working with SQL databases in such case cumbersome. Abstracting away relational structure of data to objects might be necessary. 
+Although connecting to SQL database from both R and Python is easily achievable, working with SQL databases in such case might be cumbersome. Abstracting away relational structure of data to objects might be needed when working with SQL database. 
 
 
 \chapter{Design}
@@ -231,7 +231,7 @@ As a user, I want to have obvious place to create my own APIs on server so that 
 
 \section{System inputs and outputs}
 
-In this section I will specify inputs and outputs of the system. This will then help me to discover what transformation the input data will undergo, and what components are needed to provide outputs efficiently. Here I will consider only part of the project that is responsible for serving data, not the part that will be responsible for hosting future APIs.
+In this section inputs and outputs of the system will be specified. This will then help to discover what transformation the input data will undergo, and what components are needed to provide outputs efficiently. Here will be considered only part of the project that is responsible for serving data, not the part that will be responsible for hosting future APIs.
 
 \subsection{Inputs}
 \subsubsection{Bitcoind BLK files}
@@ -284,7 +284,7 @@ Based on these facts, the database that will be used is MongoDB. This choice wil
 
 \subsection{Database structure}
  
-Collections in MongoDB don't have structure defined upfront. To have mandatory attributes, actor responsible for data insertion needs to enforce it. Because of this, writing about database structure is not most accurate term. It is easier to think about it as structure of data, and in my system the structure of data will not change in big degree compared to form I will obtain it in. The only difference is, that by default, Bitcoin transactions don't specify address of sender. Additionally I have added value that is the time that had passed between receiving resources which were input of transaction, and that transaction.
+Collections in MongoDB don't have structure defined upfront. To have mandatory attributes, actor responsible for data insertion needs to enforce it. Because of this, writing about database structure is not most accurate term. It is easier to think about it as structure of data, and in my system the structure of data will not change in big degree compared to form it will be obtained from blocks. The only difference is, that by default, Bitcoin transactions don't specify address of sender. Additionally attribute have been added, that is the time that had passed between receiving resources which were input of transaction, and that transaction.
 
 One document in MongoDB collection will be one Bitcoin block, its attributes are:
 \begin{itemize}
@@ -358,8 +358,8 @@ type
 
 \subsection{Database indexes}
 
-Database indexes serve purpose of making queries faster and more efficient on cost of space and slower data insertion time.
-Because performance of queries is one of key user needs, and space and data insertion time are very low on priority list the indexes will be added to all of the fields that data will be queried by.
+Database indexes serve purpose of making queries faster and more efficient on cost of space and data insertion time.
+Because performance of queries is one of key user needs, and space and data insertion time are very low on priority list, the indexes will be added to all of the fields that data will be queried by.
 
 Indexed attributes:
 \begin{itemize}
@@ -379,11 +379,11 @@ System will consist of:
 \item
 Bitcoin node with its data directory
 \item
-Database for storing processed blocks
+database for storing processed blocks
 \item
-Process constantly updating database with new blocks that are gathered by Bitcoin node which I will refer to as database updater
+process constantly updating database with new blocks that are gathered by Bitcoin node, which will be referred to as database updater
 \item
-Web application ready to implement complex functionalities in
+web application ready to implement complex functionalities in
 \end{itemize}
 
 \begin{figure}[H]
@@ -393,7 +393,18 @@ Web application ready to implement complex functionalities in
 \end{figure}
 
 \subsection{Database Updater}
-This component will be responsible for parsing raw Bitcoin blocks collected from BLK files, discovering transaction sender address by transaction output referred in its input, adding blocks to database, and administering the database, namely adding indexes in the best moment.
+This component will be responsible for:
+
+\begin{itemize}
+\item
+parsing raw Bitcoin blocks collected from BLK files
+\item
+discovering transaction sender address by transaction output referred in its input
+\item
+adding blocks to database
+\item
+administering the database, namely adding indexes in the best moment
+\end{itemize}
 
 Although this components performance does not influence user wait time, it influences time needed to get to the point at which most of the recent blocks are in the database. Because of large amount of data that needs to be processed and inserted to database, optimizations are necessary to finish initial data load in reasonable time.
 
@@ -410,7 +421,7 @@ Complex Operations API will be web service, which in response to its users reque
 
 The main property of software, that can be accomplished with well chosen deployment and packaging, are simplicity of use and cross-platform possibilities. Those can positively influence adoption rate of this solution in perspective of both usage and further open source development.
 
-For this project docker containers will be used, which will help in keeping components decoupled, and will make installation process easy to follow. 
+For this project docker containers will be used (web page: www.docker.com), which will help in keeping components decoupled, and will make installation process easy to follow. 
 
 Installation process should consist only of installing full Bitcoin node, docker, running one custom script and setting up simple configuration (database credentials, etc.).
 
@@ -513,7 +524,7 @@ All this is being done in separate module responsible only for database - "mongo
 \\  
 Data insertion took the most effort to develop, and is the most complex part of the system.
 
-All of Bitcoin BLK files processing is done with "blockchain-parser" library, but not the official release, but version straight from their git repository. The reason for this is that changes in Bitcoin are far more frequent than releases of this software, and some features of Bitcoin were not supported in official version. The version that is being used does not support BIP-0173 (BIP stands for Bitcoin improvement proposal) so discovering addresses from transactions using techniques described in it cannot be done. 
+All of Bitcoin BLK files processing is done with "blockchain-parser" library, but not the official release, but version straight from their git repository (web page: www.github.com/alecalve/python-bitcoin-blockchain-parser). The reason for this is that changes in Bitcoin are far more frequent than releases of this software, and some features of Bitcoin were not supported in official version. The version that is being used does not support BIP-0173 (BIP stands for Bitcoin improvement proposal) so discovering addresses from transactions using techniques described in it cannot be done. 
 \\
 \\
 Processing and loading data can be broken into these steps:
@@ -531,7 +542,7 @@ last step is inserting processed block into database.
 Of course there is more complexity hidden inside those steps, like handling exceptions from blockchain-parser library. The reason there are exceptions while parsing Bitcoin blocks is that Bitcoin transactions do not have to be fully valid. Many transactions exist with errors, and although they are of no interest to the system, they need to be recognized and handled properly.
 
 \section{Complex Operation API}
-This component was implemented in Flask framework, which was chosen for its simplicity. Simplicity is well needed in application that users, who very often don't have experience with web applications, will extend with their code. 
+This component was implemented in Flask framework (web page: www.flask.pocoo.org), which was chosen for its simplicity. Simplicity is well needed in application that users, who very often don't have experience with web applications, will extend with their code. 
 
 Main page is made purely in HTML and CSS, for the sake of before mentioned simplicity.
 
