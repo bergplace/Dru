@@ -111,7 +111,7 @@ One notable property of this data structure is that modification of single block
 Because of restrictions imposed on block creation, creating blocks is highly time consuming, thus modification of block that had been followed by 6 other blocks is considered impossible to be done without consent of large portion of miners.
 
 \section{Mining - block creation}
-Mining in bitcoin is the process of block creation. One of the most interesting properties of valid block is that its hash starts with certain amount of "0". To achieve needed hash, attribute named "nonce" is set in trial and error manner. Everyone who wishes to create new block will need to:
+Mining in bitcoin is the process of block creation. One of the most interesting properties of valid block is that its hash starts with certain amount of "0". Number of "0" needed at beginning of correct block is being adjusted every 2016 blocks, so that rate at which blocks are being mined is approximately 10 minutes per block. To achieve needed hash, attribute named "nonce" is set in trial and error manner. Everyone who wishes to create new block will need to:
 
 \begin{itemize}
 \item
@@ -128,14 +128,15 @@ calculate hash of block
 if hash starts with needed number of "0" than propagate block through the network, otherwise set "nonce" to different value and continue process till finding correct value or till some other miner finished 
 \end{itemize}
 
-Naturally, process described above is simplified. There are nuances e.g. "nonce" attribute is 32 bit integer, and nowadays more often than not there is no such value of that attribute that results in correct hash. Miners in such situation apply other techniques to find correct hash.
+Naturally, process described above is simplified. There are nuances e.g. "nonce" attribute is 32 bit integer, and nowadays more often than not there is no such value of that attribute that results in correct hash. Miners in such situation apply other techniques to find correct hash. Nonetheless this is level of detail this work does not operate on.
+ 
+Incentives for mining blocks are transaction fees and block rewards. Transaction fee is any unspent output in a transaction. For instance when 0.9 BTC is sent from output that holds 1 BTC, unspent output equals 0.1 BTC and this can be transfered to address controlled by miner.  
+Another incentive, block reward is last transaction in the block which creates new coins and transfers them to address specified by miner. Amount of BTC in block reward started at 50 BTC, and halfs every 210000 blocks \cite{currency-supply}
 
-Number of "0" needed at beginning of correct block is being adjusted every 2016 blocks, so that rate at which blocks are being mined is approximately 10 minutes per block.  
+\section{Block}
+Block in bitcoin network is structure that hold transactions as well as other data needed for this network to operate.
 
-
-      
-
-
+Block consists of header and transactions. As transactions were described before, whats left is explaining content of block header 
 
 \chapter{Alternative software providing similar features}
 
@@ -694,6 +695,10 @@ Starry Peng, 2013, BITCOIN: Cryptography, Economics, and the Future
 \bibitem{elliptic-curves}
 Definition of elliptic curves
 \texttt{https://en.wikipedia.org/wiki/Elliptic\_curve}
+
+\bibitem{currency-supply}
+Description of supply on bitcoin
+\texttt{https://en.bitcoin.it/wiki/Controlled\_supply}
 
 \end{thebibliography}
 
