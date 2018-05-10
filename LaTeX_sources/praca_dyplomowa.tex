@@ -112,10 +112,10 @@ Blockchain in Bitcoin is data structure that holds every transaction that had ta
 
 One notable property of this data structure is that modification of single block would require modification of every block that followed. This property of blockchain comes from the fact that modification of block, changes its hash, and as mentioned before blocks contain hash of previous block. This of course would require modification of previous block hash field in following block. 
 
-Because of restrictions imposed on block creation, creating blocks is highly time consuming, thus modification of block that had been followed by 6 other blocks is considered impossible to be done without consent of large portion of miners.
+Because of restrictions imposed on block creation, creating blocks is highly time consuming, thus modification of block that had been followed by 6 other blocks is considered impossible without consent of large portion of miners.
 
 \section{Mining - block creation}
-Mining in Bitcoin is the process of block creation. One of the most interesting properties of valid block is that its hash starts with certain amount of "0". Number of "0" needed at beginning of correct block is being adjusted every 2016 blocks, so that rate at which blocks are being mined is approximately 10 minutes per block. To achieve needed hash, attribute named "nonce" is set in trial and error manner. Everyone who wishes to create new block will need to:
+Mining in Bitcoin is the process of block creation. One of the most interesting properties of valid block is that its hash starts with certain amount of "0". Number of "0" needed at beginning of correct block is being adjusted every 2016 blocks, so that rate at which blocks are being mined is approximately 1 block per 10 minutes. To achieve needed hash, attribute named "nonce" is set in trial and error manner. Everyone who wishes to create new block will need to:
 
 \begin{itemize}
 \item
@@ -132,20 +132,20 @@ calculate hash of block
 if hash starts with needed number of "0" than propagate block through the network, otherwise set "nonce" to different value and continue process till finding correct value or till some other miner finished 
 \end{itemize}
 
-Naturally, process described above is simplified. There are nuances e.g. "nonce" attribute is 32 bit integer, and nowadays more often than not there is no such value of that attribute that results in correct hash. Miners in such situation apply other techniques to find correct hash. Nonetheless this is level of detail this work does not operate on.
+Naturally, process described above is simplified. There are some nuances, e.g. "nonce" attribute is 32 bit integer, and nowadays more often than not there is no such value of that attribute that results in correct hash. Miners in such situation apply other techniques to find correct hash. Nonetheless this is level of detail this work does not operate on.
  
-Incentives for mining blocks are transaction fees and block rewards. Transaction fee is any unspent output in a transaction. For instance when 0.9 BTC is sent from output that holds 1 BTC, unspent output equals 0.1 BTC and this can be transfered to address controlled by miner.  
-Another incentive, block reward is last transaction in the block which creates new coins and transfers them to address specified by miner. Amount of BTC in block reward started at 50 BTC, and halfs every 210000 blocks \cite{currency-supply}
+Incentives for mining blocks are transaction fees and block rewards. Transaction fee is any unspent output in a transaction. For instance when 0.9 BTC is sent from output that holds 1 BTC, unspent output equals 0.1 BTC. This unspend output can be transfered to address controlled by miner.  
+Another incentive, block reward, is last transaction in the block which creates new coins and transfers them to address specified by miner. Amount of BTC in block reward started at 50 BTC, and halfs every 210000 blocks \cite{currency-supply}
 
 
 \chapter{Alternative software providing similar features}
 
 \section{Overview}
-This chapter describes software that is similar to what will be designed and implemented in this paper. These descriptions go through features, advantages and disadvantages. 
+This chapter describes software that is similar to what will be designed and implemented in this paper. These descriptions go through features, advantages and disadvantages of those applications. 
 
 \section{blockchain.info}
 
-Web application blockchain.info provides free access to Bitcoin blockchain data by either website, JSON API or APIs dedicated to specific languages including Python, but without support for R. Number of requests is limited.
+Web application blockchain.info provides free access to Bitcoin blockchain data by either website, JSON API or APIs dedicated to specific languages including Python. Blockchain.info does not have dedicated support for R. Number of requests is limited.
 \\
 \\
 Relevant APIs provided by blockchain.info:
@@ -164,13 +164,13 @@ getting all transactions of single or multiple addresses
 
 \end{itemize}
 
-Most common usage scenario in analytic context is getting range of blocks, for example all blocks from 10.04.2017 to 20.04.2017. Nonetheless, blockchain.info does not provide simple way of getting such data. To achieve this, we would have to make thousands of requests to API providing us with single block data, and this wouldn't be fast enough.
+Most common usage scenario in analytic context is getting range of blocks, for example all blocks from 10.04.2017 to 20.04.2017. Nonetheless, blockchain.info does not provide simple way of getting such data. To achieve this, thousands of requests to API providing us with single block data is needed, and this is not fast enough.
 
-Another and the biggest problem is the API call limit that would make working with this application impossible for larger query's.
+Another and the biggest problem is the API call limit that would make working with this application impossible for larger queries.
 
 \section{blockexplorer.com}
 
-This web application is very similar to blockchain.info in almost every aspect, although there are some differences. Data is accessible either by website or by JSON API, but there is no Python or R API provided. Set of APIs is almost identical to blockchain.info and does not provide easy way to get multiple blocks. The main difference is that there is no official API call limit, but using tool that is not controlled by us means that such limit can appear every moment.
+This web application is very similar to blockchain.info in almost every aspect, although there are some differences. Data is accessible either by website or by JSON API, but there is no Python or R API provided. Set of APIs is almost identical to blockchain.info and does not provide easy way to get multiple blocks. The main difference is that there is no official API call limit, but because it is external tool, it means that such limit can appear every moment.
 
 \section{libBitcoin-database}
 
@@ -178,10 +178,10 @@ This web application is very similar to blockchain.info in almost every aspect, 
 https://github.com/libbitcoin/libbitcoin-database Last visited 25.04
 \end{verbatim}
 
-This piece of software, after installation builds in-memory database of Bitcoin blockchain, its description promises high performance. Because of almost non existing documentation it is hard to write much about it.
+This piece of software, after installation builds in-memory database of Bitcoin blockchain, its description promises high performance. Because of almost non existing documentation, it is hard to describe its features in depth.
 \\
 \\
-Although this software is actively developed, and at first sight it might seam like solution that fits needs of our users, some problems can be found. One drawback is coming from its biggest selling point - being in-memory database makes it requiring large amounts of RAM. This problem makes it not viable for hardware that is accessible for the average user. Next problem lies in its API that allows connecting to the database via C/C++ library, which would make usage in R and Python at least problematic. Another problem is lack of useful documentation, which would make the usage largely troublesome.
+Although this software is actively developed, and at first sight it might seam like solution that fits needs of users, some problems can be found. One drawback is coming from its biggest selling point - being in-memory database makes it requiring large amounts of RAM. This problem makes it not viable for hardware that is accessible for the average user. Next problem lies in its API that allows connecting to the database only via C/C++ library, which would make usage in R and Python at least problematic. Another problem is already mentioned lack of useful documentation, which would make the usage largely troublesome.
 
 \section{BitcoinDatabaseGenerator}
 
@@ -189,7 +189,7 @@ Although this software is actively developed, and at first sight it might seam l
 https://github.com/ladimolnar/BitcoinDatabaseGenerator Last visited 25.04
 \end{verbatim}
 
-BitcoinDatabaseGenerator is a data transfer tool that can feed SQL database with blockchain data. It was written in C\# and as its author states, it is only meant to be run on Windows machines. From the documentation we know that this software should be ran every time we want to update our database. Database schema, that is created after update operation, consists of separate tables for blocks, transactions, transaction inputs and so forth. Such database schema would require joining tables in multitude of usage scenarios, which is known to be slow operation.
+BitcoinDatabaseGenerator is a data transfer tool that can feed SQL database with blockchain data. It was written in C\# and as its author states, it is only meant to be run on Windows machines. From the documentation we know that this software should be ran every time we want to update our database. Database schema that is created after update operation, consists of separate tables for blocks, transactions, transaction inputs and so forth. Such database schema would require joining tables in multitude of usage scenarios, which is known to be slow operation.
 \\
 \\
 Although you can easily connect to SQL database from both R and Python, I find working with SQL databases in such case cumbersome. Abstracting away relational structure of data to objects might be necessary. 
@@ -204,7 +204,7 @@ This chapter goes through design process in detail. Design starts with describin
 
 \subsection{Users description}
 
-Requester of this software is Ph.D. working at university. He is interested in networks that emerge between cryptocurrencies users. The cryptocurrency that he researches the most is Bitcoin, because of its wide adoption which leads to his research having biggest impact. He believes that science is group activity, and thus he wants knowledge to be shared in efficient way. He has created group of people working on this subject at his university, and actively pursues better communication and collaboration with similar groups at other universities. Problem he and his peers faces is lack of standard way to share common analytic solutions, which would encourage accumulation of knowledge. With such place, as he believes, common analytic tasks would not have to be implemented over and over by separate researchers. One of common tasks that he sees to be implemented over and over is acquiring Bitcoin data.  
+Requester of this software is Ph.D. working at university. He is interested in networks that emerge between cryptocurrencies users. The cryptocurrency that he researches the most is Bitcoin, because of its wide adoption which leads to his research having bigger impact. He believes that science is group activity, and thus he wants knowledge to be shared in efficient way. He has created group of people working on this subject at his university, and actively pursues better communication and collaboration with similar groups at other universities. Problem he and his peers faces is lack of standard way to share common analytic solutions, which hinders accumulation of knowledge. With such place, as he believes, common analytic tasks would not have to be implemented over and over by separate researchers. One of common tasks that he notices to be implemented over and over is acquiring Bitcoin data.  
 
 \subsection{User stories}
 
@@ -216,7 +216,7 @@ As a user, I want to access blockchain data from my Python/R script so that data
 \item
 As a user, I want the data be in a format idiomatic to Python/R so that I don't have to convert it myself.
 \item
-As a user, I want easy access to block data from range of time or block height so that I can spend my time working with the data, and not with accessing it.
+As a user, I want easy access to block data by specifying range of time or block height so that I can spend my time working with the data, and not with accessing it.
 \item
 As a user, I want the installation not to require complicated operations so that I can do it without specialized knowledge.
 \item
@@ -235,54 +235,51 @@ In this section I will specify inputs and outputs of the system. This will then 
 
 \subsection{Inputs}
 \subsubsection{Bitcoind BLK files}
-The only source of Bitcoin block data will be BLK files stored by full Bitcoin node. Daemon process Bitcoind gets blocks from neighboring nodes and stores them in data directory. The blk files in default configuration store up to 128MB of raw network format block data. Blocks are stored in order in which they come from network. Library's that handle parsing BLK files exist, so accessing this data should not be a problem.
-\\
-\\
-One important thing to mention about Bitcoin transactions stored in blocks is the fact that address of the sender is described as output of previous transaction.
+The only source of Bitcoin block data will be BLK files, stored by full Bitcoin node. Daemon process bitcoind gets blocks from neighboring nodes, and stores them in data directory. The BLK files in default configuration store up to 128MB of raw network format block data. Blocks are stored in order in which they come from network. Library's that handle parsing BLK files exist, so accessing this data should not be a problem.
 
-\subsubsection{Request for blocks} will be the way user communicates with the system. In this request user will specify which blocks he wants to receive. Usually those will be blocks from specified range of time, or range of height.
+\subsubsection{Request for blocks} This request will be the way user communicates with the system. In this request user will specify which blocks he wants to receive. Usually those will be blocks from specified range of time, or range of height.
 
 \subsection{Outputs}
-\subsubsection{Response on request for blocks} will contain block data in format understandable by user 
+\subsubsection{Response on request for blocks} This response will contain block data in format either native to Python/R or JSON.
 
 
 \section{Persistence}
 The fact that transaction sender address is not stored in Bitcoin blocks directly, but by reference to other transaction, creates responsibility for the system. This responsibility is to discover addresses by finding referred transaction, and getting the address of recipient. This of course requires substantial amount of time which should not be added to the time of user waiting for his response. 
 \\
-Additional thing to consider is the time needed to transform raw binary Bitcoin block to widely used data format such as JSON. Knowing this we will get to the conclusion that we will need some type of persistence. Although some custom way to store this data might be better suited for our needs, I will be using a database because of constraint of time I have available to build this solution.
+Additional thing to consider is the time needed to transform raw binary Bitcoin block to widely used data format such as JSON. Knowing this we will get to the conclusion that we need some type of persistence. Although some custom way to store this data might be better suited for our needs, database will be used, because of constraint of time available to build this solution.
 
 \subsection{Database operations}
-Lets consider database operations that will need to be fast, and those that are not so important in this regard.
+Let's consider database operations that will need to be fast, and those that are not so important in this regard.
 \\
 \\
-Least important operation will be data addition. End user will not be performing these operations, and its performance will be my last priority.
+Least important operation will be data addition. End user will not be performing these operations, and its performance will be of least priority.
 \\
 \\
-Most important operation will be querying blocks, by its hash, time, and other attributes, especially querying for range of consecutive blocks described by time frame and height range.
+Most important operation will be querying blocks, by theirs hash, time, and other attributes, especially querying for range of consecutive blocks described by time frame or height range.
 \\
 \\
-Another important operation is operation of getting transactions by hash. This operation will be needed for discovering address of transaction sender. Although this operation will not be in usage scenarios started by end user, the number of such operations needed to discover sender address of every Bitcoin transaction makes it crucial for this operation to be fast.
+Another important operation is getting transactions by hash. This operation will be needed for discovering addresses of transaction senders. Although this operation will not be in usage scenarios started by end user, the number of such operations needed to discover sender address of every Bitcoin transaction makes it crucial for this it to be fast.
 
 \subsection{Database choice}
-At the beginning let's simplify the choice between RDBMS and NoSQL databases. Out of many NoSQL possibilities I have chosen MongoDB (web page: www.mongodb.com) database based on some research of different NoSQL systems strengths and weaknesses.
+At the beginning let's simplify the choice between RDBMS (Relational Database Management System) and NoSQL databases. Out of many NoSQL possibilities, MongoDB (web page: www.mongodb.com) have been chosen, based on initial research of different NoSQL systems strengths and weaknesses.
 
 
 Let's lay out some facts that will help to decide whether to use relational database, or MongoDB.
 
 \begin{itemize}
 \item 
-Storing blocks in RDBMS in multiple tables, for instance table for blocks and table for transactions, would require joining those tables which is known to be slow operation.
+Storing blocks in RDBMS in multiple tables, for instance table for blocks and table for transactions, would require joining those tables which could be slow operation.
 \item 
 To achieve fast querying, the data should be strongly denormalized.
 \item
-Storing blocks in RDBMS in one table can be impossible in most systems, due to attribute count limit.
+Storing blocks in RDBMS in one table can be impossible in many systems, due to attribute count limit.
 \item 
 Comparable performance can be achieved with MongoDB and RDBMS, but MongoDB makes storing denormalized data idiomatic.
 \item
 MongoDB have APIs for Python and R that makes data available as objects.
 \end{itemize}
 
-Based on these facts, the database I will use will be MongoDB. Because of that choice I hope to easily achieve needed performance and native support for Python and R.
+Based on these facts, the database that will be used is MongoDB. This choice will provide easy access to the data from Python and R code, and achieving needed performance will come without problems.
 
 
 \subsection{Database structure}

@@ -1,18 +1,28 @@
 Progress:
 
-Przejżane do High level architecture
+do user description
 
 
 
 New content:
 
-proszę dopisać wprowadzenie do blockchaina, bitcoina, opis jak
-powstają nowe bloki, jakie są relacje między wyjściem a wejściami
+
 
 strona tytułowa
 
 
 Editing:
+
+proszę podać linki np. do MongoDB itp.
+
+
+
+posprawdzać cytowania
+
+
+
+
+Done:
 
 nie byłem w stanie dobrze skompilować aby nie było problemu z polskimi
 znakami diakrytycznymi, proszę rzucić okiem co jest nie tak
@@ -30,19 +40,13 @@ proszę zmienić formę osobową na bezosobową, np. "In this section I
 will specify" na "In this section the .... will be specified", w pracach
 inżynierskich unika się trybu osobowego
 
-proszę podać linki np. do MongoDB itp.
-
 podobnie zwracanie się do czytelnika per "you" jest zbyt spoufałe w
 tego typu pracach: "Collections in MongoDB don't have structure defined
 upfront, if you want to have mandatory attribute in document, your
 application has to enforce it." - to nie brzmi najlepiej
 
-posprawdzać cytowania
-
-
-
-
-Done:
+proszę dopisać wprowadzenie do blockchaina, bitcoina, opis jak
+powstają nowe bloki, jakie są relacje między wyjściem a wejściami
 
 dodać overview do (prawie) każdego rozdziału
 
