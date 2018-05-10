@@ -18,7 +18,7 @@
 
 \chapter{Goals}
 
-Every process of analyzing data starts with accessing the data. When analyzing Bitcoin blockchain, the first step might be the hardest one. Currently Bitcoin blockchain contains over 160GB of raw binary data, and everyone who attempts to analyze it needs to possess an efficient and reliable way to work with it. Moreover, users should have obvious place for creating additional APIs that will be placed on the same server as the data. The reason for that is that operations requiring big amounts of data, but return results of significantly smaller size, can be implemented efficiently, gathered in one place and blend in with the system. 
+Every process of data analysis starts with accessing the data. When analyzing Bitcoin blockchain, the first step might be the hardest one. Currently Bitcoin blockchain contains over 160GB of raw binary data, and everyone who attempts to analyze it needs to have an efficient and reliable way of obtaining it. Moreover, users should have obvious place for creating additional APIs that will be placed on the same server as the data. The reason for that is that operations requiring big amounts of data, but returning results of significantly smaller size, can be implemented more efficiently this way.
 \\
 \\
 The goal of this work is to create an application that fulfills the following requirements: 
@@ -46,66 +46,76 @@ This chapter will explain concept of cryptocurrencies, in some cases based on ex
 Cryptocurrency is a digital currency in which encryption techniques are used to regulate the generation of units of currency and verify the transfer of funds, operating independently of a central bank. \cite{crypto-def}
 
 \section{Security}
-Every currency operates within its defined set of rules, and has to have means to ensure these rules are obeyed. For regular money as we know it today security is provided by central authorities in way of creating banknotes that are hard to counterfeit, creating law that penalizes creating counterfeits, creating banking systems for digital money transfer that ensures those rules and is secure from malicious actors. Cryptocurrencies have their own way of ensuring their rules, but instead of central authority, those rules are ensured by cryptography and probability.
+Every currency operates within its defined set of rules, and has to have means to ensure that these rules are obeyed. For regular money, as we know it today, security is provided by central authorities in multiple ways:
+\begin{itemize}
+\item
+banknotes that are hard to counterfeit
+\item
+law that penalizes creating counterfeits
+\item
+banking systems for digital money transfer, that ensure specified rules and are secure from malicious actors
+\end{itemize}
+
+Cryptocurrencies have their own ways of ensuring their rules, but instead of central authority, those rules are ensured by cryptography and probability in a distributed system.
 
 \section{Cryptography}
-Cryptocurrencies are in big part based on cryptography to ensure the rules at witch it operates. Cryptography helps not only to ensure that fraudulent and malicious operations can't have their place, but as well to encode rules of creating new units of those currencies 
+Cryptocurrencies are in big part based on cryptography to ensure the rules at which they operate. Cryptography helps not only to ensure that fraudulent and malicious operations can't have their place, but as well to establish rules of creating new units of those currencies. 
 
-Cryptography is a field of knowledge that has its focus on protecting information from unauthorized access. Nowadays it is considered to be part of mathematics as well as informatics. 
+Cryptography is a field of knowledge that has its focus on protecting information from unauthorized access as well as providing means to authenticate and ensure integrity of message.
 
 Cryptography can be classified as:
 
 \begin{itemize}
 \item
-Symmetrical - Information is encrypted and decrypted with the same key, this creates problem of securely transferring the key.
+Symmetrical - Information is encrypted and decrypted with the same key, with this type of encryption arises problem of transferring the key.
 \item
-Asymmetrical - Information is encrypted with different key than the key that is used for decryption. One key is usually called the public key, and is used to encrypt messages. Because public key cannot be used to decrypt message it can be shared freely without concern. Second key is called private key an is used to decrypt messages. Private key should never be shared, because everyone possessing this key can decrypt messages addressed to original owner of this key.
+Asymmetrical - Information is encrypted with different key than the key that is used for decryption. One key is usually called the public key, and is used to encrypt messages. Because public key cannot be used to decrypt message it can be shared freely without concern. Second key is called private key an is used to decrypt messages. Private key should never be shared, everyone possessing that key can decrypt messages encrypted with related public key.
 \end{itemize} 
 
 Public key cryptography was developed in 1970s and is widely used to ensure security of information today. Mathematical functions were discovered that are easy to calculate in one way, but nearly impossible to calculate in reverse. Bitcoin uses elliptic-curve functions as a base of calculating public key.\cite{bartek}
 
 Aside of encryption, Bitcoin uses cryptographic hash functions in its inner workings. Cryptographic hash functions map strings of arbitrary length to constant number of bits called digest, typically from 128 to 512. 
 
-One of the main properties of hash functions is that they work one-way only. This means that for given hash digest it is impossible to find original message, but other way around it is possible. Another important property of hash functions is that for different messages, output should be different. This property does not hold in theory. Because output space of hash function is finite, and input space being virtually infinite, there must exist such messages that while being different, their hashes are identical. In practice output space is so large that finding so called collisions is nearly impossible. Therefore when hash digest are identical for two messages, those messages are assumed to be identical as well.  \cite{hash-functions}
+One of the main properties of hash functions is that they work one-way only. This means that for given hash digest it is impossible to find original message, but creating hash is easy. Another important property of hash functions is that for different messages, output should be different. This property does not hold in theory. Because output space of hash function is finite, and input space being virtually infinite, there must exist such messages that while being different, their hashes are identical. In practice output space is so large that finding so called collisions is nearly impossible. Therefore when hash digest is identical for two messages, those messages are assumed to be identical as well.  \cite{hash-functions}
 
 
 \chapter{Bitcoin}
 
 \section{Overview}
 
-This chapter explains bitcoin protocol, communication between nodes and creation of blocks
+This chapter explains Bitcoin protocol, communication between nodes, transactions and creation of blocks.
 
 \section{Network}
-Bitcoin is distributed network and there are no authoritative nodes. The exception are servers that are used by new bitcoin nodes to discover other nodes, but they will not be discussed. Reason for it is that essentially they are not part of bitcoin network, and if those servers fail, nodes will use other methods for discovery. 
+Bitcoin is distributed network and there are no authoritative nodes. The exception are servers that are used by new Bitcoin nodes to discover other nodes, but they will not be discussed. Reason for it is that essentially they are not part of Bitcoin network, and if those servers fail, nodes will use other methods for discovery. 
 
 There are two types of information that nodes share between them: transactions and blocks. \cite{bitcoin-paper-1} Those entities will be discussed in separate sections.
 
 \section{Transactions}
-Transactions in bitcoin are used to transfer value between owners. Single transaction describes inputs from which resources are being transfered, and outputs to which those resources are being transfered. All the resources from the inputs are being transfered to the outputs, unused resources are transfered to the miner which is known as miners fee.
+Transactions in Bitcoin are used to transfer value between owners. Single transaction describes inputs from which resources are being transfered, and outputs to which those resources are being transfered. All the resources from the inputs are being transfered to the outputs, unused resources are transfered to the miner which is known as transaction fee.
 
-Inputs are described by reference to output of previous transaction. To reference output of transaction, hash of transaction is needed as well as index of output, numbering of outputs starts with 0. Additionally for each input, value is specified, that makes it possible to verify that resources are transferred by their rightful owner.
+Inputs are described by reference to output of previous transaction. To reference output of transaction, hash of transaction is needed as well as index of output, numbering of outputs starts with 0. Additionally for each input, there is attribute that makes it possible to verify that resources are transferred by their rightful owner. \cite{bitcoin-transaction}
 
-Outputs of transaction specify value that is being transfered to that output, and a script that defines way of accessing those resources.
+Outputs of transaction specify number of BTC that is being transfered to that output, and a script that defines way of accessing those resources. 
 
 As have been stated outputs define way of accessing resources, and inputs provide values that unlock those resources. This is done with scripting system.
 
 \section{Scripts}
-In bitcoin providing access verification is done with scripting system. Scripts in bitcoin are programs, written in non Turing complete language, that when processed determine weather access to resources protected by script is granted or not.
+In Bitcoin providing access verification is done with scripting system. Scripts in Bitcoin are programs, written in non Turing complete language, that when processed determine whether access to resources protected by script is granted or not. \cite{bitcoin-script}
 
 Because this system is very versatile, granting access to resources can require e.g. providing multiple keys, providing password, can be granted to everyone etc. 
 
-Although script system allows for many methods of authentication, one of them is used in most of the transactions. In this method called "pay-to-pubkey-hash" script field of transaction output specifies hash of public key and requires anyone wishing to spend this output to provide public key, hash of which is equal to one provided, and signature that proves that spender owns the private key.
+Although script system allows for many methods of authentication, one of them is used in most of the transactions. In this method is often called "pay-to-pubkey-hash". Script field of transaction output specifies hash of public key and requires anyone wishing to spend this output to provide signature and public key. Hash of public key must be equal to hash provided in output. Signature, which proves that spender owns the private key, must be correct.
 
 
 \section{Blockchain}
-Blockchain in bitcoin is data structure that holds every transaction that had taken place since beginning of bitcoin network. It consists of blocks of transactions, with each block holding in itself hash of previous block. Every bitcoin node, after it has synchronized with the network, holds entire blockchain in its memory.
+Blockchain in Bitcoin is data structure that holds every transaction that had taken place since beginning of Bitcoin network. It consists of blocks of transactions, with each block holding in itself hash of previous block. Every Bitcoin node, after it has synchronized with the network, holds entire blockchain in its memory.
 
 One notable property of this data structure is that modification of single block would require modification of every block that followed. This property of blockchain comes from the fact that modification of block, changes its hash, and as mentioned before blocks contain hash of previous block. This of course would require modification of previous block hash field in following block. 
 
 Because of restrictions imposed on block creation, creating blocks is highly time consuming, thus modification of block that had been followed by 6 other blocks is considered impossible to be done without consent of large portion of miners.
 
 \section{Mining - block creation}
-Mining in bitcoin is the process of block creation. One of the most interesting properties of valid block is that its hash starts with certain amount of "0". Number of "0" needed at beginning of correct block is being adjusted every 2016 blocks, so that rate at which blocks are being mined is approximately 10 minutes per block. To achieve needed hash, attribute named "nonce" is set in trial and error manner. Everyone who wishes to create new block will need to:
+Mining in Bitcoin is the process of block creation. One of the most interesting properties of valid block is that its hash starts with certain amount of "0". Number of "0" needed at beginning of correct block is being adjusted every 2016 blocks, so that rate at which blocks are being mined is approximately 10 minutes per block. To achieve needed hash, attribute named "nonce" is set in trial and error manner. Everyone who wishes to create new block will need to:
 
 \begin{itemize}
 \item
@@ -225,7 +235,7 @@ In this section I will specify inputs and outputs of the system. This will then 
 
 \subsection{Inputs}
 \subsubsection{Bitcoind BLK files}
-The only source of Bitcoin block data will be BLK files stored by full Bitcoin node. Daemon process bitcoind gets blocks from neighboring nodes and stores them in data directory. The blk files in default configuration store up to 128MB of raw network format block data. Blocks are stored in order in which they come from network. Library's that handle parsing BLK files exist, so accessing this data should not be a problem.
+The only source of Bitcoin block data will be BLK files stored by full Bitcoin node. Daemon process Bitcoind gets blocks from neighboring nodes and stores them in data directory. The blk files in default configuration store up to 128MB of raw network format block data. Blocks are stored in order in which they come from network. Library's that handle parsing BLK files exist, so accessing this data should not be a problem.
 \\
 \\
 One important thing to mention about Bitcoin transactions stored in blocks is the fact that address of the sender is described as output of previous transaction.
@@ -254,7 +264,8 @@ Most important operation will be querying blocks, by its hash, time, and other a
 Another important operation is operation of getting transactions by hash. This operation will be needed for discovering address of transaction sender. Although this operation will not be in usage scenarios started by end user, the number of such operations needed to discover sender address of every Bitcoin transaction makes it crucial for this operation to be fast.
 
 \subsection{Database choice}
-At the beginning let's simplify the choice between RDBMS and NoSQL databases. Out of many NoSQL possibilities I have chosen MongoDB database based on some research of different NoSQL systems strengths and weaknesses.
+At the beginning let's simplify the choice between RDBMS and NoSQL databases. Out of many NoSQL possibilities I have chosen MongoDB (web page: www.mongodb.com) database based on some research of different NoSQL systems strengths and weaknesses.
+
 
 Let's lay out some facts that will help to decide whether to use relational database, or MongoDB.
 
@@ -266,7 +277,7 @@ To achieve fast querying, the data should be strongly denormalized.
 \item
 Storing blocks in RDBMS in one table can be impossible in most systems, due to attribute count limit.
 \item 
-You can achieve comparable performance from MongoDB and RDBMS, but MongoDB makes storing denormalized data idiomatic.
+Comparable performance can be achieved with MongoDB and RDBMS, but MongoDB makes storing denormalized data idiomatic.
 \item
 MongoDB have APIs for Python and R that makes data available as objects.
 \end{itemize}
@@ -689,6 +700,14 @@ Definition of elliptic curves
 \bibitem{currency-supply}
 Description of supply on Bitcoin
 \texttt{https://en.bitcoin.it/wiki/Controlled\_supply}
+
+\bibitem{bitcoin-transaction}
+Bitcoin transaction
+\texttt{https://en.bitcoin.it/wiki/Transaction}
+
+\bibitem{bitcoin-script}
+Bitcoin script
+\texttt{https://en.bitcoin.it/wiki/Script}
 
 \end{thebibliography}
 
