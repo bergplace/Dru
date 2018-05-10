@@ -100,8 +100,38 @@ In bitcoin providing access verification is done with scripting system. Scripts 
 
 Because this system is very versatile, granting access to resources can require e.g. providing multiple keys, providing password, can be granted to everyone etc. 
 
+Although script system allows for many methods of authentication, one of them is used in most of the transactions. In this method called "pay-to-pubkey-hash" script field of transaction output specifies hash of public key and requires anyone wishing to spend this output to provide public key, hash of which is equal to one provided, and signature that proves that spender owns the private key.
+
+
 \section{Blockchain}
-Blockchain in bitcoin is data structure that holds every transaction that had taken place since beginning. It consists of blocks of transactions, with each block holding in itself hash of previous block. One notable property of this data structure is that modification of single block would require modification of every block that followed. Because of restrictions imposed on block creation, creating blocks is computationally complex operation, thus modification of block that had been followed by 6 other blocks is considered impossible.
+Blockchain in bitcoin is data structure that holds every transaction that had taken place since beginning of bitcoin network. It consists of blocks of transactions, with each block holding in itself hash of previous block. Every bitcoin node, after it has synchronized with the network, holds entire blockchain in its memory.
+
+One notable property of this data structure is that modification of single block would require modification of every block that followed. This property of blockchain comes from the fact that modification of block, changes its hash, and as mentioned before blocks contain hash of previous block. This of course would require modification of previous block hash field in following block. 
+
+Because of restrictions imposed on block creation, creating blocks is highly time consuming, thus modification of block that had been followed by 6 other blocks is considered impossible to be done without consent of large portion of miners.
+
+\section{Mining - block creation}
+Mining in bitcoin is the process of block creation. One of the most interesting properties of valid block is that its hash starts with certain amount of "0". To achieve needed hash, attribute named "nonce" is set in trial and error manner. Everyone who wishes to create new block will need to:
+
+\begin{itemize}
+\item
+listen on the network for new transactions
+\item
+gather transactions into block
+\item
+set all attributes of block like previous block hash, transaction count etc.
+\item
+set value of "nonce" attribute
+\item
+calculate hash of block
+\item
+if hash starts with needed number of "0" than propagate block through the network, otherwise set "nonce" to different value and continue process till finding correct value or till some other miner finished 
+\end{itemize}
+
+Naturally, process described above is simplified. There are nuances e.g. "nonce" attribute is 32 bit integer, and nowadays more often than not there is no such value of that attribute that results in correct hash. Miners in such situation apply other techniques to find correct hash.
+
+Number of "0" needed at beginning of correct block is being adjusted every 2016 blocks, so that rate at which blocks are being mined is approximately 10 minutes per block.  
+
 
       
 
