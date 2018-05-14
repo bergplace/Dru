@@ -1,7 +1,5 @@
 Progress:
 
-do user description
-
 
 
 New content:
@@ -13,16 +11,62 @@ strona tytułowa
 
 Editing:
 
-proszę podać linki np. do MongoDB itp.
+- w dalszym ciągu mam problem z polskimi znakami diakrytycznymi na
+stronie tytułowej (specialization, polskie tłumaczenie tytułu) - nie
+widać polskich literek
+
+- jako supervisor proszę podać Radosław Michalski, Ph.D., Department of
+Computational Intelligence
+
+-------------- PROGRESS CURSOR ----------------
+
+- po stronie tytułowej proszę dodać dwa abstrakty pracy, polski i
+angielski, każdy tak na 1/3 strony
+
+- na początku Chapter 1 proszę też napisać jeden akapit wprowadzenia,
+tzn. że jest coś takiego jak bitcoin, bazuje on na blockchainie i można
+to analizować jako sieć złożoną (complex network), późniejsze przejście
+do zdania "Every process" będzie przez to nieco płynniejsze
+
+- proszę zmienić nazwę Chapter 1 z Goals na Introduction
+
+- pod koniec Chapter 1 proszę też dopisać co jest w kolejnych
+rozdziałach, tzn. "The stucture of this thesis is as follows. Chapter 2
+covers the introduction to ..., in Chapter 3 it is described ...".
+
+- gdy mamy referncję pod koniec zdania, napierw idzie referencja,
+później kropka kończąca zdanie [1].
+
+- w Chapter 3 proszę napisać jeszcze genezę Bitcoina i ogólnie że jest
+to jedna z kryptowalut, proszę też wrzucić ilustrację blockchaina
+(referencje kolejnych bloków itp.)
+
+- tam gdzie daje Pan odnośniki do stron internetowych, to miałem nieco
+inną intencję, chodzi o to, aby byly one normalną referencją i w
+bibliografii miały "last accessed" a nie tak jak np. w 4.4. Czyli robi
+Pan referencję na zasadzie "This piece of software [X] (...)" i w
+bibliografii jest link + last accessed
+
+-  w 6.3 link sie rozjezdza, tez do referencji mozna go dac
+
+- w chapter 7 musi Pan nieco rozpisać na czym polegały testy, np.
+niezorientowany czytelnik nie wie co oznacza ten czas
+
+- w 8.1 może Pan dodac referencję "Wyszukiwanie klastrów w sieci
+Bitcoin", Marcin Twardak, master thesis to be defended in July 2018,
+supervisor Radosław Michalski
+
+- proszę także umieścić link do repozytorium i link do samej usługi
+
+- posprawdzać cytowania i zmienić dosłowne cytowania, dodatkowo przyjżeć się
+zaczerpnięciom z pracy Bartka
+
+- weryfikacja z wymaganiami dot. pracy dyplomowej
 
 
 
-posprawdzać cytowania
 
-
-
-
-Done:
+Old Done:
 
 nie byłem w stanie dobrze skompilować aby nie było problemu z polskimi
 znakami diakrytycznymi, proszę rzucić okiem co jest nie tak
