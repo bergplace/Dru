@@ -30,7 +30,9 @@ In this work system allowing fast and easy access to Bitcoin transactions as wel
 
 \chapter{Introduction}
 
-Every process of data analysis starts with accessing the data. When analyzing Bitcoin blockchain, the first step might be the hardest one. Currently Bitcoin blockchain contains over 160GB of raw binary data, and everyone who attempts to analyze it needs to have an efficient and reliable way of obtaining it. Moreover, users should have obvious place for creating additional APIs that will be placed on the same server as the data. The reason for that is that operations requiring big amounts of data, but returning results of significantly smaller size, can be implemented more efficiently this way.
+In world of cryptocurrencies, Bitcoin is most widely accepted implementation of that concept. Bitcoin is based on immutable distributed data structure called blockchain, which ensures security without central authority. While Bitcoin is most often researched in context of economics, it starts to be looked at as complex network by growing number of researchers today. 
+
+Every process of data analysis starts with accessing the data. When analyzing Bitcoin blockchain, the first step might be the hardest one. Currently Bitcoin blockchain contains over 160GB of raw binary data, and everyone who attempts to analyze it needs to have an efficient and reliable way of obtaining it. Moreover, users should have obvious place for creating additional APIs that will be hosted on the same server as the data. Thanks to that, operations requiring big amounts of data, but returning results of significantly smaller size, could be implemented more efficiently.
 \\
 \\
 The goal of this work is to create an application that fulfills the following requirements: 
@@ -48,6 +50,8 @@ provides API for Python and R
 is easy to install
 
 \end{itemize}
+
+The structure of this thesis is as follows. Chapter 2 covers the introduction to cryptocurrencies. Chapter 3 shows implementation of cryptocurrency concept in example of Bitcoin. Chapter 4 lists alternative software providing similar features to software being created in this work. Chapter 5 goes through process of design of the system. In chapter 6 implementation details of selected parts of the system are being shown. Chapter 7 covers functionality testing providing perspective on performance of system as well as usage examples. Next chapter describes real life usage, problems and future directions of the system. At the end, summary of whole work can be found. 
 
 \chapter{Cryptocurrencies}
 
@@ -96,6 +100,8 @@ One of the main properties of hash functions is that they work one-way only. Thi
 \section{Overview}
 
 This chapter explains Bitcoin protocol, communication between nodes, transactions and creation of blocks.
+
+\section{Genesis of Bitcoin}
 
 \section{Network}
 Bitcoin is distributed network and there are no authoritative nodes. The exception are servers that are used by new Bitcoin nodes to discover other nodes, but they will not be discussed. Reason for it is that essentially they are not part of Bitcoin network, and if those servers fail, nodes will use other methods for discovery. 
