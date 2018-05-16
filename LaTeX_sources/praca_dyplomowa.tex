@@ -170,7 +170,7 @@ This chapter describes software that is similar to what will be designed and imp
 
 \section{blockchain.info}
 
-Web application blockchain.info provides free access to Bitcoin blockchain data by either website, JSON API or APIs dedicated to specific languages including Python. Blockchain.info does not have dedicated support for R. Number of requests is limited.
+Web application blockchain.info\cite{blokchain.info} provides free access to Bitcoin blockchain data by either website, JSON API or APIs dedicated to specific languages including Python. Blockchain.info does not have dedicated support for R. Number of requests is limited.
 \\
 \\
 Relevant APIs provided by blockchain.info:
@@ -195,26 +195,18 @@ Another and the biggest problem is the API call limit that would make working wi
 
 \section{blockexplorer.com}
 
-This web application is very similar to blockchain.info in almost every aspect, although there are some differences. Data is accessible either by website or by JSON API, but there is no Python or R API provided. Set of APIs is almost identical to blockchain.info and does not provide easy way to get multiple blocks. The main difference is that there is no official API call limit, but because it is external tool, it means that such limit can appear every moment.
+This web application\cite{blockexpolrer} is very similar to blockchain.info in almost every aspect, although there are some differences. Data is accessible either by website or by JSON API, but there is no Python or R API provided. Set of APIs is almost identical to blockchain.info and does not provide easy way to get multiple blocks. The main difference is that there is no official API call limit, but because it is external tool, it means that such limit can appear every moment.
 
 \section{libBitcoin-database}
 
-\begin{verbatim}
-https://github.com/libbitcoin/libbitcoin-database Last visited 25.04
-\end{verbatim}
-
-This piece of software, after installation builds in-memory database of Bitcoin blockchain, its description promises high performance. Because of almost non existing documentation, it is hard to describe its features in depth.
+This piece of software\cite{libbitcoin-database}, after installation builds in-memory database of Bitcoin blockchain, its description promises high performance. Because of almost non existing documentation, it is hard to describe its features in depth.
 \\
 \\
 Although this software is actively developed, and at first sight it might seam like solution that fits needs of users, some problems can be found. One drawback is coming from its biggest selling point - being in-memory database makes it requiring large amounts of RAM. This problem makes it not viable for hardware that is accessible for the average user. Next problem lies in its API that allows connecting to the database only via C/C++ library, which would make usage in R and Python at least problematic. Another problem is already mentioned lack of useful documentation, which would make the usage largely troublesome.
 
 \section{BitcoinDatabaseGenerator}
 
-\begin{verbatim}
-https://github.com/ladimolnar/BitcoinDatabaseGenerator Last visited 25.04
-\end{verbatim}
-
-BitcoinDatabaseGenerator is a data transfer tool that can feed SQL database with blockchain data. It was written in C\# and as its author states, it is only meant to be run on Windows machines. From the documentation we know that this software should be ran every time we want to update our database. Database schema that is created after update operation, consists of separate tables for blocks, transactions, transaction inputs and so forth. Such database schema would require joining tables in multitude of usage scenarios, which is known to be slow operation.
+BitcoinDatabaseGenerator\cite{BitcoinDatabaseGenerator} is a data transfer tool that can feed SQL database with blockchain data. It was written in C\# and as its author states, it is only meant to be run on Windows machines. From the documentation we know that this software should be ran every time we want to update our database. Database schema that is created after update operation, consists of separate tables for blocks, transactions, transaction inputs and so forth. Such database schema would require joining tables in multitude of usage scenarios, which is known to be slow operation.
 \\
 \\
 Although connecting to SQL database from both R and Python is easily achievable, working with SQL databases in such case might be cumbersome. Abstracting away relational structure of data to objects might be needed when working with SQL database. 
@@ -286,7 +278,7 @@ Most important operation will be querying blocks, by theirs hash, time, and othe
 Another important operation is getting transactions by hash. This operation will be needed for discovering addresses of transaction senders. Although this operation will not be in usage scenarios started by end user, the number of such operations needed to discover sender address of every Bitcoin transaction makes it crucial for this it to be fast.
 
 \subsection{Database choice}
-At the beginning let's simplify the choice between RDBMS (Relational Database Management System) and NoSQL databases. Out of many NoSQL possibilities, MongoDB (web page: www.mongodb.com) have been chosen, based on initial research of different NoSQL systems strengths and weaknesses.
+At the beginning let's simplify the choice between RDBMS (Relational Database Management System) and NoSQL databases. Out of many NoSQL possibilities, MongoDB\cite{mongo} have been chosen, based on initial research of different NoSQL systems strengths and weaknesses.
 
 
 Let's lay out some facts that will help to decide whether to use relational database, or MongoDB.
@@ -446,7 +438,7 @@ Complex Operations API will be web service, which in response to its users reque
 
 The main property of software, that can be accomplished with well chosen deployment and packaging, are simplicity of use and cross-platform possibilities. Those can positively influence adoption rate of this solution in perspective of both usage and further open source development.
 
-For this project docker containers will be used (web page: www.docker.com), which will help in keeping components decoupled, and will make installation process easy to follow. 
+For this project docker\cite{docker} containers will be used, which will help in keeping components decoupled, and will make installation process easy to follow. 
 
 Installation process should consist only of installing full Bitcoin node, docker, running one custom script and setting up simple configuration (database credentials, etc.).
 
@@ -493,7 +485,7 @@ docker run -d \
     aashreys/mongo-auth:latest
 \end{verbatim}
 
-Database container is build on "aashreys/mongo-auth:latest" docker image, which lets us create MongoDB database with enabled authentication (by default in MongoDB authentication is not enabled).
+Database container is build on "aashreys/mongo-auth:latest"\cite{mongo-auth} docker image, which lets us create MongoDB database with enabled authentication (by default in MongoDB authentication is not enabled).
 Admin user credentials are being set, but credentials of user with read-only privilege can't be set here, because before-mentioned image does not support such action.
 
 There are couple other things in this configuration worth noting, namely "-v" flag creates volume for container and its purpose comes from the fact that docker containers should be possible to be killed without any loss. With volume set up, when we kill our database container and run it again, the database data will persist.
@@ -525,14 +517,14 @@ EXPOSE 27017
 CMD [ "python", "-u", "/src/update_database.py" ]
 \end{verbatim}
 
-Dockerfile starts with base image that is being used, here it is "python:3" image that contains as its name suggests python3 installed.
+Dockerfile starts with base image that is being used, here it is "python:3"\cite{python3} image that contains as its name suggests python3 installed.
 Next two lines copy needed files to the container, than libraries are installed, containers port is exposed for communication with database, and in the last line my application is being started.
 \\
 \\
 Using docker makes it easy to create installation process repeatable and independent from environment, so that running software will have the same effect on every machine it is being ran (to some extend naturally). 
 
 \subsection{Complex Operation API container setup}
-This container is based on "tiangolo/uwsgi-nginx-flask:python3.6" which have all the basic elements needed to run flask application already configured. The only non standard configuration that needed to be done is setting timeout in Nginx web server to larger value. By default timeout is 60 seconds, but because of type of operations that this application is made for, this is not enough.  
+This container is based on "tiangolo/uwsgi-nginx-flask:python3.6"\cite{flask} which have all the basic elements needed to run flask application already configured. The only non standard configuration that needed to be done is setting timeout in Nginx\cite{nginx} web server to larger value. By default timeout is 60 seconds, but because of type of operations that this application is made for, this is not enough.  
 
 \section{Database updater}
 This container as stated before is responsible for database, and in more detail it is responsible for both putting data to it and for managing its configuration. In regards of managing configuration of database, this module takes responsibility for everything that could not be achieved in docker command, and that is:
@@ -544,12 +536,12 @@ Creating user with privilege to read the database, but not to modify it. This ac
 Creating database indexes for block height, block timestamp and transaction hash.
 \end{itemize}
 
-All this is being done in separate module responsible only for database - "mongo.py". Other than caring for database configuration, it abstracts away connecting and loading data to the database. This module uses library "pymongo" in version 3.6 to connect to database.
+All this is being done in separate module responsible only for database - "mongo.py". Other than caring for database configuration, it abstracts away connecting and loading data to the database. This module uses pymongo\cite{pymongo} library in version 3.6 to connect to database.
 \\
 \\  
 Data insertion took the most effort to develop, and is the most complex part of the system.
 
-All of Bitcoin BLK files processing is done with "blockchain-parser" library, but not the official release, but version straight from their git repository (web page: www.github.com/alecalve/python-bitcoin-blockchain-parser). The reason for this is that changes in Bitcoin are far more frequent than releases of this software, and some features of Bitcoin were not supported in official version. The version that is being used does not support BIP-0173 (BIP stands for Bitcoin improvement proposal) so discovering addresses from transactions using techniques described in it cannot be done. 
+All of Bitcoin BLK files processing is done with blockchain-parser\cite{blockchain-parser} library, but not the official release, but version straight from their git repository\cite{blockchain-parser}. The reason for this is that changes in Bitcoin are far more frequent than releases of this software, and some features of Bitcoin were not supported in official version. The version that is being used does not support BIP-0173\cite{bip173} (BIP stands for Bitcoin improvement proposal) so discovering addresses from transactions using techniques described in it cannot be done. 
 \\
 \\
 Processing and loading data can be broken into these steps:
@@ -567,7 +559,7 @@ last step is inserting processed block into database.
 Of course there is more complexity hidden inside those steps, like handling exceptions from blockchain-parser library. The reason there are exceptions while parsing Bitcoin blocks is that Bitcoin transactions do not have to be fully valid. Many transactions exist with errors, and although they are of no interest to the system, they need to be recognized and handled properly.
 
 \section{Complex Operation API}
-This component was implemented in Flask framework (web page: www.flask.pocoo.org), which was chosen for its simplicity. Simplicity is well needed in application that users, who very often don't have experience with web applications, will extend with their code. 
+This component was implemented in Flask framework\cite{flask-web-page}, which was chosen for its simplicity. Simplicity is well needed in application that users, who very often don't have experience with web applications, will extend with their code. 
 
 Main page is made purely in HTML and CSS, for the sake of before mentioned simplicity.
 
@@ -580,7 +572,7 @@ def _last_block():
 In this code first line specifies address at which service will be available, second one is declaration of function, and the last one is its implementation. This function connects to the database with previously created "mongo" object, finds last block in the database, converts it to JSON with "dumps" function and returns.
 \\
 \\
-The second functionality is surely more complex. First of all lets notice that we can look at Bitcoin transactions as graph. Every transaction has its input and output, the addresses of inputs and outputs are vertices of the graph, and transactions are the edges between them. My second functionality as input takes two parameters which specify block range by hight, than creates graph out of transactions found in specified blocks using iGraph library. After creating graph it separates unconnected graphs and returns array of count of vertices in each graph.
+The second functionality is surely more complex. First of all lets notice that we can look at Bitcoin transactions as graph. Every transaction has its input and output, the addresses of inputs and outputs are vertices of the graph, and transactions are the edges between them. My second functionality as input takes two parameters which specify block range by hight, than creates graph out of transactions found in specified blocks using iGraph\cite{igraph} library. After creating graph it separates unconnected graphs and returns array of count of vertices in each graph.
 
 The choice of this functionality was not random. Operations on graphs are very common when analyzing Bitcoin transactions.
 
@@ -710,7 +702,7 @@ In this case it returns \texttt{[1701,74,42,39,21,20,20,19,17,...]} which means 
 \chapter{Beyond implementation}
 
 \section{Usage}
-After implementation finished, described software was used by fellow student in research he conducted for his master thesis. In his research he performed cluster analysis of Bitcoin transactions. His opinion of this software, as he stated, had fully met his needs, but he expressed his concern for security of current authentication system. In his opinion if someone unauthorized would acquire credentials, denial of service attack could be performed.
+After implementation finished, described software was used by fellow student in research he conducted for his master thesis\cite{twardak}. In his research he performed cluster analysis of Bitcoin transactions. His opinion of this software, as he stated, had fully met his needs, but he expressed his concern for security of current authentication system. In his opinion if someone unauthorized would acquire credentials, denial of service attack could be performed.
 
 \section{Problems}
 In this section, several issues this software have will be addressed.
@@ -775,6 +767,55 @@ Bitcoin script
 \bibitem{bitcoin-history}
 History of Bitcoin
 \texttt{https://en.wikipedia.org/wiki/History\_of\_bitcoin}
+
+\bibitem{blokchain.info}
+\texttt{https://blockchain.info/} last accessed 16.05.2018
+
+\bibitem{blockexpolrer}
+\texttt{https://blockexplorer.com/} last accessed 16.05.2018
+
+\bibitem{libbitcoin-database}
+\texttt{https://github.com/libbitcoin/libbitcoin-database} last accessed 25.04.2018
+
+\bibitem{BitcoinDatabaseGenerator}
+\texttt{https://github.com/ladimolnar/BitcoinDatabaseGenerator} last accessed 25.04.2018
+
+\bibitem{mongo}
+\texttt{https://www.mongodb.com/} last accessed 16.05.2018
+
+\bibitem{docker}
+\texttt{https://www.docker.com/} last accessed 16.05.2018
+
+\bibitem{mongo-auth}
+\texttt{https://github.com/aashreys/docker-mongo-auth} last accessed 16.05.2018
+
+\bibitem{python3}
+\texttt{https://hub.docker.com/\_/python/} last accessed 16.05.2018
+
+\bibitem{flask}
+\texttt{https://hub.docker.com/r/tiangolo/uwsgi-nginx-flask/} last accessed 16.05.2018
+
+\bibitem{pymongo}
+\texttt{https://api.mongodb.com/python/current/} last accessed 16.05.2018
+
+\bibitem{blockchain-parser}
+\texttt{https://github.com/alecalve/python-bitcoin-blockchain-parser} last accessed 16.05.2018 
+
+\bibitem{nginx}
+\texttt{https://www.nginx.com/} last accessed 16.05.2018
+
+\bibitem{bip173}
+\texttt{https://en.bitcoin.it/wiki/Bech32} last accessed 16.05.2018
+
+\bibitem{flask-web-page}
+\texttt{http://flask.pocoo.org/} last accessed 16.05.2018
+
+\bibitem{igraph}
+\texttt{http://igraph.org/python/} last accessed 16.05.2018
+
+\bibitem{twardak}
+Marcin Twardak, master thesis to be defended in July 2018, supervisor Radosław Michalski
+
 
 \end{thebibliography}
 
