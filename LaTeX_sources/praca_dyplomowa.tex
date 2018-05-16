@@ -102,6 +102,7 @@ One of the main properties of hash functions is that they work one-way only. Thi
 This chapter explains Bitcoin protocol, communication between nodes, transactions and creation of blocks.
 
 \section{Genesis of Bitcoin}
+Bitcoin is the first widely accepted cryptocurrency, and was created by anonymous author who published his work under pseudonym Satoshi Nakamoto. Domain \texttt{bitcoin.org} was registered 18.08.2018, and first block, called genesis block, was mined 3.01.2009. Since those times Bitcoin's popularity had grown substantially, and many other cryptocurrencies based on Bitcoin emerged. \cite{bitcoin-history}
 
 \section{Network}
 Bitcoin is distributed network and there are no authoritative nodes. The exception are servers that are used by new Bitcoin nodes to discover other nodes, but they will not be discussed. Reason for it is that essentially they are not part of Bitcoin network, and if those servers fail, nodes will use other methods for discovery. 
@@ -127,6 +128,12 @@ Although script system allows for many methods of authentication, one of them is
 
 \section{Blockchain}
 Blockchain in Bitcoin is data structure that holds every transaction that had taken place since beginning of Bitcoin network. It consists of blocks of transactions, with each block holding in itself hash of previous block. Every Bitcoin node, after it has synchronized with the network, holds entire blockchain in its memory.
+
+\begin{figure}[H]
+  \includegraphics[width=0.8\linewidth]{blockchain.png}
+  \caption{Visualization of blockchain}
+  \label{fig:visualization-of-blockchain}
+\end{figure}
 
 One notable property of this data structure is that modification of single block would require modification of every block that followed. This property of blockchain comes from the fact that modification of block, changes its hash, and as mentioned before blocks contain hash of previous block. This of course would require modification of previous block hash field in following block. 
 
@@ -735,6 +742,10 @@ Bitcoin transaction
 \bibitem{bitcoin-script}
 Bitcoin script
 \texttt{https://en.bitcoin.it/wiki/Script}
+
+\bibitem{bitcoin-history}
+History of Bitcoin
+\texttt{https://en.wikipedia.org/wiki/History\_of\_bitcoin}
 
 \end{thebibliography}
 
