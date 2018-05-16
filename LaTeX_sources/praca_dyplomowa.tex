@@ -590,66 +590,93 @@ At the end it needs to be said that although that application by itself is easy 
 
 \section{Getting blocks by height}
 Getting Bitcoin blocks by their height has been identified to be one of the most needed way to query blockchain, and its performance is of high priority.
+
  
-\subsection{testing on the same machine as database} 
+\subsection{Getting blocks by height on the same machine as database} 
+Tests were performed by running simple script that accesses the database and fetches blocks that fit specified range of block height. Query that was used in this test is as follows: 
+\begin{verbatim}
+db.blocks.find({'height': {'$gte': lower_bound, '$lte': upper_bound}})
+\end{verbatim}
+Query is ran on previously instantiated object of database connection. Because pymongo library used in those tests fetches documents lazily, result of query was iterated over to truly fetch the data. Time stated in test results is time between running query and retrieving all documents. In case of this tests, testing script was ran at server hosting the database.
 
-\subsubsection{consecutive blocks test}
-results:
+\subsubsection{Consecutive blocks test}
+Requested blocks are taken just as they are in blockchain.
 \\
-blocks between height 0 - 99: \quad \quad \quad \hspace*{2em} 0.0035 s\\
-blocks between height 100000 - 100099: \quad 0.0065 s\\
-blocks between height 200000 - 200099: \quad 0.48 s\\
-blocks between height 300000 - 300099: \quad 1.7 s\\
-blocks between height 400000 - 400099: \quad 7.9 s\\
-
-\subsubsection{spread blocks test}
-results:
 \\
-100 blocks spread between height 0 - 100000: \quad \quad \quad 0.49 s\\
-100 blocks spread between height 100000 - 200000: \quad 1.2 s\\
-100 blocks spread between height 200000 - 300000: \quad 1.6 s\\
-100 blocks spread between height 300000 - 400000: \quad 3.5 s\\
+\textbf{Test results:}
+\begin{verbatim}
+blocks between height 0 - 99:                0.0035 s
+blocks between height 100000 - 100099:       0.0065 s
+blocks between height 200000 - 200099:       0.48 s
+blocks between height 300000 - 300099:       1.7 s
+blocks between height 400000 - 400099:       7.9 s
+\end{verbatim}
 
-\subsection{testing with accessing database by network}
 
-\subsubsection{consecutive blocks test}
-results:
+\subsubsection{Spread blocks test}
+Requested blocks are taken from larger hight range, and are equally distributed in that range. For each range, 100 blocks are fetched.
 \\
-blocks between height 0 - 99: \quad \quad \quad \hspace*{2em} 0.097 s\\
-blocks between height 100000 - 100099: \quad 0.15 s\\
-blocks between height 200000 - 200099: \quad 5.1 s\\
-blocks between height 300000 - 300099: \quad 13 s\\
-blocks between height 400000 - 400099: \quad 51 s\\
+\\ 
+\textbf{Test results:}
+\begin{verbatim}
+100 blocks spread between height 0 - 100000:            0.49 s
+100 blocks spread between height 100000 - 200000:       1.2 s
+100 blocks spread between height 200000 - 300000:       1.6 s
+100 blocks spread between height 300000 - 400000:       3.5 s
+\end{verbatim}
 
-\subsubsection{spread blocks test}
-results:
+
+\subsection{Getting blocks by height with accessing database by network}
+This tests were identical to previous ones, with exception of running them on machine separated from database by the Internet.
+
+\subsubsection{Consecutive blocks test}
+Requested blocks are taken just as they are in blockchain.
 \\
-100 blocks spread between height 0 - 100000: \quad \quad \quad 2.9 s\\
-100 blocks spread between height 100000 - 200000: \quad 5.7 s\\
-100 blocks spread between height 200000 - 300000: \quad 15 s\\
-100 blocks spread between height 300000 - 400000: \quad 42 s\\
+\\
+\textbf{Test results:}
+\begin{verbatim}
+blocks between height 0 - 99:                0.097 s
+blocks between height 100000 - 100099:       0.15 s
+blocks between height 200000 - 200099:       5.1 s
+blocks between height 300000 - 300099:       13 s
+blocks between height 400000 - 400099:       51 s
+\end{verbatim}
+
+\subsubsection{Spread blocks test}
+Requested blocks are taken from larger hight range, and are equally distributed in that range. For each range, 100 blocks are fetched.
+\\
+\\ 
+\textbf{Test results:}
+\begin{verbatim}
+100 blocks spread between height 0 - 100000:            2.9 s
+100 blocks spread between height 100000 - 200000:       5.7 s
+100 blocks spread between height 200000 - 300000:       15 s
+100 blocks spread between height 300000 - 400000:       42 s
+\end{verbatim}
+
 
 \subsection{Result interpretation}
 When comparing results for tests ran locally and over network, about ten fold difference in time can be noticed. This means that performance of database is not a bottleneck and there is no need for further optimizations.
 
-Another noticeable thing is that query time highly depends on height of blocks requested. The reason for this is the fact that, because of gradual adoption of Bitcoin, the average number of transactions in blocks had grown over years. 
+Another noticeable thing is that query time highly depends on height of blocks requested. The reason for this is the fact that, because of gradual adoption of Bitcoin, the average number of transactions in blocks had grown over the years. 
 
 \section{Getting blocks by timestamp}
-Because querying by hight and by timestamp should not give different results, only one test will be performed.
+Querying by hight and by timestamp should not give different results. Both of those attributes are indexed, and both of those attributes have equal amount of unique values. Because of that only one test was performed to test those assumptions.
 \\
 \\
-result of run over network:
-\\
-blocks between timestamp 2016-02-25 16:24 - 2016-02-26 07:23: \quad 58 s
+\textbf{Test result of run over network:}
+\begin{verbatim}
+blocks between timestamp 2016-02-25 16:24 - 2016-02-26 07:23:    58 s
+\end{verbatim}
 
 \subsection{Result interpretation}
-Because range of time that was tested fully corresponds to getting blocks by hight with range of height being from 400000 to 400099 we can compare those results. There seams to be no significant difference in performance between getting by height and by timestamp.
+Because range of time that was tested fully corresponds to getting blocks by hight with range of height being from 400000 to 400099, those results can be compared. There seams to be no significant difference (51 and 58 seconds) in performance between getting by height and by timestamp.
 
 \section{Complex operations API}
-In functionalities prepared in this component, performance is not main goal. All available services will be requested, to see if results are satisfying.
+In functionalities prepared in this component, performance is not main goal. All available services will be requested to see if results are as expected.
 
 \subsection{Getting last block}
-service is located at http://base-address/api/last\_block and calling it returns JSON data:
+Service is located at http://base-address/api/last\_block and calling it returns JSON data:
 \begin{verbatim}
 {
     "_id": {
@@ -672,10 +699,12 @@ service is located at http://base-address/api/last\_block and calling it returns
 }
 \end{verbatim}
 
+Data that was returned has form and content as expected. 
+
 \subsection{Getting count of maximal connected graphs by height}
-service is requester with address
+Service is requester with address
 \\ \verb|http://base-address/api/count_separate_graphs?height_from=100000&height_to=100500|
-and in this case it returns [1701,74,42,39,21,20,20,19,17,...] which means that biggest connected graph that can be made from transactions with height from 100000 to 100150 has 1701 vertices, and so forth.
+In this case it returns \texttt{[1701,74,42,39,21,20,20,19,17,...]} which means that biggest connected graph that can be made from transactions from blocks with height from 100000 to 100150 has 1701 vertices, second biggest has 74 vertices, and so forth.
 
 
 \chapter{Beyond implementation}
