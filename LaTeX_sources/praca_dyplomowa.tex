@@ -1,4 +1,4 @@
-\documentclass[12pt, en, eng, oneside]{mgr}
+\documentclass[12pt, en, eng, oneside, final]{mgr}
 
 \usepackage{graphicx}
 \usepackage{float}
@@ -105,9 +105,9 @@ This chapter explains Bitcoin protocol, communication between nodes, transaction
 Bitcoin is the first widely accepted cryptocurrency, and was created by anonymous author who published his work under pseudonym Satoshi Nakamoto. Domain \texttt{bitcoin.org} was registered 18.08.2018, and first block, called genesis block, was mined 3.01.2009. Since those times Bitcoin's popularity had grown substantially, and many other cryptocurrencies based on Bitcoin emerged. \cite{bitcoin-history}
 
 \section{Network}
-Bitcoin is distributed network and there are no authoritative nodes. The exception are servers that are used by new Bitcoin nodes to discover other nodes, but they will not be discussed. Reason for it is that essentially they are not part of Bitcoin network, and if those servers fail, nodes will use other methods for discovery. 
+Bitcoin is distributed network and there are no authoritative nodes. The exception are servers that are used by new Bitcoin nodes to discover other nodes, but they will not be discussed. Reason for it is that essentially they are not part of Bitcoin network, and if those servers fail, nodes will use other methods for discovery. \cite{bitcoin-paper-1}
 
-There are two types of information that nodes share between them: transactions and blocks. \cite{bitcoin-paper-1} Those entities will be discussed in separate sections.
+There are two types of information that nodes share between them: transactions and blocks\cite{bitcoin-paper-1}. Those entities will be discussed in separate sections.
 
 \section{Transactions}
 Transactions in Bitcoin are used to transfer value between owners. Single transaction describes inputs from which resources are being transfered, and outputs to which those resources are being transfered. All the resources from the inputs are being transfered to the outputs, unused resources are transfered to the miner which is known as transaction fee.
@@ -619,7 +619,7 @@ Requested blocks are taken from larger hight range, and are equally distributed 
 
 
 \subsection{Getting blocks by height with accessing database by network}
-This tests were identical to previous ones, with exception of running them on machine separated from database by the Internet.
+This tests were identical to previous ones, with exception of running them on machine separated from database server by the Internet.
 
 \subsubsection{Consecutive blocks test}
 Requested blocks are taken just as they are in blockchain.
@@ -703,6 +703,17 @@ In this case it returns \texttt{[1701,74,42,39,21,20,20,19,17,...]} which means 
 
 \section{Usage}
 After implementation finished, described software was used by fellow student in research he conducted for his master thesis\cite{twardak}. In his research he performed cluster analysis of Bitcoin transactions. His opinion of this software, as he stated, had fully met his needs, but he expressed his concern for security of current authentication system. In his opinion if someone unauthorized would acquire credentials, denial of service attack could be performed.
+
+\section{Important addresses}
+Code repository can be found at:
+\begin{verbatim}
+https://github.com/MarcinPieczka/Mongo-BTC-Blocks-Database
+\end{verbatim}
+\noindent
+Database (port 27357) and Complex operations API (port 80) can be found at:
+\begin{verbatim}
+156.17.248.236
+\end{verbatim}
 
 \section{Problems}
 In this section, several issues this software have will be addressed.

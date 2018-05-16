@@ -32,21 +32,14 @@ do zdania "Every process" będzie przez to nieco płynniejsze
 rozdziałach, tzn. "The stucture of this thesis is as follows. Chapter 2
 covers the introduction to ..., in Chapter 3 it is described ...".
 
--------------- PROGRESS CURSOR ----------------
-
-
-
-
-
-
-
-
 - w Chapter 3 proszę napisać jeszcze genezę Bitcoina i ogólnie że jest
-to jedna z kryptowalut, proszę też wrzucić ilustrację blockchaina
+to jedna z kryptowalut, 
+
+- proszę też wrzucić ilustrację blockchaina
 (referencje kolejnych bloków itp.)
 
-- gdy mamy referncję pod koniec zdania, napierw idzie referencja,
-później kropka kończąca zdanie [1].
+- w chapter 7 musi Pan nieco rozpisać na czym polegały testy, np.
+niezorientowany czytelnik nie wie co oznacza ten czas
 
 - tam gdzie daje Pan odnośniki do stron internetowych, to miałem nieco
 inną intencję, chodzi o to, aby byly one normalną referencją i w
@@ -56,14 +49,24 @@ bibliografii jest link + last accessed
 
 -  w 6.3 link sie rozjezdza, tez do referencji mozna go dac
 
-- w chapter 7 musi Pan nieco rozpisać na czym polegały testy, np.
-niezorientowany czytelnik nie wie co oznacza ten czas
-
 - w 8.1 może Pan dodac referencję "Wyszukiwanie klastrów w sieci
 Bitcoin", Marcin Twardak, master thesis to be defended in July 2018,
 supervisor Radosław Michalski
 
 - proszę także umieścić link do repozytorium i link do samej usługi
+
+-------------- PROGRESS CURSOR ----------------
+
+
+
+
+
+
+
+
+
+- gdy mamy referncję pod koniec zdania, napierw idzie referencja,
+później kropka kończąca zdanie [1].
 
 - posprawdzać cytowania i zmienić dosłowne cytowania, dodatkowo przyjżeć się
 zaczerpnięciom z pracy Bartka
