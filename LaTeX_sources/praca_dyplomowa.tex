@@ -160,7 +160,7 @@ if hash starts with needed number of "0" than propagate block through the networ
 Naturally, process described above is simplified. There are some nuances, e.g. "nonce" attribute is 32 bit integer, and nowadays more often than not there is no such value of that attribute that results in correct hash. Miners in such situation apply other techniques to find correct hash. Nonetheless this is level of detail this work does not operate on.
  
 Incentives for mining blocks are transaction fees and block rewards. Transaction fee is any unspent output in a transaction. For instance when 0.9 BTC is sent from output that holds 1 BTC, unspent output equals 0.1 BTC. This unspent output can be transfered to address controlled by miner.  
-Another incentive, block reward, is last transaction in the block which creates new coins and transfers them to address specified by miner. Amount of BTC in block reward started at 50 BTC, and halfs every 210000 blocks \cite{currency-supply}
+Another incentive, block reward, is last transaction in the block which creates new coins and transfers them to address specified by miner. Amount of BTC in block reward started at 50 BTC, and halfs every 210000 blocks \cite{currency-supply}.
 
 
 \chapter{Alternative software providing similar features}
@@ -170,7 +170,7 @@ This chapter describes software that is similar to what will be designed and imp
 
 \section{blockchain.info}
 
-Web application blockchain.info\cite{blokchain.info} provides free access to Bitcoin blockchain data by either website, JSON API or APIs dedicated to specific languages including Python. Blockchain.info does not have dedicated support for R. Number of requests is limited.
+Web application blockchain.info \cite{blokchain.info} provides free access to Bitcoin blockchain data by either website, JSON API or APIs dedicated to specific languages including Python. Blockchain.info does not have dedicated support for R. Number of requests is limited.
 \\
 \\
 Relevant APIs provided by blockchain.info:
@@ -275,7 +275,7 @@ Least important operation will be data addition. End user will not be performing
 Most important operation will be querying blocks, by theirs hash, time, and other attributes, especially querying for range of consecutive blocks described by time frame or height range.
 \\
 \\
-Another important operation is getting transactions by hash. This operation will be needed for discovering addresses of transaction senders. Although this operation will not be in usage scenarios started by end user, the number of such operations needed to discover sender address of every Bitcoin transaction makes it crucial for this it to be fast.
+Another important operation is getting transactions by hash. This operation will be needed for discovering addresses of transaction senders. Although this operation will not be in usage scenarios started by end user, the number of such operations needed to discover sender address of every Bitcoin transaction makes it crucial for it to be fast.
 
 \subsection{Database choice}
 At the beginning let's simplify the choice between RDBMS (Relational Database Management System) and NoSQL databases. Out of many NoSQL possibilities, MongoDB\cite{mongo} have been chosen, based on initial research of different NoSQL systems strengths and weaknesses.
@@ -336,7 +336,7 @@ inputs - list of data regarding addresses from which resources had been transfer
 \item
 transaction hash - hash of transaction in which sender of this transaction got resources spent in this transaction
 \item
-transaction index - points to certain output in transaction described by previous attribute
+transaction index - points to specific output in transaction described by previous attribute
 \item
 output timestamp - additional value described before this list of attributes
 \item addresses - list of addresses, each containing:
@@ -377,12 +377,15 @@ type
 
 Database indexes serve purpose of making queries faster and more efficient on cost of space and data insertion time.
 Because performance of queries is one of key user needs, and space and data insertion time are very low on priority list, the indexes will be added to all of the fields that data will be queried by.
-
+\\
+\\
 Indexed attributes:
 \begin{itemize}
 \item
 block hash
+\item
 block timestamp
+\item
 transaction hash - needed internally for discovering input addresses
 \end{itemize} 
 
@@ -436,7 +439,7 @@ Complex Operations API will be web service, which in response to its users reque
 
 \section{Deployment}
 
-The main property of software, that can be accomplished with well chosen deployment and packaging, are simplicity of use and cross-platform possibilities. Those can positively influence adoption rate of this solution in perspective of both usage and further open source development.
+The main property of software, that can be accomplished with well chosen deployment and packaging, are simplicity of use and cross-platform capabilities. Those can positively influence adoption rate of this solution in perspective of both usage and further open source development.
 
 For this project docker\cite{docker} containers will be used, which will help in keeping components decoupled, and will make installation process easy to follow. 
 
@@ -553,7 +556,7 @@ Representation of blockchain is created, to get to know the order of blocks, and
 \item
 One by one, starting from the block next after last inserted, blocks are fully parsed. Their transactions are cached, and input addresses are being discovered. Those addresses are being discovered first by looking into cache, than if cache does not contain needed transaction, the database is being asked.
 \item
-last step is inserting processed block into database.
+Last step is inserting processed block into database.
 \end{itemize}
 
 Of course there is more complexity hidden inside those steps, like handling exceptions from blockchain-parser library. The reason there are exceptions while parsing Bitcoin blocks is that Bitcoin transactions do not have to be fully valid. Many transactions exist with errors, and although they are of no interest to the system, they need to be recognized and handled properly.
@@ -569,14 +572,14 @@ Two exemplary functionalities have been implemented, one of which, because of it
 def _last_block():
     return dumps(mongo.db.blocks.find().sort([('height', -1)])[0])
 \end{verbatim}
-In this code first line specifies address at which service will be available, second one is declaration of function, and the last one is its implementation. This function connects to the database with previously created "mongo" object, finds last block in the database, converts it to JSON with "dumps" function and returns.
+In this code, first line specifies address at which service will be available, second one is declaration of function, and the last one is its implementation. This function connects to the database with previously created "mongo" object, finds last block in the database, converts it to JSON with "dumps" function and returns.
 \\
 \\
 The second functionality is surely more complex. First of all lets notice that we can look at Bitcoin transactions as graph. Every transaction has its input and output, the addresses of inputs and outputs are vertices of the graph, and transactions are the edges between them. My second functionality as input takes two parameters which specify block range by hight, than creates graph out of transactions found in specified blocks using iGraph\cite{igraph} library. After creating graph it separates unconnected graphs and returns array of count of vertices in each graph.
 
 The choice of this functionality was not random. Operations on graphs are very common when analyzing Bitcoin transactions.
 
-At the end it needs to be said that although that application by itself is easy to understand and in this regard it will be easy for users to add their code to it, the deployment with docker makes it not so easy to use as a developer. Biggest drawback of docker is relatively slow startup. When some portion of code is written into this container, and it needs to be ran for testing, process of building image will take about 15 s (time based on personal observations) 
+At the end it needs to be said that although that application by itself is easy to understand and in this regard it will be easy for users to add their code to it, the deployment with docker makes it not so easy to use as a developer. Biggest drawback of docker is relatively slow startup. When some portion of code is written into this container, and it needs to be ran for testing, process of building image will take about 15 s (time based on personal observations).
 
 \chapter{Functionality testing}
 
