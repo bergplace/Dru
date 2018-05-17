@@ -22,11 +22,11 @@
 \pagebreak 
 
 \section*{Streszczenie}
-Praca ta poświęcona jest zaprojektowaniu i implementacji systemu pozwalającego na szybki i prosty dostęp do transakcji przeprowadzonych w sieci Bitcoin oraz dodatkowego API pozwalającego na rozwój nowych funkcjonalności. Na początku przedstawiona zostaje pokrótce problematyka kryptowalut wraz z opisem podstawowych operacji kryptograficznych które są w nich wykorzystywane. Następnie poruszony zostaje temat Bitcoina, wyjaśniony zostaje mechanizm działania jego sieci, pojęcia transakcji, bloku i blockchaina oraz sposobu autoryzacji transakcji. Po tych wstępnych rozdziałach opisane zostają alternatywne rozwiązania, które w pewnym stopniu zapewniają funkcjonalności zapewniane przez implementowany system. Przedstawiane są ich zalety i wady w kontekście wymagań użytkowników. W rozdziale 5 opisany jest proces projektowania rzeczonego systemu. Proces ten rozpoczyna się od opisu wymagań użytkowników poprzez opis użytkownika i zdefiniowanie jego wymagań poprzez historyjki użytkownika. Od tego miejsca projektowanie zaczyna się od definicji wejść i wyjść systemu i podąża drogą nasuwających się pytań i problemów. W kolejnym rozdziale przedstawiony został proces implementacji systemu. Pokazane zostały najbardziej interesujące i najważniejsze elementy implementacji, w szczególności te które bezpośrednio pozwalały osiągnąć spełnienie potrzeb użytkownika. Po implementacji przedstawione zostały testy funkcjonalności, obrazujące zarówno wydajność jak i sposób użytkowania systemu. Ostatni rozdział przed podsumowaniem przybliża czytelnikowi w jaki sposób system był już wykorzystywany, z jakimi problemami się on boryka i jakie perspektywy przyszłego rozwoju ma on przed sobą. Praca zwieńczona jest podsumowaniem w skrócie łączącym cały proces, od potrzeb użytkownika, do końcowych rezultatów. 
+Praca ta poświęcona jest zaprojektowaniu i implementacji systemu pozwalającego na szybki i prosty dostęp do transakcji przeprowadzonych w sieci Bitcoin oraz dodatkowego API pozwalającego na rozwój nowych funkcjonalności. Na początku pokrótce zostaje przedstawiona problematyka kryptowalut, wraz z opisem podstawowych operacji kryptograficznych które są w nich wykorzystywane. Następnie poruszony zostaje temat Bitcoina, wyjaśniony zostaje mechanizm działania jego sieci, pojęcia transakcji, bloku i blockchaina oraz sposobu autoryzacji transakcji. Po tych wstępnych rozdziałach opisane zostają alternatywne rozwiązania, które w pewnym stopniu zapewniają funkcjonalności zapewniane przez implementowany system. Przedstawiane są ich zalety i wady w kontekście wymagań użytkowników. W rozdziale 5 opisany jest proces projektowania rzeczonego systemu. Proces ten rozpoczyna się od opisu wymagań użytkowników poprzez opis użytkownika i historyjki użytkownika. Od tego miejsca projektowanie zaczyna się od definicji wejść i wyjść systemu i podąża drogą nasuwających się pytań i problemów. W kolejnym rozdziale przedstawiony został proces implementacji systemu. Pokazane zostały najbardziej interesujące i najważniejsze elementy implementacji, w szczególności te które bezpośrednio pozwalały osiągnąć spełnienie potrzeb użytkownika. Po implementacji przedstawione zostały testy funkcjonalności, obrazujące zarówno wydajność jak i sposób użytkowania systemu. Ostatni rozdział przed podsumowaniem przybliża czytelnikowi w jaki sposób system był już wykorzystywany, z jakimi problemami się on boryka i jakie perspektywy przyszłego rozwoju ma on przed sobą. Praca zwieńczona jest podsumowaniem, w skrócie łączącym cały proces, od potrzeb użytkownika, do końcowych rezultatów. 
 
 \section*{Abstract}
 
-In this work system allowing fast and easy access to Bitcoin transactions as well as API allowing for new functionalities to be hosted was designed and implemented. At beginning cryptocurrencies and cryptographic operations that they are using are shortly described. Next, Bitcoin is being presented by describing mechanisms of its network, explaining concepts of transaction, block, blockchain, and describing means of authorization. After those introductory chapters alternative software, which provide functionalities similar to those implemented in before mentioned system, is being described. Advantages and disadvantages of alternative software are being listed in context of user needs. In chapter 5 process of design is being described. This process starts with describing user requirements by describing user, and listing user stories. From that point, design process starts with specifying system inputs and outputs, and that follows questions and problems that arise. Most interesting and most important elements of implementation have been shown, specifically those which directly help to fulfill user needs. After implementation, functional test had been shown, which serve a purpose of showing performance, as well as usage examples of the system. Chapter before summary shows usage of this system that had already occurred, what problems this system faces, and what are its future directions. Work ends with summary that shortly binds whole process from user needs to end results.
+In this work system allowing fast and easy access to Bitcoin transactions as well as API allowing for new functionalities to be hosted was designed and implemented. At beginning cryptocurrencies and cryptographic operations that they are using are shortly described. Next, Bitcoin is being presented by describing mechanisms of its network, explaining concepts of transaction, block, blockchain, and describing means of authorization. After those introductory chapters alternative software, which provide functionalities similar to those implemented in before mentioned system, is being described. Advantages and disadvantages of alternative software are being listed in context of user needs. In chapter 5 process of design is being described. This process starts with describing user requirements by describing user, and listing user stories. From that point, design process starts with specifying system inputs and outputs, and than follows questions and problems that arise. Most interesting and most important elements of implementation have been shown, specifically those which directly help to fulfill user needs. After implementation, functional tests had been performed, which serve a purpose of showing performance, as well as usage examples of the system. Chapter before summary shows usage of this system that had already occurred, what problems this system faces, and what are its future directions. Work ends with summary that shortly binds whole process from user needs to end results.
 
 \chapter{Introduction}
 
@@ -51,7 +51,7 @@ is easy to install
 
 \end{itemize}
 
-The structure of this thesis is as follows. Chapter 2 covers the introduction to cryptocurrencies. Chapter 3 shows implementation of cryptocurrency concept in example of Bitcoin. Chapter 4 lists alternative software providing similar features to software being created in this work. Chapter 5 goes through process of design of the system. In chapter 6 implementation details of selected parts of the system are being shown. Chapter 7 covers functionality testing providing perspective on performance of system as well as usage examples. Next chapter describes real life usage, problems and future directions of the system. At the end, summary of whole work can be found. 
+The structure of this thesis is as follows. Chapter 2 covers the introduction to cryptocurrencies. Chapter 3 shows implementation of cryptocurrency concept in example of Bitcoin. Chapter 4 lists alternative software providing similar features to software being created in this work. Chapter 5 goes through process of designing the system. In chapter 6 implementation details of selected parts of the system are being shown. Chapter 7 covers functionality testing providing perspective on performance of system as well as usage examples. Next chapter describes real life usage, problems and future directions of the system. At the end, summary of whole work can be found. 
 
 \chapter{Cryptocurrencies}
 
@@ -59,7 +59,7 @@ The structure of this thesis is as follows. Chapter 2 covers the introduction to
 This chapter will explain concept of cryptocurrencies, in some cases based on example of Bitcoin. The connection between cryptography and cryptocurrencies will be shown, as well as means that are used to ensure correctness and safety of transactions.
 
 \section{Definition}
-Cryptocurrency is a digital currency in which encryption techniques are used to regulate the generation of units of currency and verify the transfer of funds, operating independently of a central bank. \cite{crypto-def}
+"Cryptocurrency is a digital currency in which encryption techniques are used to regulate the generation of units of currency and verify the transfer of funds, operating independently of a central bank." \cite{crypto-def}
 
 \section{Security}
 Every currency operates within its defined set of rules, and has to have means to ensure that these rules are obeyed. For regular money, as we know it today, security is provided by central authorities in multiple ways:
@@ -72,27 +72,27 @@ law that penalizes creating counterfeits
 banking systems for digital money transfer, that ensure specified rules and are secure from malicious actors
 \end{itemize}
 
-Cryptocurrencies have their own ways of ensuring their rules, but instead of central authority, those rules are ensured by cryptography and probability in a distributed system.
+Cryptocurrencies have their own ways of ensuring their rules, but instead of central authority, those rules are ensured by cryptography and probability in a distributed system \cite{bartek}.
 
 \section{Cryptography}
-Cryptocurrencies are in big part based on cryptography to ensure the rules at which they operate. Cryptography helps not only to ensure that fraudulent and malicious operations can't have their place, but as well to establish rules of creating new units of those currencies. 
+Cryptocurrencies are in big part based on cryptography to ensure the rules at which they operate. Cryptography helps not only to ensure that fraudulent and malicious operations can't have their place, but as well to establish rules of creating new units of those currencies \cite{cryptocurrencies}. 
 
-Cryptography is a field of knowledge that has its focus on protecting information from unauthorized access as well as providing means to authenticate and ensure integrity of message.
+Cryptography is a field of knowledge that has its focus on protecting information from unauthorized access in communication channel \cite{cryptography}, as well as providing means to authenticate and ensure integrity messages \cite{cryptography-2}. 
 
 Cryptography can be classified as:
 
 \begin{itemize}
 \item
-Symmetrical - Information is encrypted and decrypted with the same key, with this type of encryption arises problem of transferring the key.
+Symmetrical - Information is encrypted and decrypted with the same key, with this type of encryption arises problem of transferring the key \cite{bartek}.
 \item
-Asymmetrical - Information is encrypted with different key than the key that is used for decryption. One key is usually called the public key, and is used to encrypt messages. Because public key cannot be used to decrypt message it can be shared freely without concern. Second key is called private key an is used to decrypt messages. Private key should never be shared, everyone possessing that key can decrypt messages encrypted with related public key.
+Asymmetrical - Information is encrypted with different key than the key that is used for decryption. One key is usually called the public key, and is used to encrypt messages. Because public key cannot be used to decrypt message it can be shared freely without concern. Second key is called private key an is used to decrypt messages. Private key should never be shared, everyone possessing that key can decrypt messages encrypted with related public key \cite{bartek}.
 \end{itemize} 
 
-Public key cryptography was developed in 1970s and is widely used to ensure security of information today. Mathematical functions were discovered that are easy to calculate in one way, but nearly impossible to calculate in reverse. Bitcoin uses elliptic-curve functions as a base of calculating public key.\cite{bartek}
+Public key cryptography was developed in 1970s and is widely used to ensure security of information today. Mathematical functions were discovered that are easy to calculate in one way, but nearly impossible to calculate in reverse. Bitcoin uses elliptic-curve functions as a base of calculating public key \cite{bartek}.
 
-Aside of encryption, Bitcoin uses cryptographic hash functions in its inner workings. Cryptographic hash functions map strings of arbitrary length to constant number of bits called digest, typically from 128 to 512. 
+Aside of encryption, Bitcoin uses cryptographic hash functions in its inner workings. Cryptographic hash functions map strings of arbitrary length to constant number of bits called digest, typically from 128 to 512 \cite{hash-functions}. 
 
-One of the main properties of hash functions is that they work one-way only. This means that for given hash digest it is impossible to find original message, but creating hash is easy. Another important property of hash functions is that for different messages, output should be different. This property does not hold in theory. Because output space of hash function is finite, and input space being virtually infinite, there must exist such messages that while being different, their hashes are identical. In practice output space is so large that finding so called collisions is nearly impossible. Therefore when hash digest is identical for two messages, those messages are assumed to be identical as well.  \cite{hash-functions}
+One of the main properties of hash functions is that they work one-way only. This means that for given hash digest it is impossible to find original message, but creating hash is easy. Another important property of hash functions is that for different messages, output should be different. This property does not hold in theory. Because output space of hash function is finite, and input space being virtually infinite, there must exist such messages that while being different, their hashes are identical. In practice output space is so large that finding so called collisions is nearly impossible. Therefore when hash digest is identical for two messages, those messages are assumed to be identical as well \cite{hash-functions}.
 
 
 \chapter{Bitcoin}
@@ -102,28 +102,28 @@ One of the main properties of hash functions is that they work one-way only. Thi
 This chapter explains Bitcoin protocol, communication between nodes, transactions and creation of blocks.
 
 \section{Genesis of Bitcoin}
-Bitcoin is the first widely accepted cryptocurrency, and was created by anonymous author who published his work under pseudonym Satoshi Nakamoto. Domain \texttt{bitcoin.org} was registered 18.08.2018, and first block, called genesis block, was mined 3.01.2009. Since those times Bitcoin's popularity had grown substantially, and many other cryptocurrencies based on Bitcoin emerged. \cite{bitcoin-history}
+Bitcoin is the first widely accepted cryptocurrency, and was created by anonymous author who published his work under pseudonym Satoshi Nakamoto. Domain \texttt{bitcoin.org} was registered 18.08.2018, and first block, called genesis block, was mined 3.01.2009. Since those times Bitcoin's popularity had grown substantially, and many other cryptocurrencies based on Bitcoin emerged \cite{bitcoin-history}.
 
 \section{Network}
-Bitcoin is distributed network and there are no authoritative nodes. The exception are servers that are used by new Bitcoin nodes to discover other nodes, but they will not be discussed. Reason for it is that essentially they are not part of Bitcoin network, and if those servers fail, nodes will use other methods for discovery. \cite{bitcoin-paper-1}
+Bitcoin is distributed network and there are no authoritative nodes. The exception are servers that are used by new Bitcoin nodes to discover other nodes, but they will not be discussed. Reason for it is that essentially they are not part of Bitcoin network, and if those servers fail, nodes will use other methods for discovery \cite{bitcoin-paper-1}.
 
 There are two types of information that nodes share between them: transactions and blocks\cite{bitcoin-paper-1}. Those entities will be discussed in separate sections.
 
 \section{Transactions}
 Transactions in Bitcoin are used to transfer value between owners. Single transaction describes inputs from which resources are being transfered, and outputs to which those resources are being transfered. All the resources from the inputs are being transfered to the outputs, unused resources are transfered to the miner which is known as transaction fee.
 
-Inputs are described by reference to output of previous transaction. To reference output of transaction, hash of transaction is needed as well as index of output, numbering of outputs starts with 0. Additionally for each input, there is attribute that makes it possible to verify that resources are transferred by their rightful owner. \cite{bitcoin-transaction}
+Inputs are described by reference to output of previous transaction. To reference output of transaction, hash of transaction is needed as well as index of output, numbering of outputs starts with 0. Additionally for each input, there is attribute that makes it possible to verify that resources are transferred by their rightful owner \cite{bitcoin-transaction}.
 
 Outputs of transaction specify number of BTC that is being transfered to that output, and a script that defines way of accessing those resources. 
 
-As have been stated outputs define way of accessing resources, and inputs provide values that unlock those resources. This is done with scripting system.
+As have been stated, outputs define way of accessing resources, and inputs provide values that unlock those resources. This is done with scripting system.
 
 \section{Scripts}
-In Bitcoin providing access verification is done with scripting system. Scripts in Bitcoin are programs, written in non Turing complete language, that when processed determine whether access to resources protected by script is granted or not. \cite{bitcoin-script}
+In Bitcoin providing access verification is done with scripting system. Scripts in Bitcoin are programs, written in non Turing complete language, that when processed determine whether access to resources protected by script is granted or not \cite{bitcoin-script}.
 
 Because this system is very versatile, granting access to resources can require e.g. providing multiple keys, providing password, can be granted to everyone etc. 
 
-Although script system allows for many methods of authentication, one of them is used in most of the transactions. In this method is often called "pay-to-pubkey-hash". Script field of transaction output specifies hash of public key and requires anyone wishing to spend this output to provide signature and public key. Hash of public key must be equal to hash provided in output. Signature, which proves that spender owns the private key, must be correct.
+Although script system allows for many methods of authentication, one of them is used in most of the transactions. In this method is often called "pay-to-pubkey-hash". Script field of transaction output specifies hash of public key and requires anyone wishing to spend this output to provide signature and public key. Hash of public key must be equal to hash provided in output. Signature, which proves that spender owns the private key, must be correct \cite{bitcoin-script}.
 
 
 \section{Blockchain}
@@ -135,9 +135,9 @@ Blockchain in Bitcoin is data structure that holds every transaction that had ta
   \label{fig:visualization-of-blockchain}
 \end{figure}
 
-One notable property of this data structure is that modification of single block would require modification of every block that followed. This property of blockchain comes from the fact that modification of block, changes its hash, and as mentioned before blocks contain hash of previous block. This of course would require modification of previous block hash field in following block. 
+One notable property of this data structure is that modification of single block would require modification of every block that followed. This property of blockchain comes from the fact that modification of block changes its hash, and as mentioned before, blocks contain hash of previous block. This of course would require modification of previous block hash field in following block. 
 
-Because of restrictions imposed on block creation, creating blocks is highly time consuming, thus modification of block that had been followed by 6 other blocks is considered impossible without consent of large portion of miners.
+Because of restrictions imposed on block creation, creating blocks is highly time consuming, thus modification of block that had been followed by 6 other blocks is considered impossible without consent of large portion of miners \cite{confirmation}.
 
 \section{Mining - block creation}
 Mining in Bitcoin is the process of block creation. One of the most interesting properties of valid block is that its hash starts with certain amount of "0". Number of "0" needed at beginning of correct block is being adjusted every 2016 blocks, so that rate at which blocks are being mined is approximately 1 block per 10 minutes. To achieve needed hash, attribute named "nonce" is set in trial and error manner. Everyone who wishes to create new block will need to:
@@ -159,7 +159,7 @@ if hash starts with needed number of "0" than propagate block through the networ
 
 Naturally, process described above is simplified. There are some nuances, e.g. "nonce" attribute is 32 bit integer, and nowadays more often than not there is no such value of that attribute that results in correct hash. Miners in such situation apply other techniques to find correct hash. Nonetheless this is level of detail this work does not operate on.
  
-Incentives for mining blocks are transaction fees and block rewards. Transaction fee is any unspent output in a transaction. For instance when 0.9 BTC is sent from output that holds 1 BTC, unspent output equals 0.1 BTC. This unspend output can be transfered to address controlled by miner.  
+Incentives for mining blocks are transaction fees and block rewards. Transaction fee is any unspent output in a transaction. For instance when 0.9 BTC is sent from output that holds 1 BTC, unspent output equals 0.1 BTC. This unspent output can be transfered to address controlled by miner.  
 Another incentive, block reward, is last transaction in the block which creates new coins and transfers them to address specified by miner. Amount of BTC in block reward started at 50 BTC, and halfs every 210000 blocks \cite{currency-supply}
 
 
@@ -759,10 +759,6 @@ Thomsen, Søren Steffen; Knudsen, Lars Ramkilde, 2009, Cryptographic Hash Functi
 \bibitem{bitcoin-paper-1}
 Starry Peng, 2013, BITCOIN: Cryptography, Economics, and the Future
 
-\bibitem{elliptic-curves}
-Definition of elliptic curves
-\texttt{https://en.wikipedia.org/wiki/Elliptic\_curve}
-
 \bibitem{currency-supply}
 Description of supply on Bitcoin
 \texttt{https://en.bitcoin.it/wiki/Controlled\_supply}
@@ -827,6 +823,20 @@ History of Bitcoin
 \bibitem{twardak}
 Marcin Twardak, master thesis to be defended in July 2018, supervisor Radosław Michalski
 
+\bibitem{cryptocurrencies}
+Michael J. Casey Paul Vigna. Cryptocurrency. Random House UK Ltd, 2016.
+
+\bibitem{cryptography}
+Stinson Douglas, Cryptography, theory and practise, 2006
+\iffalse
+https://books.google.pl/books?hl=en&lr=&id=uhl_kYfpgo4C&oi=fnd&pg=PP1&dq=cryptography&ots=nwtZny7gUZ&sig=ZUMq2yJPz2bdcG_GL_gMsIE_LcQ&redir_esc=y#v=onepage&q=cryptography&f=false
+\fi
+
+\bibitem{cryptography-2}
+Menezes, A. J.; van Oorschot, P. C.; Vanstone, S. A. Handbook of Applied Cryptography. ISBN 0-8493-8523-7. Archived from the original on 7 March 2005.
+
+\bibitem{confirmation}
+\texttt{https://en.bitcoin.it/wiki/Confirmation}
 
 \end{thebibliography}
 
