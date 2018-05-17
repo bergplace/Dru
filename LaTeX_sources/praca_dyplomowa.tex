@@ -5,6 +5,27 @@
 
 \usepackage[utf8]{inputenc} % `utf8` option to match Editor encoding
 \usepackage[T1]{fontenc}
+
+
+
+\usepackage{titlesec}
+
+\newcommand{\chapfnt}{\fontsize{14}{19}}
+\newcommand{\secfnt}{\fontsize{13}{17}}
+\newcommand{\ssecfnt}{\fontsize{12}{14}}
+
+\titleformat{\chapter}[display]
+{\normalfont\chapfnt\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\chapfnt}
+
+\titleformat{\section}
+{\normalfont\secfnt\bfseries}{\thesection}{1em}{}
+
+\titleformat{\subsection}
+{\normalfont\ssecfnt\bfseries}{\thesubsection}{1em}{}
+
+\titlespacing*{\chapter} {0pt}{50pt}{40pt}
+\titlespacing*{\section} {0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
+\titlespacing*{\subsection} {0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
  
 \begin{document}
 \engtitle{
