@@ -107,7 +107,7 @@ Bitcoin is the first widely accepted cryptocurrency, and was created by anonymou
 \section{Network}
 Bitcoin is distributed network and there are no authoritative nodes. The exception are servers that are used by new Bitcoin nodes to discover other nodes, but they will not be discussed. Reason for it is that essentially they are not part of Bitcoin network, and if those servers fail, nodes will use other methods for discovery \cite{bitcoin-paper-1}.
 
-There are two types of information that nodes share between them: transactions and blocks\cite{bitcoin-paper-1}. Those entities will be discussed in separate sections.
+There are two types of information that nodes share between them: transactions and blocks \cite{bitcoin-paper-1}. Those entities will be discussed in separate sections.
 
 \section{Transactions}
 Transactions in Bitcoin are used to transfer value between owners. Single transaction describes inputs from which resources are being transfered, and outputs to which those resources are being transfered. All the resources from the inputs are being transfered to the outputs, unused resources are transfered to the miner which is known as transaction fee.
@@ -195,18 +195,18 @@ Another and the biggest problem is the API call limit that would make working wi
 
 \section{blockexplorer.com}
 
-This web application\cite{blockexpolrer} is very similar to blockchain.info in almost every aspect, although there are some differences. Data is accessible either by website or by JSON API, but there is no Python or R API provided. Set of APIs is almost identical to blockchain.info and does not provide easy way to get multiple blocks. The main difference is that there is no official API call limit, but because it is external tool, it means that such limit can appear every moment.
+This web application \cite{blockexpolrer} is very similar to blockchain.info in almost every aspect, although there are some differences. Data is accessible either by website or by JSON API, but there is no Python or R API provided. Set of APIs is almost identical to blockchain.info and does not provide easy way to get multiple blocks. The main difference is that there is no official API call limit, but because it is external tool, it means that such limit can appear every moment.
 
 \section{libBitcoin-database}
 
-This piece of software\cite{libbitcoin-database}, after installation builds in-memory database of Bitcoin blockchain, its description promises high performance. Because of almost non existing documentation, it is hard to describe its features in depth.
+This piece of software \cite{libbitcoin-database}, after installation builds in-memory database of Bitcoin blockchain, its description promises high performance. Because of almost non existing documentation, it is hard to describe its features in depth.
 \\
 \\
 Although this software is actively developed, and at first sight it might seam like solution that fits needs of users, some problems can be found. One drawback is coming from its biggest selling point - being in-memory database makes it requiring large amounts of RAM. This problem makes it not viable for hardware that is accessible for the average user. Next problem lies in its API that allows connecting to the database only via C/C++ library, which would make usage in R and Python at least problematic. Another problem is already mentioned lack of useful documentation, which would make the usage largely troublesome.
 
 \section{BitcoinDatabaseGenerator}
 
-BitcoinDatabaseGenerator\cite{BitcoinDatabaseGenerator} is a data transfer tool that can feed SQL database with blockchain data. It was written in C\# and as its author states, it is only meant to be run on Windows machines. From the documentation we know that this software should be ran every time we want to update our database. Database schema that is created after update operation, consists of separate tables for blocks, transactions, transaction inputs and so forth. Such database schema would require joining tables in multitude of usage scenarios, which is known to be slow operation.
+BitcoinDatabaseGenerator \cite{BitcoinDatabaseGenerator} is a data transfer tool that can feed SQL database with blockchain data. It was written in C\# and as its author states, it is only meant to be run on Windows machines. From the documentation we know that this software should be ran every time we want to update our database. Database schema that is created after update operation, consists of separate tables for blocks, transactions, transaction inputs and so forth. Such database schema would require joining tables in multitude of usage scenarios, which is known to be slow operation.
 \\
 \\
 Although connecting to SQL database from both R and Python is easily achievable, working with SQL databases in such case might be cumbersome. Abstracting away relational structure of data to objects might be needed when working with SQL database. 
@@ -441,7 +441,7 @@ Complex Operations API will be web service, which in response to its users reque
 
 The main property of software, that can be accomplished with well chosen deployment and packaging, are simplicity of use and cross-platform capabilities. Those can positively influence adoption rate of this solution in perspective of both usage and further open source development.
 
-For this project docker\cite{docker} containers will be used, which will help in keeping components decoupled, and will make installation process easy to follow. 
+For this project docker \cite{docker} containers will be used, which will help in keeping components decoupled, and will make installation process easy to follow. 
 
 Installation process should consist only of installing full Bitcoin node, docker, running one custom script and setting up simple configuration (database credentials, etc.).
 
