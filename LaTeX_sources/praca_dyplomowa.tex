@@ -10,6 +10,15 @@
 
 \usepackage{titlesec}
 
+\usepackage{listings}
+
+\lstset{
+  basicstyle=\ttfamily,
+  columns=fixed,
+  fontadjust=true,
+  basewidth=0.5em
+}
+
 \newcommand{\chapfnt}{\fontsize{14}{19}}
 \newcommand{\secfnt}{\fontsize{13}{17}}
 \newcommand{\ssecfnt}{\fontsize{12}{14}}
@@ -123,7 +132,7 @@ One of the main properties of hash functions is that they work one-way only. Thi
 This chapter explains Bitcoin protocol, communication between nodes, transactions and creation of blocks.
 
 \section{Genesis of Bitcoin}
-Bitcoin is the first widely accepted cryptocurrency, and was created by anonymous author who published his work under pseudonym Satoshi Nakamoto. Domain \texttt{bitcoin.org} was registered 18.08.2018, and first block, called genesis block, was mined 3.01.2009. Since those times Bitcoin's popularity had grown substantially, and many other cryptocurrencies based on Bitcoin emerged \cite{bitcoin-history}.
+Bitcoin is the first widely accepted cryptocurrency, and was created by anonymous author who published his work under pseudonym Satoshi Nakamoto \cite{nakamoto}. Domain \texttt{bitcoin.org} was registered 18.08.2008, and first block, called genesis block, was mined 3.01.2009. Since those times Bitcoin's popularity had grown substantially, and many other cryptocurrencies based on Bitcoin emerged \cite{bitcoin-history}.
 
 \section{Network}
 Bitcoin is distributed network and there are no authoritative nodes. The exception are servers that are used by new Bitcoin nodes to discover other nodes, but they will not be discussed. Reason for it is that essentially they are not part of Bitcoin network, and if those servers fail, nodes will use other methods for discovery \cite{bitcoin-paper-1}.
@@ -148,7 +157,7 @@ Although script system allows for many methods of authentication, one of them is
 
 
 \section{Blockchain}
-Blockchain in Bitcoin is data structure that holds every transaction that had taken place since beginning of Bitcoin network. It consists of blocks of transactions, with each block holding in itself hash of previous block. Every Bitcoin node, after it has synchronized with the network, holds entire blockchain in its memory.
+Blockchain in Bitcoin is data structure that holds every transaction that had taken place since beginning of Bitcoin network. It consists of blocks of transactions, with each block holding in itself hash of previous block. Every Bitcoin node, after it has synchronized with the network, holds entire blockchain in its memory \cite{mastering-bitcoin}.
 
 \begin{figure}[H]
   \includegraphics[width=0.8\linewidth]{blockchain.png}
@@ -424,7 +433,7 @@ database for storing processed blocks
 \item
 process constantly updating database with new blocks that are gathered by Bitcoin node, which will be referred to as database updater
 \item
-web application ready to implement complex functionalities in
+web application allowing for analytic functionalities implementation
 \end{itemize}
 
 \begin{figure}[H]
@@ -496,7 +505,7 @@ After configuration is loaded, network is being created, and building and starti
 \subsection{Database container setup}
 For database container configuration will be shown, so that readers without experience with docker will have chance to see how such configuration looks.
 
-\begin{verbatim}
+\begin{lstlisting}[caption=Database container run command]
 docker run -d \
     --name btc-blockchain-db \
     -e AUTH=yes \
@@ -507,7 +516,7 @@ docker run -d \
     -v $database_dir:/data/db \
     --network=btcnet \
     aashreys/mongo-auth:latest
-\end{verbatim}
+\end{lstlisting}
 
 Database container is build on "aashreys/mongo-auth:latest" \cite{mongo-auth} docker image, which lets us create MongoDB database with enabled authentication (by default in MongoDB authentication is not enabled).
 Admin user credentials are being set, but credentials of user with read-only privilege can't be set here, because before-mentioned image does not support such action.
@@ -523,8 +532,7 @@ from within other container connected to the same network will send messages cor
 \subsection{Database updater container setup}
 Before database updater docker image can be ran, it needs to be created first. To create docker image, configuration needs to be written in file named "Dockerfile", than command "docker build" is used to build image. With image ready it can be ran in the same way previously described image was.
 
-Dockerfile for database updater:
-\begin{verbatim}
+\begin{lstlisting}[caption=The dockerfile for database updater]
 FROM python:3
 
 COPY requirements.txt ./
@@ -532,14 +540,15 @@ COPY ./src/ /src/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # forked version from 22.03.2018
-RUN pip install https://github.com/MarcinPieczka/python-bitcoin-blockchain-parser/archive/master.zip
+RUN pip install https://github.com/MarcinPieczka\
+/python-bitcoin-blockchain-parser/archive/master.zip
 
 RUN mkdir /btc-blocks-data/
 
 EXPOSE 27017
 
 CMD [ "python", "-u", "/src/update_database.py" ]
-\end{verbatim}
+\end{lstlisting}
 
 Dockerfile starts with base image that is being used, here it is "python:3" \cite{python3} image that contains as its name suggests python3 installed.
 Next two lines copy needed files to the container, than libraries are installed, containers port is exposed for communication with database, and in the last line my application is being started.
@@ -588,11 +597,11 @@ This component was implemented in Flask framework \cite{flask-web-page}, which w
 Main page is made purely in HTML and CSS, for the sake of before mentioned simplicity.
 
 Two exemplary functionalities have been implemented, one of which, because of its lack of complexity, will be a good way to show advantages of Flask.
-\begin{verbatim}
+\begin{lstlisting}[caption=API returning last block in blockchain]
 @app.route('/api/last_block')
 def _last_block():
     return dumps(mongo.db.blocks.find().sort([('height', -1)])[0])
-\end{verbatim}
+\end{lstlisting}
 In this code, first line specifies address at which service will be available, second one is declaration of function, and the last one is its implementation. This function connects to the database with previously created "mongo" object, finds last block in the database, converts it to JSON with "dumps" function and returns.
 \\
 \\
@@ -693,7 +702,7 @@ In functionalities prepared in this component, performance is not main goal. All
 
 \subsection{Getting last block}
 Service is located at http://base-address/api/last\_block and calling it returns JSON data:
-\begin{verbatim}
+\begin{lstlisting}[caption=Response on last block API call]
 {
     "_id": {
         "$oid": "5ae122209043650001213f12"
@@ -713,7 +722,7 @@ Service is located at http://base-address/api/last\_block and calling it returns
     .
     .
 }
-\end{verbatim}
+\end{lstlisting}
 
 Data that was returned has form and content as expected. 
 
@@ -764,32 +773,36 @@ Success in development of this system if partial, because libraries that make pa
 
 \begin{thebibliography}{9}
 
+\bibitem{mastering-bitcoin}
+Andreas Antonopoulos, Mastering Bitcoin: Unlocking Digital Cryptocurrencies, 2014
+
 \bibitem{bitcoin-transaction}
-Bitcoin transaction, https://en.bitcoin.it/wiki/Transaction
+Bitcoin transaction, https://en.bitcoin.it/wiki/Transaction last accessed 27.05.2018
 
 \bibitem{bitcoin-script}
-Bitcoin script, https://en.bitcoin.it/wiki/Script
+Bitcoin script, https://en.bitcoin.it/wiki/Script last accessed 27.05.2018
  
 \bibitem{bitcoin-wiki-bha} 
-Block hashing algorithm, https://en.bitcoin.it/wiki/Block\_hashing\_algorithm
+Block hashing algorithm, https://en.bitcoin.it/wiki/Block\_hashing\_algorithm last accessed 27.05.2018
 
 \bibitem{crypto-def} 
-Definition of cryptocurrency, https://en.oxforddictionaries.com/definition/cryptocurrency
+Definition of cryptocurrency, https://en.oxforddictionaries.com/definition/cryptocurrency last accessed 27.05.2018
 
 \bibitem{bip173}
 Description of BIP-0173, https://en.bitcoin.it/wiki/Bech32 last accessed 16.05.2018
 
 \bibitem{confirmation}
-Description of Bitcoin confirmation process, https://en.bitcoin.it/wiki/Confirmation
+Description of Bitcoin confirmation process, https://en.bitcoin.it/wiki/Confirmation last accessed 27.05.2018
 
 \bibitem{currency-supply}
-Description of supply on Bitcoin, https://en.bitcoin.it/wiki/Controlled\_supply
+Description of supply on Bitcoin, https://en.bitcoin.it/wiki/Controlled\_supply last accessed 27.05.2018
 
 \bibitem{bitcoin-history}
-History of Bitcoin, https://en.wikipedia.org/wiki/History\_of\_bitcoin
+History of Bitcoin, https://en.wikipedia.org/wiki/History\_of\_bitcoin last accessed 27.05.2018
 
 \bibitem{twardak}
-Marcin Twardak, master thesis to be defended in July 2018, supervisor Radosław Michalski
+Marcin Twardak, Finding
+clusters in Bitcoin cryptocurrency blockchain, master thesis to be defended in July 2018, supervisor Radosław Michalski
 
 \bibitem{cryptography-2}
 Menezes, A. J.; van Oorschot, P. C.; Vanstone, S. A. Handbook of Applied Cryptography. ISBN 0-8493-8523-7. Archived from the original on 7 March 2005.
@@ -807,6 +820,9 @@ Repository of blockchain-parser library, https://github.com/alecalve/python-bitc
 
 \bibitem{libbitcoin-database}
 Repository of libbitcoin-database, https://github.com/libbitcoin/libbitcoin-database last accessed 25.04.2018
+
+\bibitem{nakamoto}
+Satoshi Nakamoto, Bitcoin: A peer-to-peer electronic cash system, 2008
 
 \bibitem{bitcoin-paper-1}
 Starry Peng, BITCOIN: Cryptography, Economics, and the Future, 2013
@@ -854,8 +870,15 @@ Website of Flask framework, http://flask.pocoo.org/ last accessed 16.05.2018
 Website of Python iGraph package, http://igraph.org/python/ last accessed 16.05.2018
 
 \bibitem{bartek} 
-Zychal Bartosz Analiza łańcucha tranzakcji w sieci Bitcoin, 2018
+Zychal Bartosz, Analiza łańcucha tranzakcji w sieci Bitcoin, 2018
 
 \end{thebibliography}
+
+
+
+\lstlistoflistings
+
+\listoffigures
+
 
 \end{document}
