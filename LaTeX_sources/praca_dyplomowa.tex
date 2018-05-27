@@ -43,11 +43,11 @@
 \pagebreak 
 
 \section*{Streszczenie}
-Praca ta poświęcona jest zaprojektowaniu i implementacji systemu pozwalającego na szybki i prosty dostęp do transakcji przeprowadzonych w sieci Bitcoin oraz dodatkowego API pozwalającego na rozwój nowych funkcjonalności. Na początku pokrótce zostaje przedstawiona problematyka kryptowalut, wraz z opisem podstawowych operacji kryptograficznych które są w nich wykorzystywane. Następnie poruszony zostaje temat Bitcoina, wyjaśniony zostaje mechanizm działania jego sieci, pojęcia transakcji, bloku i blockchaina oraz sposobu autoryzacji transakcji. Po tych wstępnych rozdziałach opisane zostają alternatywne rozwiązania, które w pewnym stopniu zapewniają funkcjonalności zapewniane przez implementowany system. Przedstawiane są ich zalety i wady w kontekście wymagań użytkowników. W rozdziale 5 opisany jest proces projektowania rzeczonego systemu. Proces ten rozpoczyna się od opisu wymagań użytkowników poprzez opis użytkownika i historyjki użytkownika. Od tego miejsca projektowanie zaczyna się od definicji wejść i wyjść systemu i podąża drogą nasuwających się pytań i problemów. W kolejnym rozdziale przedstawiony został proces implementacji systemu. Pokazane zostały najbardziej interesujące i najważniejsze elementy implementacji, w szczególności te które bezpośrednio pozwalały osiągnąć spełnienie potrzeb użytkownika. Po implementacji przedstawione zostały testy funkcjonalności, obrazujące zarówno wydajność jak i sposób użytkowania systemu. Ostatni rozdział przed podsumowaniem przybliża czytelnikowi w jaki sposób system był już wykorzystywany, z jakimi problemami się on boryka i jakie perspektywy przyszłego rozwoju ma on przed sobą. Praca zwieńczona jest podsumowaniem, w skrócie łączącym cały proces, od potrzeb użytkownika, do końcowych rezultatów. 
+Praca ta poświęcona jest zaprojektowaniu i implementacji systemu pozwalającego na szybki i prosty dostęp do transakcji przeprowadzonych w sieci Bitcoin oraz dodatkowego API pozwalającego na rozwój nowych funkcjonalności. Na początku pokrótce zostaje przedstawiona problematyka kryptowalut wraz z opisem podstawowych operacji kryptograficznych, które są w nich wykorzystywane. Następnie poruszony zostaje temat Bitcoina, wyjaśniony zostaje mechanizm działania jego sieci, pojęcia transakcji, bloku i blockchaina oraz sposobu autoryzacji transakcji. Po tych wstępnych rozdziałach opisane zostają alternatywne rozwiązania, które w pewnym stopniu zapewniają funkcjonalności zapewniane przez implementowany system. Przedstawiane są ich zalety i wady w kontekście wymagań użytkowników. W Rozdziale 5 opisany jest proces projektowania systemu. Proces ten rozpoczyna się od opisu wymagań użytkowników poprzez opis docelowego użytkownika i jego wymagań. Od tego miejsca projektowanie zaczyna się od definicji wejść i wyjść systemu i podąża drogą nasuwających się pytań i problemów. W kolejnym rozdziale przedstawiony został proces implementacji systemu. Pokazane zostały najbardziej interesujące i najważniejsze elementy implementacji, w szczególności te które bezpośrednio pozwalały osiągnąć spełnienie potrzeb użytkownika. Po implementacji przedstawione zostały testy funkcjonalności, obrazujące zarówno wydajność jak i sposób użytkowania systemu. Ostatni rozdział przed podsumowaniem przybliża czytelnikowi w jaki sposób system był już wykorzystywany, z jakimi problemami się on boryka i jakie perspektywy przyszłego rozwoju ma on przed sobą. Praca zwieńczona jest podsumowaniem, w skrócie łączącym cały proces, od potrzeb użytkownika, do końcowych rezultatów. 
 
 \section*{Abstract}
 
-In this work system allowing fast and easy access to Bitcoin transactions as well as API allowing for new functionalities to be hosted was designed and implemented. At beginning cryptocurrencies and cryptographic operations that they are using are shortly described. Next, Bitcoin is being presented by describing mechanisms of its network, explaining concepts of transaction, block, blockchain, and describing means of authorization. After those introductory chapters alternative software, which provide functionalities similar to those implemented in before mentioned system, is being described. Advantages and disadvantages of alternative software are being listed in context of user needs. In chapter 5 process of design is being described. This process starts with describing user requirements by describing user, and listing user stories. From that point, design process starts with specifying system inputs and outputs, and than follows questions and problems that arise. Most interesting and most important elements of implementation have been shown, specifically those which directly help to fulfill user needs. After implementation, functional tests had been performed, which serve a purpose of showing performance, as well as usage examples of the system. Chapter before summary shows usage of this system that had already occurred, what problems this system faces, and what are its future directions. Work ends with summary that shortly binds whole process from user needs to end results.
+In this work system allowing fast and easy access to Bitcoin transactions as well as API allowing for new functionalities to be hosted was designed and implemented. At beginning cryptocurrencies and cryptographic operations that they are using are shortly described. Next, Bitcoin is being presented by describing mechanisms of its network, explaining concepts of transaction, block, blockchain, and describing means of authorization. After those introductory chapters alternative software, which provide functionalities similar to those implemented in before mentioned system, is being described. Advantages and disadvantages of alternative software are being listed in context of user needs. In Chapter 5 process of design is being described. This process starts with describing user requirements by describing end user, and listing user stories. From that point, design process starts with specifying system inputs and outputs, and than follows questions and problems that arise. Most interesting and most important elements of implementation have been shown, specifically those which directly help to fulfill user needs. After implementation, functional tests had been performed, which serve a purpose of showing performance, as well as usage examples of the system. Chapter before summary shows usage of this system that had already occurred, what problems this system faces, and what are its future directions. Work ends with summary that shortly binds whole process from user needs to end results.
 
 \chapter{Introduction}
 
@@ -299,7 +299,7 @@ Most important operation will be querying blocks, by theirs hash, time, and othe
 Another important operation is getting transactions by hash. This operation will be needed for discovering addresses of transaction senders. Although this operation will not be in usage scenarios started by end user, the number of such operations needed to discover sender address of every Bitcoin transaction makes it crucial for it to be fast.
 
 \subsection{Database choice}
-At the beginning let's simplify the choice between RDBMS (Relational Database Management System) and NoSQL databases. Out of many NoSQL possibilities, MongoDB\cite{mongo} have been chosen, based on initial research of different NoSQL systems strengths and weaknesses.
+At the beginning let's simplify the choice between RDBMS (Relational Database Management System) and NoSQL databases. Out of many NoSQL possibilities, MongoDB \cite{mongo} have been chosen, based on initial research of different NoSQL systems strengths and weaknesses.
 
 
 Let's lay out some facts that will help to decide whether to use relational database, or MongoDB.
@@ -509,7 +509,7 @@ docker run -d \
     aashreys/mongo-auth:latest
 \end{verbatim}
 
-Database container is build on "aashreys/mongo-auth:latest"\cite{mongo-auth} docker image, which lets us create MongoDB database with enabled authentication (by default in MongoDB authentication is not enabled).
+Database container is build on "aashreys/mongo-auth:latest" \cite{mongo-auth} docker image, which lets us create MongoDB database with enabled authentication (by default in MongoDB authentication is not enabled).
 Admin user credentials are being set, but credentials of user with read-only privilege can't be set here, because before-mentioned image does not support such action.
 
 There are couple other things in this configuration worth noting, namely "-v" flag creates volume for container and its purpose comes from the fact that docker containers should be possible to be killed without any loss. With volume set up, when we kill our database container and run it again, the database data will persist.
@@ -541,14 +541,14 @@ EXPOSE 27017
 CMD [ "python", "-u", "/src/update_database.py" ]
 \end{verbatim}
 
-Dockerfile starts with base image that is being used, here it is "python:3"\cite{python3} image that contains as its name suggests python3 installed.
+Dockerfile starts with base image that is being used, here it is "python:3" \cite{python3} image that contains as its name suggests python3 installed.
 Next two lines copy needed files to the container, than libraries are installed, containers port is exposed for communication with database, and in the last line my application is being started.
 \\
 \\
 Using docker makes it easy to create installation process repeatable and independent from environment, so that running software will have the same effect on every machine it is being ran (to some extend naturally). 
 
 \subsection{Complex Operation API container setup}
-This container is based on "tiangolo/uwsgi-nginx-flask:python3.6"\cite{flask} which have all the basic elements needed to run flask application already configured. The only non standard configuration that needed to be done is setting timeout in Nginx\cite{nginx} web server to larger value. By default timeout is 60 seconds, but because of type of operations that this application is made for, this is not enough.  
+This container is based on "tiangolo/uwsgi-nginx-flask:python3.6" \cite{flask} which have all the basic elements needed to run flask application already configured. The only non standard configuration that needed to be done is setting timeout in Nginx \cite{nginx} web server to larger value. By default timeout is 60 seconds, but because of type of operations that this application is made for, this is not enough.  
 
 \section{Database updater}
 This container as stated before is responsible for database, and in more detail it is responsible for both putting data to it and for managing its configuration. In regards of managing configuration of database, this module takes responsibility for everything that could not be achieved in docker command, and that is:
@@ -565,7 +565,7 @@ All this is being done in separate module responsible only for database - "mongo
 \\  
 Data insertion took the most effort to develop, and is the most complex part of the system.
 
-All of Bitcoin BLK files processing is done with blockchain-parser\cite{blockchain-parser} library, but not the official release, but version straight from their git repository\cite{blockchain-parser}. The reason for this is that changes in Bitcoin are far more frequent than releases of this software, and some features of Bitcoin were not supported in official version. The version that is being used does not support BIP-0173\cite{bip173} (BIP stands for Bitcoin improvement proposal) so discovering addresses from transactions using techniques described in it cannot be done. 
+All of Bitcoin BLK files processing is done with blockchain-parser\cite{blockchain-parser} library, but not the official release, but version straight from their git repository \cite{blockchain-parser}. The reason for this is that changes in Bitcoin are far more frequent than releases of this software, and some features of Bitcoin were not supported in official version. The version that is being used does not support BIP-0173 \cite{bip173} (BIP stands for Bitcoin improvement proposal) so discovering addresses from transactions using techniques described in it cannot be done. 
 \\
 \\
 Processing and loading data can be broken into these steps:
@@ -583,7 +583,7 @@ Last step is inserting processed block into database.
 Of course there is more complexity hidden inside those steps, like handling exceptions from blockchain-parser library. The reason there are exceptions while parsing Bitcoin blocks is that Bitcoin transactions do not have to be fully valid. Many transactions exist with errors, and although they are of no interest to the system, they need to be recognized and handled properly.
 
 \section{Complex Operation API}
-This component was implemented in Flask framework\cite{flask-web-page}, which was chosen for its simplicity. Simplicity is well needed in application that users, who very often don't have experience with web applications, will extend with their code. 
+This component was implemented in Flask framework \cite{flask-web-page}, which was chosen for its simplicity. Simplicity is well needed in application that users, who very often don't have experience with web applications, will extend with their code. 
 
 Main page is made purely in HTML and CSS, for the sake of before mentioned simplicity.
 
@@ -596,7 +596,7 @@ def _last_block():
 In this code, first line specifies address at which service will be available, second one is declaration of function, and the last one is its implementation. This function connects to the database with previously created "mongo" object, finds last block in the database, converts it to JSON with "dumps" function and returns.
 \\
 \\
-The second functionality is surely more complex. First of all lets notice that we can look at Bitcoin transactions as graph. Every transaction has its input and output, the addresses of inputs and outputs are vertices of the graph, and transactions are the edges between them. My second functionality as input takes two parameters which specify block range by hight, than creates graph out of transactions found in specified blocks using iGraph\cite{igraph} library. After creating graph it separates unconnected graphs and returns array of count of vertices in each graph.
+The second functionality is surely more complex. First of all lets notice that we can look at Bitcoin transactions as graph. Every transaction has its input and output, the addresses of inputs and outputs are vertices of the graph, and transactions are the edges between them. My second functionality as input takes two parameters which specify block range by hight, than creates graph out of transactions found in specified blocks using iGraph \cite{igraph} library. After creating graph it separates unconnected graphs and returns array of count of vertices in each graph.
 
 The choice of this functionality was not random. Operations on graphs are very common when analyzing Bitcoin transactions.
 
@@ -726,7 +726,7 @@ In this case it returns \texttt{[1701,74,42,39,21,20,20,19,17,...]} which means 
 \chapter{Beyond implementation}
 
 \section{Usage}
-After implementation finished, described software was used by fellow student in research he conducted for his master thesis\cite{twardak}. In his research he performed cluster analysis of Bitcoin transactions. His opinion of this software, as he stated, had fully met his needs, but he expressed his concern for security of current authentication system. In his opinion if someone unauthorized would acquire credentials, denial of service attack could be performed.
+After implementation finished, described software was used by fellow student in research he conducted for his master thesis \cite{twardak}. In his research he performed cluster analysis of Bitcoin transactions. His opinion of this software, as he stated, had fully met his needs, but he expressed his concern for security of current authentication system. In his opinion if someone unauthorized would acquire credentials, denial of service attack could be performed.
 
 \section{Important addresses}
 Code repository can be found at:
@@ -755,7 +755,7 @@ As for the database updater, full support of Bitcoin protocol is needed, so that
 
 Direction in which the complex operations API should be heading are depending on feedback from its users. Adding new functionalities might need to become simpler. In current situation, to add new functionality and to share it with others, the code needs to be added to main repository. This of course creates need for reviewing proposed functionalities by administrator of repository. Possible solution might be creating plug-in system that can run arbitrary modules, which would be maintained by their creators. 
 
-\chapter{Summary}
+\chapter*{Summary}
 In this work system providing easy access to Bitcoin blockchain data have been designed and implemented . There is big problem of unnecessary work being done among Bitcoin researchers, many of them would develop their own way of accessing blockchain data, others would use web services, which usually have API call limits. To combat this problem there needed to be free, easy to use and maintain solution that provides access to Bitcoin data. 
 Nonetheless accessing data is not the only field on which researchers have problem which mutual code reuse, thats why platform, that is ready to implement functionalities on, needed to exist as well. 
 
