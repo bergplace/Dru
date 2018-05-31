@@ -1,4 +1,4 @@
-\documentclass[12pt, en, eng, twoside, final]{mgr}
+\documentclass[12pt, en, eng, oneside, final]{mgr}
 
 \usepackage{graphicx}
 \usepackage{float}
@@ -132,7 +132,7 @@ One of the main properties of hash functions is that they work one-way only. Thi
 This chapter explains Bitcoin protocol, communication between nodes, transactions, and creation of blocks.
 
 \section{Genesis of Bitcoin}
-Bitcoin is the first widely accepted cryptocurrency and was created by an anonymous author who published his work under pseudonym Satoshi Nakamoto \cite{nakamoto}. Domain \texttt{bitcoin.org} was registered 18.08.2008, and the first block, called genesis block, was mined 3.01.2009. Since those times Bitcoin's popularity had grown substantially, and many other cryptocurrencies based on Bitcoin emerged \cite{bitcoin-history}.
+Bitcoin is the first widely accepted cryptocurrency and was created by an anonymous author who published his work under pseudonym Satoshi Nakamoto \cite{nakamoto}. Domain \linebreak \texttt{bitcoin.org} was registered 18.08.2008, and the first block, called genesis block, was mined 3.01.2009. Since those times Bitcoin's popularity had grown substantially, and many other cryptocurrencies based on Bitcoin emerged \cite{bitcoin-history}.
 
 \section{Network}
 Bitcoin is distributed network and there are no authoritative nodes. The exception is servers that are used by new Bitcoin nodes to discover other nodes, but they will not be discussed. Reason for it is that essentially they are not part of Bitcoin network, and if those servers fail, nodes will use other methods for discovery \cite{bitcoin-paper-1}.
@@ -707,11 +707,14 @@ Service is located at http://base-address/api/last\_block and calling it returns
     "_id": {
         "$oid": "5ae122209043650001213f12"
     },
-    "hash": "000000000000000000c0af3be64d9a335968225b35f9fb102d4962c0ff2558c2",
+    "hash": "000000000000000000c0af3be64d9a335968225b35
+    		f9fb102d4962c0ff2558c2",
     "version": 536870912,
     "height": 496509,
-    "prev_hash": "000000000000000000384595a7dc898a505d5c131dffa1c55431dc73cffe2355",
-    "merkle_root": "9df11de2a46b352591f5980d63929c68d9af01bc2e494f4b350ae697809773ac",
+    "prev_hash": "000000000000000000384595a7dc898a505d5
+    		c131dffa1c55431dc73cffe2355",
+    "merkle_root": "9df11de2a46b352591f5980d63929c68d9a
+    		f01bc2e494f4b350ae697809773ac",
     "timestamp": {
         "$date": 1511869304000
     },
@@ -728,7 +731,12 @@ Data that was returned has form and content as expected.
 
 \subsection{Getting count of maximal connected graphs by height}
 Service is requested with the address
-\\ \verb|http://base-address/api/count_separate_graphs?height_from=100000&height_to=100500|
+\\ 
+\begin{verbatim}
+http://base-address/api/count_separate_graphs?
+height_from=100000&height_to=100500
+\end{verbatim}
+
 In this case, it returns \texttt{[1701,74,42,39,21,20,20,19,17,...]} which means that biggest connected graph that can be made from transactions from blocks with height from 100000 to 100150 has 1701 vertices, second biggest has 74 vertices, and so forth.
 
 
