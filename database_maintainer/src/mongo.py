@@ -4,7 +4,7 @@ import time
 
 import os
 from pymongo import MongoClient, ASCENDING
-from pymongo.errors import OperationFailure
+from pymongo.errors import OperationFailure, DuplicateKeyError
 
 
 class DBIntegrityException(Exception):
@@ -32,8 +32,8 @@ class Mongo(object):
             try:
                 mongo_container = os.environ['MONGODB_HOST']
                 self.logger.log('connecting to mongo at: {}'.format(mongo_container))
-                username = os.environ['MONGODB_ADMIN_USER']
-                password = os.environ['MONGODB_ADMIN_PASS']
+                username = urllib.parse.quote_plus(os.environ['MONGODB_ADMIN_USER'])
+                password = urllib.parse.quote_plus(os.environ['MONGODB_ADMIN_PASS'])
                 connection = MongoClient('mongodb://{}:{}@{}'.format(username, password, mongo_container))
                 db = connection['bitcoin']
                 return db
@@ -42,12 +42,15 @@ class Mongo(object):
                 time.sleep(1)
 
     def add_readonly_user(self):
-        self.db.command(
-            "createUser",
-            os.environ['MONGODB_READONLY_USER'],
-            pwd=os.environ['MONGODB_READONLY_PASS'],
-            roles=[{'role': 'read', 'db': 'bitcoin'}]
-        )
+        try:
+            self.db.command(
+                "createUser",
+                os.environ['MONGODB_READONLY_USER'],
+                pwd=os.environ['MONGODB_READONLY_PASS'],
+                roles=[{'role': 'read', 'db': 'bitcoin'}]
+            )
+        except DuplicateKeyError:
+            pass
 
     @property
     def blocks_collection(self):
