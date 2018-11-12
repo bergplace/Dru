@@ -1,4 +1,4 @@
-FROM tiangolo/uwsgi-nginx-flask:python3.6
+FROM tiangolo/uwsgi-nginx-flask:python3.7
 
 COPY requirements.txt /
 COPY custom.conf /etc/nginx/conf.d/
