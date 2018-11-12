@@ -1,3 +1,7 @@
+"""
+Mongo-BTC-Blocks-Database
+"""
+
 import os
 from bson.json_util import dumps
 from flask import Flask, render_template, request
@@ -20,6 +24,7 @@ mongo = PyMongo(app)
 
 @app.route('/')
 def index():
+    """index"""
     return render_template('index.html', title='Home')
 
 

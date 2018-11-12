@@ -1,15 +1,20 @@
+"""
+Blk files reader
+"""
+
 from collections import deque, defaultdict
 
 import os
 
 import time
-from blockchain_parser.block import Block
-from blockchain_parser.blockchain import get_files, get_blocks
+from blockchain_parser.block import Block  # pylint: disable=import-error
+from blockchain_parser.blockchain import get_files, get_blocks  # noqa pylint: disable=import-error
 
 from block_info import BlockInfo
 
 
-class BLKFilesReader(object):
+class BLKFilesReader:  # pylint: disable=too-many-instance-attributes
+    """Blk files reader"""
 
     def __init__(self, logger, mongo):
         self.logger = logger
@@ -42,13 +47,21 @@ class BLKFilesReader(object):
         self.logger.log('files to check: {}'.format(files_to_check))
         for blk_i, blk_file in enumerate(files_to_check):
             for rb_i, raw_block in enumerate(get_blocks(blk_file)):
-                b = Block(raw_block)
-                self.block_hash_chain[b.header.previous_block_hash].add(
-                    BlockInfo(hash=b.hash, path=blk_file,
-                              index=rb_i, height=-1)
+                block = Block(raw_block)
+                self.block_hash_chain[block.header.previous_block_hash].add(
+                    BlockInfo(
+                        blk_hash=block.hash,
+                        path=blk_file,
+                        index=rb_i,
+                        height=-1
+                    )
                 )
-            self.logger.log('loading blk files {0:.2f}% ready'.format(100 * blk_i / len(files_to_check)))
-        self.logger.log('{} blocks in blocks directory'.format(len(self.block_hash_chain)))
+            self.logger.log('loading blk files {0:.2f}% ready'.format(
+                100 * blk_i / len(files_to_check)
+            ))
+        self.logger.log('{} blocks in blocks directory'.format(
+            len(self.block_hash_chain)
+        ))
 
     def get_files_to_check(self):
         """
@@ -80,25 +93,29 @@ class BLKFilesReader(object):
             block_info_set = self.block_hash_chain.get(block_info.hash)
 
         for _ in range(self.verification_threshold):
-            if len(self.blockchain) != 0:
+            if not self.blockchain:
                 self.blockchain.pop()
         self.logger.log('{} blocks to upload'.format(len(self.blockchain)))
 
     def chose_non_orphan(self, block_info_set):
         """
-        returns block_info of block that have at least self.verification_threshold
-        following blocks, or block with longest branch
+        returns block_info of block that have at least
+        self.verification_threshold following blocks,
+        or block with longest branch
         """
         if len(block_info_set) == 1:
             return block_info_set.pop()
         depths = []
         for block_info in block_info_set:
-            depths.append((block_info, self.get_max_branch_length({block_info}, 0)))
+            depths.append(
+                (block_info, self.get_max_branch_length({block_info}, 0))
+            )
         return max(depths, key=lambda x: x[1])[0]
 
     def get_max_branch_length(self, block_info_set, depth):
         """
-        returns maximal depth that branch reaches, or self.verification_threshold
+        returns maximal depth that branch reaches,
+        or self.verification_threshold
         if it goes deep enough
         """
         max_depth = 0
@@ -116,8 +133,10 @@ class BLKFilesReader(object):
         """checks if block hashes are unique,
         and if paths and indexes are unique"""
         # checks if hashes are unique
-        if (len(self.blockchain)
-                != len({block_hash for (block_hash, _, _, _) in self.blockchain})):
+        blockchain_indexes = {
+            block_hash for (block_hash, _, _, _) in self.blockchain
+        }
+        if len(self.blockchain) != len(blockchain_indexes):
             raise Exception('self.blockchain contains doubled hashes')
 
         # checks if paths and indexes are unique

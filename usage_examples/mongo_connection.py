@@ -19,6 +19,6 @@ def get_db_connection():
 
 if __name__ == '__main__':
     get_db_connection()
-    #try_simple_connection()
-    #conn = MongoConnection().get_connection()
-    #print(conn.collection_names())
+    # try_simple_connection()
+    # conn = MongoConnection().get_connection()
+    # print(conn.collection_names())
