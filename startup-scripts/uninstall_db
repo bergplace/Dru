@@ -1,4 +1,0 @@
-#!/bin/bash
-
-docker stop btc-blockchain-db
-docker rm btc-blockchain-db

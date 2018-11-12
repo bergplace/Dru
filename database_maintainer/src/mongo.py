@@ -30,10 +30,10 @@ class Mongo(object):
     def establish_connection(self):
         while True:
             try:
-                mongo_container = 'btc-blockchain-db'
+                mongo_container = os.environ['MONGODB_HOST']
                 self.logger.log('connecting to mongo at: {}'.format(mongo_container))
-                username = urllib.parse.quote_plus(os.environ['MONGODB_ADMIN_USER'])
-                password = urllib.parse.quote_plus(os.environ['MONGODB_ADMIN_PASS'])
+                username = os.environ['MONGODB_ADMIN_USER']
+                password = os.environ['MONGODB_ADMIN_PASS']
                 connection = MongoClient('mongodb://{}:{}@{}'.format(username, password, mongo_container))
                 db = connection['bitcoin']
                 return db
@@ -42,9 +42,10 @@ class Mongo(object):
                 time.sleep(1)
 
     def add_readonly_user(self):
-        self.db.add_user(
+        self.db.command(
+            "createUser",
             os.environ['MONGODB_READONLY_USER'],
-            os.environ['MONGODB_READONLY_PASS'],
+            pwd=os.environ['MONGODB_READONLY_PASS'],
             roles=[{'role': 'read', 'db': 'bitcoin'}]
         )
 

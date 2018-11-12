@@ -6,22 +6,23 @@ creates and maintains MongoDB with Bitcoin blocks, contained in docker
 ### prerequisites
 1. linux system
 1. full bitcoin node
-1. docker
 1. about 500Gb free space (full node + DB)
+1. `docker` & `docker-compose`
+1. `build-essential` (maketools)
+1. `pycodestyle` & `pylint`
 
 ### installation
-1. add your user to group docker on your system
-1. download this repository to your hard drive
-1. rename 'template_config.conf' to 'config.conf'
-1. set variables in 'config.conf'
-1. run 'install.sh'
-1. now you can connect to DB on port specified in config.conf
+1. `cp -v .env.dist .env`
+1. set variables in `.env`
+1. run `make`
+1. now you can connect to DB on port specified in `.env`
+1. web api is available on `http://localhost:${api_port}`
 
 ## Management
 
 ### connect to mongo shell
 
-`docker exec -it btc-blockchain-db mongo auth`
+`docker-compose exec mongo mongo auth`
 
 then to authenticate, type into the shell
 
@@ -29,7 +30,7 @@ then to authenticate, type into the shell
 
 ### folow logs of db maintainer
 
-`docker logs -f btc-blockchain-db-maintainer`
+`docker-compose logs db_maintainer`
 
 ## Usage in python
 
