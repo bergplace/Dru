@@ -2,16 +2,6 @@ appmake: build down run
 
 prod: build-prod down-prod run-prod
 
-static_test:
-	pycodestyle database_maintainer || true  ## don`t fail for now - TO BE FIXED
-	pycodestyle web_api || true  ## don`t fail for now - TO BE FIXED
-	pycodestyle tests || true  ## don`t fail for now - TO BE FIXED
-	pycodestyle usage_examples || true  ## don`t fail for now - TO BE FIXED
-	pylint database_maintainer || true  ## don`t fail for now - TO BE FIXED
-	pylint web_api || true  ## don`t fail for now - TO BE FIXED
-	pylint tests || true  ## don`t fail for now - TO BE FIXED
-	pylint usage_examples || true  ## don`t fail for now - TO BE FIXED
-
 build: static_test
 	docker-compose build
 
@@ -33,3 +23,22 @@ run-prod:
 
 down-prod:
 	docker-compose -f docker-compose.prod.yml down -v
+
+## static code analysis
+static_test: test-static-db_maintainer test-static-web_api test-static_tests test-static-usage_examples	
+
+test-static-db_maintainer:
+	pycodestyle database_maintainer || true  ## don`t fail for now - TO BE FIXED
+	pylint database_maintainer || true  ## don`t fail for now - TO BE FIXED
+
+test-static-web_api:
+	pycodestyle web_api || true  ## don`t fail for now - TO BE FIXED
+	pylint web_api || true  ## don`t fail for now - TO BE FIXED
+
+test-static_tests:
+	pycodestyle tests || true  ## don`t fail for now - TO BE FIXED
+	pylint tests || true  ## don`t fail for now - TO BE FIXED
+
+test-static-usage_examples:
+	pycodestyle usage_examples || true  ## don`t fail for now - TO BE FIXED
+	pylint usage_examples || true  ## don`t fail for now - TO BE FIXED
