@@ -1,0 +1,2 @@
+pymongo==3.6.0
+https://github.com/puchtaw/python-bitcoin-blockchain-parser/archive/0.1.5.zip

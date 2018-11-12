@@ -1,0 +1,61 @@
+version: "3.1"
+services:
+
+  mongo:
+    image: mongo
+    container_name: mongo
+    volumes:
+      - ${database_dir}:/data/db
+    environment:
+      - "AUTH=yes"
+      - "MONGO_INITDB_ROOT_USERNAME=${db_admin_username}"
+      - "MONGO_INITDB_ROOT_PASSWORD=${db_admin_password}"
+      - "MONGO_INITDB_DATABASE=${db_name}"
+    ports:
+      - ${db_port}:27017
+
+  mongo_web_admin:
+    image: mongo-express
+    restart: always
+    depends_on:
+      - mongo
+    ports:
+      - ${mongo_web_admin_port}:8081
+    environment:
+      - "ME_CONFIG_MONGODB_ADMINUSERNAME=${db_admin_username}"
+      - "ME_CONFIG_MONGODB_ADMINPASSWORD=${db_admin_password}"
+      - "ME_CONFIG_MONGODB_SERVER=${db_host}"
+      - "ME_CONFIG_MONGODB_AUTH_DATABASE=${db_name}"
+
+  db_maintainer:
+    build:
+      context: database_maintainer/
+    depends_on:
+      - mongo
+    volumes:
+      - ${btc_blocks_dir}:/btc-blocks-data
+      - ./database_maintainer/src:/src
+    environment:
+      - "MONGODB_ADMIN_USER=${db_admin_username}"
+      - "MONGODB_ADMIN_PASS=${db_admin_password}"
+      - "MONGODB_READONLY_USER=${db_readonly_username}"
+      - "MONGODB_READONLY_PASS=${db_readonly_password}"
+      - "MONGODB_PORT=${db_port}"
+      - "MONGODB_HOST=${db_host}"
+      - "MONGODB_NAME=${db_name}"
+      - "TX_ADDRESS_CACHE_LIMIT=${tx_address_cache_limit}"
+      
+  web_api:
+    build:
+      context: web_api/
+    volumes:
+      - ./web_api/src:/app
+    environment:
+      - "MONGODB_READONLY_USER=${db_readonly_username}"
+      - "MONGODB_READONLY_PASS=${db_readonly_password}"
+      - "MONGODB_PORT=${db_port}"
+      - "MONGODB_HOST=${db_host}"
+      - "MONGODB_NAME=${db_name}"
+      - "DEBUG=${api_debug}"
+    ports:
+      - ${api_port}:80

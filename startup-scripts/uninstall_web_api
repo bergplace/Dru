@@ -1,4 +1,0 @@
-#!/bin/bash
-
-docker stop btc-blockchain-web-api
-docker rm btc-blockchain-web-api
