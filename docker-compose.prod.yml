@@ -2,8 +2,7 @@ version: "3.1"
 services:
 
   mongo:
-    image: mongo
-    container_name: mongo
+    image: mongo:4.0.4-xenial
     volumes:
       - ${database_dir}:/data/db
     environment:
@@ -30,6 +29,7 @@ services:
   db_maintainer:
     build:
       context: database_maintainer/
+      dockerfile: Dockerfile-prod
     depends_on:
       - mongo
     volumes:
@@ -48,6 +48,7 @@ services:
   web_api:
     build:
       context: web_api/
+      dockerfile: Dockerfile-prod
     volumes:
       - ./web_api/src:/app
     environment:
@@ -56,6 +57,6 @@ services:
       - "MONGODB_PORT=${db_port}"
       - "MONGODB_HOST=${db_host}"
       - "MONGODB_NAME=${db_name}"
-      - "DEBUG=${api_debug}"
+      - "DEBUG=0"
     ports:
       - ${api_port}:80
