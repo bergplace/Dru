@@ -1,14 +1,20 @@
-class BlockInfo(object):
+"""
+Get block info
+"""
 
-    def __init__(self, hash, path, index, height=-1):
-        self.hash = hash
+
+class BlockInfo:
+    """Get block info"""
+
+    def __init__(self, blk_hash, path, index, height=-1):
+        self.hash = blk_hash
         self.path = path
         self.index = index
         self.height = height
         self.__next_counter = -1
 
     def __iter__(self):
-        return self
+        yield self
 
     def __next__(self):
         self.__next_counter += 1

@@ -11,5 +11,7 @@ def get_blocks_collection():
     mongo_container = 'btc-blockchain-db'
     username = urllib.parse.quote_plus('btc-user')
     password = urllib.parse.quote_plus('btc-pass')
-    connection = MongoClient('mongodb://{}:{}@{}'.format(username, password, mongo_container))
+    connection = MongoClient(
+        'mongodb://{}:{}@{}'.format(username, password, mongo_container)
+    )
     return connection.bitcoin.blocks

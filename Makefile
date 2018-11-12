@@ -5,6 +5,7 @@ prod: build-prod down-prod run-prod
 build: static_test
 	docker-compose build
 
+
 test:
 	echo "NO TESTS"
 
@@ -28,17 +29,13 @@ down-prod:
 static_test: test-static-db_maintainer test-static-web_api test-static_tests test-static-usage_examples	
 
 test-static-db_maintainer:
-	pycodestyle database_maintainer || true  ## don`t fail for now - TO BE FIXED
-	pylint database_maintainer || true  ## don`t fail for now - TO BE FIXED
+	docker run -v $(shell pwd):/code -ti puchtaw/pylinter:latest database_maintainer/src
 
 test-static-web_api:
-	pycodestyle web_api || true  ## don`t fail for now - TO BE FIXED
-	pylint web_api || true  ## don`t fail for now - TO BE FIXED
+	docker run -v $(shell pwd):/code -ti puchtaw/pylinter:latest web_api/src
 
 test-static_tests:
-	pycodestyle tests || true  ## don`t fail for now - TO BE FIXED
-	pylint tests || true  ## don`t fail for now - TO BE FIXED
+	docker run -v $(shell pwd):/code -ti puchtaw/pylinter:latest tests || true  ## don`t fail for now - TO BE FIXED
 
 test-static-usage_examples:
-	pycodestyle usage_examples || true  ## don`t fail for now - TO BE FIXED
-	pylint usage_examples || true  ## don`t fail for now - TO BE FIXED
+	docker run -v $(shell pwd):/code -ti puchtaw/pylinter:latest usage_examples || true  ## don`t fail for now - TO BE FIXED
