@@ -14,7 +14,7 @@ class BlockInfo:
         self.__next_counter = -1
 
     def __iter__(self):
-        yield self
+        return self
 
     def __next__(self):
         self.__next_counter += 1
