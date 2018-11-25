@@ -1,0 +1,14 @@
+body {
+    background: rgb(224, 172, 172);
+}
+
+
+.section {
+    margin-top: 4px;
+    border-top:1px solid black;
+    border-bottom:1px solid black;
+    border-left:1px solid black;
+}
+.section-inner {
+    margin-left: 6%;
+}
