@@ -4,6 +4,7 @@
 *.log
 *.toc
 *.dvi
+*.sqlite3
 *#
 *~
 .idea/*

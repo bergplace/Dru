@@ -10,7 +10,7 @@ test:
 	echo "NO TESTS"
 
 run:
-	docker-compose up -d
+	docker-compose up
 
 down:
 	docker-compose down -v
