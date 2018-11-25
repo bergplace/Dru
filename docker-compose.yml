@@ -61,8 +61,8 @@ services:
       - "MONGODB_PORT=${db_port}"
       - "MONGODB_HOST=${db_host}"
       - "MONGODB_NAME=${db_name}"
-      - "DJANGO_DB_NAME=${web_admin_username}"
-      - "DJANGO_DB_PASS=${web_admin_password}"
+      - "DJANGO_SU_NAME=${web_admin_username}"
+      - "DJANGO_SU_PASSWORD=${web_admin_password}"
       - "DEBUG=${api_debug}"
     ports:
       - 8000:8000
