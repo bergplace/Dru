@@ -81,14 +81,14 @@ DATABASES = {
         'HOST': 'postgres',
         'PORT': 5432,
     },
-    'mongo' : {
-        'ENGINE': 'django_mongodb_engine',
-        'NAME': 'mongo',
+    'mongo': {
+        'ENGINE': 'djongo',
+        'NAME': os.environ['MONGODB_NAME'],
         'HOST': os.environ['MONGODB_HOST'],
         'PORT': os.environ['MONGODB_PORT'],
         'USER': os.environ['MONGODB_READONLY_USER'],
         'PASSWORD': os.environ['MONGODB_READONLY_PASS'],
-   }
+    }
 }
 
 

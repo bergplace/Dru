@@ -6,6 +6,8 @@ RUN pip install --no-cache-dir -r /requirements.txt
 
 WORKDIR /app
 
+#RUN python manage.py migrate
+
 # Server
 EXPOSE 8000
 STOPSIGNAL SIGINT
