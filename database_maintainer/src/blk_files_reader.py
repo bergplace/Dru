@@ -93,7 +93,7 @@ class BLKFilesReader:  # pylint: disable=too-many-instance-attributes
             block_info_set = self.block_hash_chain.get(block_info.hash)
 
         for _ in range(self.verification_threshold):
-            if not self.blockchain:
+            if self.blockchain:
                 self.blockchain.pop()
         self.logger.log('{} blocks to upload'.format(len(self.blockchain)))
 
