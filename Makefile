@@ -25,6 +25,9 @@ run-prod:
 down-prod:
 	docker-compose -f docker-compose.prod.yml down -v
 
+django-shell:
+	docker-compose exec web python manage.py shell
+
 ## static code analysis
 static_test: test-static-db_maintainer test-static-web_api test-static_tests test-static-usage_examples	
 
