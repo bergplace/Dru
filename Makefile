@@ -28,6 +28,9 @@ down-prod:
 django-shell:
 	docker-compose exec web python manage.py shell
 
+maintainer-shell:
+	docker-compose exec db_maintainer bash
+
 ## static code analysis
 static_test: test-static-db_maintainer test-static-web_api test-static_tests test-static-usage_examples	
 
