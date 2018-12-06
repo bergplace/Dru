@@ -2,7 +2,7 @@ appmake: build down run
 
 prod: build-prod down-prod run-prod
 
-build: static_test
+build:
 	docker-compose build
 
 
