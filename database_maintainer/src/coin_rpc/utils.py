@@ -32,8 +32,15 @@ class RPC:
                 headers=self.headers,
                 auth=HTTPBasicAuth('user', 'pass')
             )
-            return json.loads(response.text)
+            result = json.loads(response.text)
+            if result.get('error'):
+                raise BitcoinRPCError(f"error: {result['error']} for payload: {payload}")
+            return result['result']
 
         return _call_rpc
+
+
+class BitcoinRPCError(Exception):
+    pass
 
 
