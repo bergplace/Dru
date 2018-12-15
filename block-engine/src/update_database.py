@@ -18,9 +18,8 @@ from tx_resolve import resolve_input_addresses
 
 class BlockchainDBMaintainer:
     """
-    responsible for taking raw blocks from
-    bitcoin data directory, and putting them
-    in json format to MongoDB database
+    responsible for inserting blocks from cryptocurency node
+    to mongoDB and resolving transaction input addresses
     """
 
     def __init__(self):
