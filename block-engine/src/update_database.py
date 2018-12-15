@@ -41,8 +41,8 @@ class BlockchainDBMaintainer:
                 self.mongo.blocks_collection.count()
             ))
             self.mongo.create_indexes()
-            self.logger.info('sleeps for 10 minutes')
-            time.sleep(600)
+            self.logger.info('sleeps for 100 seconds')
+            time.sleep(100)
 
     def save_blocks(self):
         """saves blocks"""
