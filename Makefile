@@ -1,5 +1,7 @@
 appmake: build down run
 
+block-engine: build-block-engine down-block-engine run-block-engine
+
 prod: build-prod down-prod run-prod
 
 build:
@@ -29,11 +31,10 @@ build-block-engine:
 	docker-compose -f docker-compose.block-engine.yml build
 
 run-block-engine:
-	grep changeme .env && { echo "YOU NEED TO SET PROPER DB PASSWORDS"; exit 1 ;} || true
-	docker-compose -f docker-compose.prod.yml up -d
+	docker-compose -f docker-compose.block-engine.yml up
 
 down-block-engine:
-	docker-compose -f docker-compose.prod.yml down -v
+	docker-compose -f docker-compose.block-engine.yml -v
 
 django-shell:
 	docker-compose exec web python manage.py shell

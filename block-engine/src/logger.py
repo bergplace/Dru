@@ -18,12 +18,15 @@ class Logger:  # pylint: disable=too-many-instance-attributes
         self.tx_cache_miss_count = 0
         self.tx_cache_length = 0
 
+    def __getattr__(self, item):
+        return self.log
+
     @staticmethod
-    def log(msg):
+    def log(*args):
         """log"""
-        print('[db-maintainer][{}] {}'.format(
+        print('[block-engine][{}] {}'.format(
             time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime()),
-            msg
+            args[0] if len(args) == 1 else args
         ))
 
     def log_processing(self, i, total):

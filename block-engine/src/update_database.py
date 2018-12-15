@@ -1,7 +1,6 @@
 """
 Update database
 """
-import logging
 import time
 import traceback
 
@@ -9,6 +8,7 @@ import os
 
 from btc_block_iterator import BTCBlockIterator
 from coin_rpc.utils import RPC
+from logger import Logger
 
 from output_addresses import OutputAddresses
 import mongo
@@ -22,7 +22,7 @@ class BlockchainDBMaintainer:
     """
 
     def __init__(self):
-        self.logger = logging.getLogger('block-engine')
+        self.logger = Logger()
         self.mongo = mongo.Mongo(self.logger)
         self.rpc_connection = RPC('http://localhost:8232', 'user', 'pass')
         self.output_addresses = OutputAddresses(
