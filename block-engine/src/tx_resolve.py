@@ -1,6 +1,6 @@
 
 
-def resolve_input_addresses(block, cache, mongo_connection):
+def resolve_input_addresses(block, cache, mongo):
     for tx in block['tx']:
         for tx_in in tx['vin']:
             if 'txid' in tx_in and 'vout' in tx_in:

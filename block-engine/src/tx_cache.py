@@ -19,7 +19,7 @@ class TxCache:
         for tx in block['tx']:
             tx_outs = []
             for out in tx['vout']:
-                tx_outs.append(tuple(out.get('scriptPubKey', {}).get('addresses', [])))
+                tx_outs.append(tuple(out.get('scriptPubKey', {}).get('addresses', None)))
             self.add(tx['txid'], tx_outs)
 
     def get(self, tx_hash, out_nr):
