@@ -24,7 +24,7 @@ class Logger:  # pylint: disable=too-many-instance-attributes
     @staticmethod
     def log(*args):
         """log"""
-        print('[block-engine][{}] {}'.format(
+        print('[{}] {}'.format(
             time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime()),
             args[0] if len(args) == 1 else args
         ))

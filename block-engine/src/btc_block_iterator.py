@@ -30,6 +30,7 @@ class BTCBlockIterator:
                 break
             block = self.connection.getblock(block.get('previousblockhash'))
             self.blockchain.append(block['hash'])
-            self.logger.info(len(self.blockchain), block['hash'])
+            if len(self.blockchain) % 100 == 0:
+                self.logger.info(f"reading block (height: {block['height']})")
 
         self.logger.info(f"blockchain recreated, got {len(self.blockchain)} blocks")
