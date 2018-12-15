@@ -12,6 +12,8 @@ from logger import Logger
 
 from output_addresses import OutputAddresses
 import mongo
+from tx_cache import TxCache
+from tx_resolve import resolve_input_addresses
 
 
 class BlockchainDBMaintainer:
@@ -25,6 +27,7 @@ class BlockchainDBMaintainer:
         self.logger = Logger()
         self.mongo = mongo.Mongo(self.logger)
         self.rpc_connection = RPC('http://localhost:8232', 'user', 'pass')
+        self.tx_cache = TxCache()
         self.output_addresses = OutputAddresses(
             limit=int(os.environ['TX_ADDRESS_CACHE_LIMIT']),
             mongo=self.mongo,
@@ -49,6 +52,8 @@ class BlockchainDBMaintainer:
                 self.logger,
                 self.mongo.hash_of_last_saved_block):
             self.logger.info(f"saving block (hash: {block['hash']})")
+            resolve_input_addresses(block, self.tx_cache, self.mongo)
+            self.tx_cache.add_from_block(block)
             self.mongo.save_block(block)
 
 

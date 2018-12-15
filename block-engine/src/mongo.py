@@ -45,7 +45,7 @@ class Mongo:
                 connection = MongoClient('mongodb://{}:{}@{}'.format(
                     username, password, mongo_container
                 ))
-                database = connection['bitcoin']
+                database = connection[os.environ['MONGODB_NAME']]
                 return database
             except OperationFailure as exception:
                 self.logger.error('error {}, retrying in 1s'.format(exception))
@@ -58,7 +58,7 @@ class Mongo:
                 "createUser",
                 os.environ['MONGODB_READONLY_USER'],
                 pwd=os.environ['MONGODB_READONLY_PASS'],
-                roles=[{'role': 'read', 'db': 'bitcoin'}]
+                roles=[{'role': 'read', 'db': os.environ['MONGODB_NAME']}]
             )
         except DuplicateKeyError:
             pass
