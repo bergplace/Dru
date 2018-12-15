@@ -29,15 +29,15 @@ services:
       - "ME_CONFIG_MONGODB_SERVER=${db_host}"
       - "ME_CONFIG_MONGODB_AUTH_DATABASE=${db_name}"
 
-  db_maintainer:
+  block-db:
     build:
-      context: database_maintainer/
+      context: block-db/
     depends_on:
       - mongo
     network_mode: "host"
     volumes:
       - ${btc_blocks_dir}:/btc-blocks-data
-      - ./database_maintainer/src:/src
+      - ./block-db/src:/src
     environment:
       - "MONGODB_ADMIN_USER=${db_admin_username}"
       - "MONGODB_ADMIN_PASS=${db_admin_password}"

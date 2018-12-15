@@ -37,7 +37,7 @@ class Mongo:
         while True:
             try:
                 mongo_container = 'localhost'
-                self.logger.log('connecting to mongo at: {}'.format(
+                self.logger.info('connecting to mongo at: {}'.format(
                     mongo_container
                 ))
                 username = quote_plus(os.environ['MONGODB_ADMIN_USER'])
@@ -48,7 +48,7 @@ class Mongo:
                 database = connection['bitcoin']
                 return database
             except OperationFailure as exception:
-                self.logger.log('error {}, retrying in 1s'.format(exception))
+                self.logger.error('error {}, retrying in 1s'.format(exception))
                 time.sleep(1)
 
     def add_readonly_user(self):
@@ -76,15 +76,19 @@ class Mongo:
             return last_block[0]['hash'], last_block[0]['height']
         return GENESIS_HASH, -1
 
-    def save_block(self, block_hash, block):
+    @property
+    def hash_of_last_saved_block(self):
+        return self.hash_and_height_of_last_saved_block[0]
+
+    def save_block(self, block):
         """save_block"""
-        if block_hash in self.saved_blocks_hashes:
+        if block['hash'] in self.saved_blocks_hashes:
             raise DBIntegrityException(
                 'Block Hash not unique for block {}'.format(
-                    block_hash
+                    block['hash']
                 )
             )
-        self.saved_blocks_hashes.add(block_hash)
+        self.saved_blocks_hashes.add(block['hash'])
         self.collection.insert_one(block)
 
     def check_hash_uniqueness(self, block_hash):
@@ -94,15 +98,15 @@ class Mongo:
     def create_indexes(self):
         """create_indexes"""
         if not self.indexes_created:
-            self.logger.log('creating height db index')
+            self.logger.info('creating height db index')
             self.collection.create_index([('height', ASCENDING)])
-            self.logger.log('creating timestamp db index')
+            self.logger.info('creating timestamp db index')
             self.collection.create_index([('timestamp', ASCENDING)])
             self.indexes_created = True
 
     def create_tx_hash_index(self):
         """create_tx_hash_index"""
-        self.logger.log('creating tx hash db index')
+        self.logger.info('creating tx hash db index')
         self.collection.create_index([('transactions.hash', ASCENDING)])
         self.output_addresses_index_created = True
 

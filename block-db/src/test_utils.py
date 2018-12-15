@@ -12,5 +12,3 @@ print('!!!!!!!!!!!!!!!!!!!!!!!!')
 for block in BTCBlockIterator(zcash):
     print(block)
 
-
-print(zcash.getbestblockhash())

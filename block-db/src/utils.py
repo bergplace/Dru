@@ -1,5 +1,5 @@
 """
-Utilities for database_maintainer.
+Utilities for block-db.
 """
 
 

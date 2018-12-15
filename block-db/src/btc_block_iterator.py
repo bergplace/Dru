@@ -3,8 +3,8 @@ import logging
 
 class BTCBlockIterator:
 
-    def __init__(self, connection, start_hash=None, verification_threshold=6):
-        self.logger = logging.getLogger()
+    def __init__(self, connection, logger, start_hash=None, verification_threshold=6):
+        self.logger = logger
         self.connection = connection
         self.start_hash = start_hash
         self.verification_threshold = verification_threshold
@@ -29,6 +29,6 @@ class BTCBlockIterator:
                 break
             block = self.connection.getblock(block.get('previousblockhash'))
             self.blockchain.append(block['hash'])
-            print(len(self.blockchain), block['hash'])
+            self.logger.info(len(self.blockchain), block['hash'])
 
-        self.logger.info(f"blockchain recreatet, got {len(self.blockchain)} blocks")
+        self.logger.info(f"blockchain recreated, got {len(self.blockchain)} blocks")
