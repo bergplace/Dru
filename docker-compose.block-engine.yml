@@ -29,9 +29,9 @@ services:
   block-engine:
     build:
       context: block-engine/
-      dockerfile: Dockerfile-prod
     depends_on:
       - mongo
+    network_mode: "host"
     volumes:
       - ${btc_blocks_dir}:/btc-blocks-data
       - ./block-engine/src:/src
@@ -44,19 +44,3 @@ services:
       - "MONGODB_HOST=${db_host}"
       - "MONGODB_NAME=${db_name}"
       - "TX_ADDRESS_CACHE_LIMIT=${tx_address_cache_limit}"
-      
-  web_api:
-    build:
-      context: web_api/
-      dockerfile: Dockerfile-prod
-    volumes:
-      - ./web_api/src:/app
-    environment:
-      - "MONGODB_READONLY_USER=${db_readonly_username}"
-      - "MONGODB_READONLY_PASS=${db_readonly_password}"
-      - "MONGODB_PORT=${db_port}"
-      - "MONGODB_HOST=${db_host}"
-      - "MONGODB_NAME=${db_name}"
-      - "DEBUG=0"
-    ports:
-      - ${api_port}:80

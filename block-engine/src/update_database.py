@@ -22,7 +22,7 @@ class BlockchainDBMaintainer:
     """
 
     def __init__(self):
-        self.logger = logging.getLogger('block-db')
+        self.logger = logging.getLogger('block-engine')
         self.mongo = mongo.Mongo(self.logger)
         self.rpc_connection = RPC('http://localhost:8232', 'user', 'pass')
         self.output_addresses = OutputAddresses(

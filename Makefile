@@ -25,6 +25,16 @@ run-prod:
 down-prod:
 	docker-compose -f docker-compose.prod.yml down -v
 
+build-block-engine:
+	docker-compose -f docker-compose.block-engine.yml build
+
+run-block-engine:
+	grep changeme .env && { echo "YOU NEED TO SET PROPER DB PASSWORDS"; exit 1 ;} || true
+	docker-compose -f docker-compose.prod.yml up -d
+
+down-block-engine:
+	docker-compose -f docker-compose.prod.yml down -v
+
 django-shell:
 	docker-compose exec web python manage.py shell
 

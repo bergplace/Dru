@@ -4,6 +4,7 @@ import logging
 class BTCBlockIterator:
 
     def __init__(self, connection, logger, start_hash=None, verification_threshold=6):
+        logger.info("initializing block iterator")
         self.logger = logger
         self.connection = connection
         self.start_hash = start_hash
