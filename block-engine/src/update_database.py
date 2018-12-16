@@ -28,12 +28,12 @@ class BlockchainDBMaintainer:
     def run(self):
         """execution starts here"""
         while True:
+            start_time = time.time()
             self.save_blocks()
             self.logger.info('current collection count: {}'.format(
                 self.mongo.blocks_collection.count()
             ))
-            self.logger.info('sleeps for 100 seconds')
-            time.sleep(100)
+            time.sleep(max(0, 100 - int(time.time() - start_time)))
 
     def save_blocks(self):
         """saves blocks"""
