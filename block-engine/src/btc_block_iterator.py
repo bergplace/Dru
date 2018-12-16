@@ -27,7 +27,7 @@ class BTCBlockIterator:
         block = {'previousblockhash': self.connection.getbestblockhash()}
         while True:
             if block.get('previousblockhash', self.start_hash) == self.start_hash:
-                break
+                break # ERROR: IF START BLOCK IS AFTER BEST BLOCK, IT WILL DUPLICATE ENTRIES
             block = self.connection.getblock(block.get('previousblockhash'))
             self.blockchain.append(block['hash'])
             if len(self.blockchain) % 100 == 0:

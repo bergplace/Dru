@@ -1,6 +1,7 @@
 """
 Utilities for block-engine.
 """
+import traceback
 
 
 def split_list(lst, number):
@@ -39,3 +40,27 @@ class FakeMongoCollection:
     def count(self):  # pylint: disable=no-self-use
         """count mockup"""
         return 0
+
+
+class SafeGetter:
+    def __init__(self, collection, logger, default=None):
+        self.collection = collection
+        self.logger = logger
+        self.items = []
+        self.default = default
+
+    def __getitem__(self, item):
+        self.items.append(item)
+        return self
+
+    def exec(self):
+        try:
+            result = self.collection
+            for i, item in enumerate(self.items):
+                result = result.__getitem__(item)
+            return result
+        except Exception as e:
+            self.logger.error(f'{traceback.format_exc()} for items {self.items[:i + 1]}')
+            return self.default
+
+

@@ -10,6 +10,7 @@ from pymongo import MongoClient, ASCENDING  # pylint: disable=import-error
 from pymongo.errors import OperationFailure, DuplicateKeyError  # noqa pylint: disable=import-error
 
 from constants import GENESIS_HASH
+from utils import SafeGetter
 
 
 class DBIntegrityException(Exception):
@@ -70,7 +71,7 @@ class Mongo:
     @property
     def hash_and_height_of_last_saved_block(self):
         """hash_and_height_of_last_saved_block"""
-        last_block = self.collection.find().sort([('_id', -1)]).limit(1)
+        last_block = self.collection.find().sort([('height', -1)]).limit(1)
         if last_block.count() != 0:
             return last_block[0]['hash'], last_block[0]['height']
         return GENESIS_HASH, -1
@@ -105,7 +106,12 @@ class Mongo:
 
     def get_tx_out_addr(self, tx_hash, out_index):
         """get_tx"""
-        return self.collection.find_one(
+        result = self.collection.find_one(
             {'tx.txid': tx_hash},
             {'tx.vout.$': 1}
-        )['tx'][0]['vout'][out_index]['scriptPubKey']['addresses']
+        )
+        return SafeGetter(
+            result,
+            self.logger,
+            default=[]
+        )['tx'][0]['vout'][out_index]['scriptPubKey']['addresses'].exec()
