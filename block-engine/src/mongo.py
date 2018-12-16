@@ -1,7 +1,7 @@
 """
 Mongo handler
 """
-
+import traceback
 from urllib.parse import quote_plus  # pylint: disable=no-name-in-module
 import time
 import os
@@ -10,7 +10,6 @@ from pymongo import MongoClient, ASCENDING  # pylint: disable=import-error
 from pymongo.errors import OperationFailure, DuplicateKeyError  # noqa pylint: disable=import-error
 
 from constants import GENESIS_HASH
-from utils import SafeGetter
 
 
 class DBIntegrityException(Exception):
@@ -106,12 +105,16 @@ class Mongo:
 
     def get_tx_out_addr(self, tx_hash, out_index):
         """get_tx"""
-        result = self.collection.find_one(
-            {'tx.txid': tx_hash},
-            {'tx.vout.$': 1}
-        )
-        return SafeGetter(
-            result,
-            self.logger,
-            default=[]
-        )['tx'][0]['vout'][out_index]['scriptPubKey']['addresses'].exec()
+        try:
+            result = None
+            result = self.collection.find_one(
+                {'tx.txid': tx_hash},
+                {'tx.vout.$': 1}
+            )
+            return result['tx'][0]['vout'][out_index]['scriptPubKey']['addresses']
+        except Exception as e:
+            self.logger.error(f'{traceback.format_exc()} '
+                              f'for txid:index {tx_hash}:{out_index} '
+                              f'querry result {result}')
+            return []
+

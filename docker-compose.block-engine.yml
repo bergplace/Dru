@@ -33,7 +33,6 @@ services:
       - mongo
     network_mode: "host"
     volumes:
-      - ${btc_blocks_dir}:/btc-blocks-data
       - ./block-engine/src:/src
     environment:
       - "MONGODB_ADMIN_USER=${db_admin_username}"

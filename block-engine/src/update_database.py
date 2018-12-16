@@ -43,8 +43,8 @@ class BlockchainDBMaintainer:
                 self.mongo.hash_of_last_saved_block):
             if block['height'] % 100 == 0:
                 self.logger.info(f"saving block (height: {block['height']})")
-            resolve_input_addresses(block, self.tx_cache, self.mongo, self.logger)
             self.tx_cache.add_from_block(block)
+            resolve_input_addresses(block, self.tx_cache, self.mongo, self.logger)
             self.mongo.save_block(block)
 
 
