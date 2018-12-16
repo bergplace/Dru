@@ -13,7 +13,7 @@ app = Flask(__name__, static_url_path='/static')
 app.config['MONGO_HOST'] = os.environ['MONGODB_HOST']
 app.config['MONGO_USERNAME'] = os.environ['MONGODB_READONLY_USER']
 app.config['MONGO_PASSWORD'] = os.environ['MONGODB_READONLY_PASS']
-app.config['MONGO_DBNAME'] = os.environ['MONGODB_NAME']
+app.config['MONGO_DBNAME'] = os.environ['CRYPTO']
 app.config['MONGO_URI'] = 'mongodb://{}:{}/'.format(
     os.environ['MONGODB_HOST'],
     os.environ['MONGODB_PORT']

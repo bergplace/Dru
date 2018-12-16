@@ -25,7 +25,7 @@ class BlockchainDBMaintainer:
     def __init__(self):
         self.logger = Logger()
         self.mongo = mongo.Mongo(self.logger)
-        self.rpc_connection = RPC('http://localhost:8232', 'user', 'pass')
+        self.rpc_connection = RPC()
         self.tx_cache = TxCache()
         self.output_addresses = OutputAddresses(
             limit=int(os.environ['TX_ADDRESS_CACHE_LIMIT']),

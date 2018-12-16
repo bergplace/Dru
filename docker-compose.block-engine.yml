@@ -9,7 +9,7 @@ services:
       - "AUTH=yes"
       - "MONGO_INITDB_ROOT_USERNAME=${db_admin_username}"
       - "MONGO_INITDB_ROOT_PASSWORD=${db_admin_password}"
-      - "MONGO_INITDB_DATABASE=${db_name}"
+      - "MONGO_INITDB_DATABASE=${cryptocurrency}"
     ports:
       - ${db_port}:27017
 
@@ -24,7 +24,7 @@ services:
       - "ME_CONFIG_MONGODB_ADMINUSERNAME=${db_admin_username}"
       - "ME_CONFIG_MONGODB_ADMINPASSWORD=${db_admin_password}"
       - "ME_CONFIG_MONGODB_SERVER=${db_host}"
-      - "ME_CONFIG_MONGODB_AUTH_DATABASE=${db_name}"
+      - "ME_CONFIG_MONGODB_AUTH_DATABASE=${cryptocurrency}"
 
   block-engine:
     build:
@@ -42,5 +42,8 @@ services:
       - "MONGODB_READONLY_PASS=${db_readonly_password}"
       - "MONGODB_PORT=${db_port}"
       - "MONGODB_HOST=${db_host}"
-      - "MONGODB_NAME=${db_name}"
+      - "CRYPTO=${cryptocurrency}"
+      - "CRYPTO_USER=${cryptocurrency_rpc_username}"
+      - "CRYPTO_PASS=${cryptocurrency_rpc_password}"
+      - "CRYPTO_PORT=${cryptocurrency_rpc_port}"
       - "TX_ADDRESS_CACHE_LIMIT=${tx_address_cache_limit}"

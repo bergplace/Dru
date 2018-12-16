@@ -2,16 +2,18 @@
 Utils for communicating with rpc api's of cryptocurrencies nodes
 """
 import json
+import os
+
 import requests
 from requests.auth import HTTPBasicAuth
 
 
 class RPC:
 
-    def __init__(self, url, user, password):
-        self.url = url
-        self.user = user
-        self.password = password
+    def __init__(self):
+        self.url = 'http://localhost:' + os.environ['CRYPTO_PORT']
+        self.user = os.environ['CRYPTO_USER']
+        self.password = os.environ['CRYPTO_PASS']
         self.headers = {
             'content-type': 'application/json',
         }
