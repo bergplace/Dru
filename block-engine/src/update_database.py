@@ -50,7 +50,8 @@ class BlockchainDBMaintainer:
                 self.rpc_connection,
                 self.logger,
                 self.mongo.hash_of_last_saved_block):
-            self.logger.info(f"saving block (hash: {block['hash']})")
+            if block['height'] % 100 == 0:
+                self.logger.info(f"saving block (height: {block['height']})")
             resolve_input_addresses(block, self.tx_cache, self.mongo)
             self.tx_cache.add_from_block(block)
             self.mongo.save_block(block)
