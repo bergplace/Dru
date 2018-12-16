@@ -1,12 +1,13 @@
+import os
 from collections import deque
 
 
 class TxCache:
 
-    def __init__(self, limit=1000000):
+    def __init__(self):
         self.tx_dict = dict()
         self.tx_queue = deque()
-        self.limit = limit
+        self.limit = int(os.environ['TX_ADDRESS_CACHE_LIMIT'])
 
     def add(self, tx_hash, tx_outputs):
         tx_hash = int(tx_hash, 16)

@@ -29,8 +29,7 @@ class Mongo:
         self.collection = self.database.blocks
         self.saved_blocks_hashes = set()
         self.add_readonly_user()
-        self.indexes_created = False
-        self.output_addresses_index_created = False
+        self.create_indexes()
 
     def establish_connection(self):
         """establish_connection"""
@@ -97,24 +96,16 @@ class Mongo:
 
     def create_indexes(self):
         """create_indexes"""
-        if not self.indexes_created:
-            self.logger.info('creating height db index')
-            self.collection.create_index([('height', ASCENDING)])
-            self.logger.info('creating timestamp db index')
-            self.collection.create_index([('timestamp', ASCENDING)])
-            self.indexes_created = True
-
-    def create_tx_hash_index(self):
-        """create_tx_hash_index"""
+        self.logger.info('creating height db index')
+        self.collection.create_index([('height', ASCENDING)])
+        self.logger.info('creating timestamp db index')
+        self.collection.create_index([('timestamp', ASCENDING)])
         self.logger.info('creating tx hash db index')
-        self.collection.create_index([('transactions.hash', ASCENDING)])
-        self.output_addresses_index_created = True
+        self.collection.create_index([('tx.txid', ASCENDING)])
 
-    def get_tx(self, tx_hash):
+    def get_tx_out_addr(self, tx_hash, out_index):
         """get_tx"""
-        if not self.output_addresses_index_created:
-            self.create_tx_hash_index()
         return self.collection.find_one(
-            {'transactions.hash': tx_hash},
-            {'transactions.$': 1, 'timestamp': 1}
-        )
+            {'tx.txid': tx_hash},
+            {'tx.vout.$': 1}
+        )['tx'][0]['vout'][out_index]['scriptPubKey']['addresses']

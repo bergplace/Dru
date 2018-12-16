@@ -4,13 +4,10 @@ Update database
 import time
 import traceback
 
-import os
-
 from btc_block_iterator import BTCBlockIterator
 from coin_rpc.utils import RPC
 from logger import Logger
 
-from output_addresses import OutputAddresses
 import mongo
 from tx_cache import TxCache
 from tx_resolve import resolve_input_addresses
@@ -27,11 +24,6 @@ class BlockchainDBMaintainer:
         self.mongo = mongo.Mongo(self.logger)
         self.rpc_connection = RPC()
         self.tx_cache = TxCache()
-        self.output_addresses = OutputAddresses(
-            limit=int(os.environ['TX_ADDRESS_CACHE_LIMIT']),
-            mongo=self.mongo,
-            logger=self.logger
-        )
 
     def run(self):
         """execution starts here"""
@@ -40,7 +32,6 @@ class BlockchainDBMaintainer:
             self.logger.info('current collection count: {}'.format(
                 self.mongo.blocks_collection.count()
             ))
-            self.mongo.create_indexes()
             self.logger.info('sleeps for 100 seconds')
             time.sleep(100)
 
@@ -52,7 +43,7 @@ class BlockchainDBMaintainer:
                 self.mongo.hash_of_last_saved_block):
             if block['height'] % 100 == 0:
                 self.logger.info(f"saving block (height: {block['height']})")
-            resolve_input_addresses(block, self.tx_cache, self.mongo)
+            resolve_input_addresses(block, self.tx_cache, self.mongo, self.logger)
             self.tx_cache.add_from_block(block)
             self.mongo.save_block(block)
 
