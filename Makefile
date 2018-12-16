@@ -34,7 +34,7 @@ run-block-engine:
 	docker-compose -f docker-compose.block-engine.yml up
 
 down-block-engine:
-	docker-compose -f docker-compose.block-engine.yml -v
+	docker-compose -f docker-compose.block-engine.yml down -v
 
 django-shell:
 	docker-compose exec web python manage.py shell
