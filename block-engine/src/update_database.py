@@ -5,12 +5,14 @@ import time
 import traceback
 
 from btc_block_iterator import BTCBlockIterator
-from coin_rpc.utils import RPC
 from logger import Logger
 
 import mongo
 from tx_cache import TxCache
 from tx_resolve import resolve_input_addresses
+
+from slickrpc import Proxy
+import os
 
 
 class BlockchainDBMaintainer:
@@ -22,7 +24,10 @@ class BlockchainDBMaintainer:
     def __init__(self):
         self.logger = Logger()
         self.mongo = mongo.Mongo(self.logger)
-        self.rpc_connection = RPC()
+        self.rpc_connection = Proxy(
+            f"http://{os.environ['CRYPTO_USER']}:{os.environ['CRYPTO_PASS']}@"
+            f"127.0.0.1:{os.environ['CRYPTO_PORT']}"
+        )
         self.tx_cache = TxCache()
 
     def run(self):
