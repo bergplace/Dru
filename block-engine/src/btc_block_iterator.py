@@ -1,6 +1,5 @@
 import logging
 
-
 class BTCBlockIterator:
 
     def __init__(self, connection, logger, start_hash=None, verification_threshold=10):
