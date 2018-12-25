@@ -11,20 +11,7 @@ services:
       - "MONGO_INITDB_ROOT_PASSWORD=${db_admin_password}"
       - "MONGO_INITDB_DATABASE=${cryptocurrency}"
     ports:
-      - ${db_port}:27017
-
-  mongo_web_admin:
-    image: mongo-express
-    restart: always
-    depends_on:
-      - mongo
-    ports:
-      - ${mongo_web_admin_port}:8081
-    environment:
-      - "ME_CONFIG_MONGODB_ADMINUSERNAME=${db_admin_username}"
-      - "ME_CONFIG_MONGODB_ADMINPASSWORD=${db_admin_password}"
-      - "ME_CONFIG_MONGODB_SERVER=${db_host}"
-      - "ME_CONFIG_MONGODB_AUTH_DATABASE=${cryptocurrency}"
+      - 127.0.0.1:${db_port}:27017
 
   block-engine:
     build:
