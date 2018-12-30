@@ -1,6 +1,9 @@
-appmake: build down run
+help:
+	less help-msg
 
-block-engine: build-block-engine down-block-engine run-block-engine
+dev: build down run
+
+block-engine-dev: build-block-engine down-block-engine run-block-engine
 
 prod: build-prod down-prod run-prod
 
@@ -39,8 +42,8 @@ down-block-engine:
 django-shell:
 	docker-compose exec web python manage.py shell
 
-maintainer-shell:
-	docker-compose exec db_maintainer bash
+block-engine-shell:
+	docker-compose exec block-engine bash
 
 ## static code analysis
 static_test: test-static-db_maintainer test-static-web_api test-static_tests test-static-usage_examples	

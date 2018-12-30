@@ -50,6 +50,9 @@ services:
   postgres:
     image: postgres:11
 
+  rabbit:
+    image: rabbitmq:3.7-management
+
   web:
     build:
       context: web/

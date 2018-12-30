@@ -1,0 +1,33 @@
+
+WELCOME TO
+ ____  ____  _   _
+/  _ \/  __\/ \ / \
+| | \||  \/|| | | |
+| |_/||    /| \_/ |
+\____/\_/\_\\_____/
+
+BEFORE FIRST RUN
+
+- make sure you have docker and docker-compose installed
+- remember to create .env file with cp .env.dist .env
+- set RPC password and user on your cryptocurrency node
+- type those RPC credentials into .env file
+- run one of the commands listed below
+
+USAGE
+- run full version for local development:
+    make dev
+- run only block-engine for local development:
+    make block-engine-dev
+- run full production version:
+    make prod
+- stop production version:
+    make down-prod
+- go into django-shell of web container:
+    make django-shell
+
+CONTACT
+
+in case of any troubles with this software
+feel free to create issue at
+https://github.com/bergplace/dru
