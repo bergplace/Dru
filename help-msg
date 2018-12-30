@@ -15,16 +15,25 @@ BEFORE FIRST RUN
 - run one of the commands listed below
 
 USAGE
-- run full version for local development:
-    make dev
-- run only block-engine for local development:
-    make block-engine-dev
-- run full production version:
-    make prod
-- stop production version:
-    make down-prod
-- go into django-shell of web container:
-    make django-shell
+
+    PRODUCTION
+    - run full production version:
+        make prod
+    - run production version of block-engine:
+        make block-engine-prod
+    - stop production:
+        make down-prod
+
+    DEVELOPMENT
+    - run full version for local development:
+        make dev
+    - run only block-engine for local development:
+        make block-engine-dev
+    - run web without block-engine:
+        make web-dev
+    - go into django-shell of web container:
+        make django-shell
+
 
 CONTACT
 

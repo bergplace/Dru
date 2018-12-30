@@ -1,2 +1,0 @@
-Flask-PyMongo==2.2.0
-python-igraph==0.7.1.post6

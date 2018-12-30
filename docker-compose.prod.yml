@@ -37,13 +37,18 @@ services:
   postgres:
     image: postgres:11
 
-  web:
+  rabbit:
+    image: rabbitmq:3.7-management
+
+  celery:
     build:
       context: web/
     volumes:
+      - ${task_result_dir}:/task-results
       - ./web/src:/app
     depends_on:
       - postgres
+      - rabbit
       - mongo
     environment:
       - "MONGODB_READONLY_USER=${db_readonly_username}"
@@ -53,7 +58,31 @@ services:
       - "MONGODB_NAME=${cryptocurrency}"
       - "DJANGO_SU_NAME=${web_admin_username}"
       - "DJANGO_SU_PASSWORD=${web_admin_password}"
-      - "DEBUG=${api_debug}"
+      - "DEBUG=True"
+      - "BASE_URL=${server_location}"
+      - "TYPE=celery"
+
+  web:
+    build:
+      context: web/
+    volumes:
+      - ${task_result_dir}:/task-results
+      - ./web/src:/app
+    depends_on:
+      - postgres
+      - rabbit
+      - mongo
+    environment:
+      - "MONGODB_READONLY_USER=${db_readonly_username}"
+      - "MONGODB_READONLY_PASS=${db_readonly_password}"
+      - "MONGODB_PORT=${db_port}"
+      - "MONGODB_HOST=${db_host}"
+      - "MONGODB_NAME=${cryptocurrency}"
+      - "DJANGO_SU_NAME=${web_admin_username}"
+      - "DJANGO_SU_PASSWORD=${web_admin_password}"
+      - "DEBUG=False"
+      - "BASE_URL=${server_location}"
+      - "TYPE=django"
     ports:
       - 8000:8000
     tty: true
