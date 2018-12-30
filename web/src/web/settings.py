@@ -23,7 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'i2sm+89p-m8)zq$lsbli#$(#w9bd4sn-$yjfqr*#0z1w^s+&+_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG') == 'True'
+
+BASE_URL = os.environ.get('BASE_URL')
 
 ALLOWED_HOSTS = []
 
@@ -39,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'api',
     'main',
+    'tasks',
     'rest_framework',
 ]
 
@@ -124,3 +127,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Celery settings
+CELERY_BROKER_URL = 'amqp://rabbit'
+
+TASK_RESULTS_DIR = '/task-results'
