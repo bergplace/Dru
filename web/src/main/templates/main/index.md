@@ -1,4 +1,4 @@
-# Mongo BTC Blocks Database
+# This is only exemplary md file transformed to html
 creates and maintains MongoDB with Bitcoin blocks, contained in docker
 
 ## Installation

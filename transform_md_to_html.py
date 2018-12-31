@@ -5,6 +5,7 @@ html_path = './web/src/main/templates/main/'
 files = [f for f in listdir(html_path) if f.endswith('.md')]
 for file in files:
     html_md = ''
+    file = html_path + file
     with open(file, 'r') as f:
         html_md = markdown2.markdown(f.read())
     html_md = """
