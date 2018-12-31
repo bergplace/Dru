@@ -11,6 +11,9 @@ prod: build-prod down-prod run-prod
 
 block-engine-prod: build-block-engine-prod down-prod run-block-engine-prod
 
+html:
+    python3 transform_md_to_html.py
+
 # DEV
 
 build-dev:

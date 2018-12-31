@@ -1,42 +1,61 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>btc analitics</title>
-     <link rel="stylesheet" type="text/css" href="{% static "main/css/index.css" %}">
-</head>
-<body>
-<div class="section">
-    <div class="section-inner">
-        <h1>BTC Analitics</h1>
-        <p>On this page you can find descriptions of implemented API's.
-            If you implement new API be sure to write about it here</p>
-    </div>
-</div>
-<div class="section">
-    <div class="section-inner">
-        <h2>Last Block</h2>
-        <p>returns last block in database,
-            useful during installation to see progress </p>
-        <p>URL: /api/last_block</p>
-    </div>
-</div>
-<div class="section">
-    <div class="section-inner">
-        <h2>Count Elements Of Unconnected Graphs</h2>
-        <p>this resourse let's you to count number of elements in separate
-        graphs of transactions for blocks specified by block height range</p>
-        <p>URL: /api/count_separate_graphs?height_from=1&height_to=100</p>
-    </div>
-</div>
-<div class="section">
-    <div class="section-inner">
-        <h2>Here describe your new API</h2>
-        <p>description</p>
-        <p>URL: ...</p>
-        <p>please don't remove this section, leave it for others</p>
-    </div>
-</div>
-</body>
-</html>
+{% extends "main/base.html" %}
+{% block content %}
+
+
+<h1>Mongo BTC Blocks Database</h1>
+
+<p>creates and maintains MongoDB with Bitcoin blocks, contained in docker</p>
+
+<h2>Installation</h2>
+
+<h3>prerequisites</h3>
+
+<ol>
+<li>linux system</li>
+<li>full bitcoin node</li>
+<li>about 500Gb free space (full node + DB)</li>
+<li><code>docker</code> &amp; <code>docker-compose</code></li>
+<li><code>build-essential</code> (maketools)</li>
+<li><code>pycodestyle</code> &amp; <code>pylint</code></li>
+</ol>
+
+<h3>installation</h3>
+
+<ol>
+<li><code>cp -v .env.dist .env</code></li>
+<li>set variables in <code>.env</code></li>
+<li>run <code>make</code></li>
+<li>now you can connect to DB on port specified in <code>.env</code></li>
+<li>web api is available on <code>http://localhost:${api_port}</code></li>
+</ol>
+
+<h2>Management</h2>
+
+<h3>connect to mongo shell</h3>
+
+<p><code>docker-compose exec mongo mongo auth</code></p>
+
+<p>then to authenticate, type into the shell</p>
+
+<p><code>db.auth('username', 'password')</code></p>
+
+<h3>folow logs of db maintainer</h3>
+
+<p><code>docker-compose logs db_maintainer</code></p>
+
+<h2>Usage in python</h2>
+
+<h3>connect to database</h3>
+
+<p>to connect to database you can use 'mongo<em>connection.py' from usage-examples directory
+than create mongo</em>credentials.py to hold variables like MONGO<em>USER, MONGO</em>PASS etc.
+and now you are ready to use your database!</p>
+
+<h3>getting last block</h3>
+
+<p><code>python
+from mongo_connection import get_db_connection
+db = get_db_connection()
+last_block = db.blocks.find().sort([('height', -1)])[0]
+</code></p>
+{% endblock %}

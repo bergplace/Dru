@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DRU</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'main/css/base2.css' %}">
+</head>
+<body style="background-color: #8abfad">
+<div style="padding: 5%" class="markdown-body">
+    <h1 style="font-size:400%">DRU <br> <p style="font-size:50%">transaction network analysis</p></h1>
+    <hr>
+    <article>
+        {% block content %}
+        {% endblock %}
+    </article>
+</div>
+</body>
+</html>
