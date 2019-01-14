@@ -41,8 +41,8 @@ class Mongo:
                 ))
                 username = quote_plus(os.environ['MONGODB_ADMIN_USER'])
                 password = quote_plus(os.environ['MONGODB_ADMIN_PASS'])
-                connection = MongoClient('mongodb://{}:{}@{}'.format(
-                    username, password, mongo_container
+                connection = MongoClient('mongodb://{}:{}@{}:{}'.format(
+                    username, password, mongo_container, os.environ['MONGODB_PORT']
                 ))
                 database = connection[os.environ['CRYPTO']]
                 return database
