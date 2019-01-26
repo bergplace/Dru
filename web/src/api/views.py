@@ -21,6 +21,11 @@ def result(request, task_id):
     raise Http404()
 
 
+@api_view(['POST'])
+def register_email(request):
+    return Response({'state': 'ok'})
+
+
 @api_view(['GET'])
 def get_block_by_height(request, height):
     task_id = task_id_from_request(request)
