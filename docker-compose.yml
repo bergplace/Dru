@@ -27,8 +27,7 @@ services:
       - "ME_CONFIG_MONGODB_AUTH_DATABASE=${cryptocurrency}"
 
   block-engine:
-    build:
-      context: block-engine/
+    image: bergplace/block-engine:1.01
     depends_on:
       - mongo
     network_mode: "host"

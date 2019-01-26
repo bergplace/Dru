@@ -14,8 +14,7 @@ services:
       - 127.0.0.1:${db_port}:27017
 
   block-engine:
-    build:
-      context: block-engine/
+    image: bergplace/block-engine:1.01
     depends_on:
       - mongo
     network_mode: "host"
