@@ -30,6 +30,10 @@ USAGE
     - go into django-shell of web container:
         make django-shell
 
+    TOOLS
+    - transform markdown files to html
+        make html
+
 
 CONTACT
 

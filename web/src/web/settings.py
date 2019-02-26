@@ -27,8 +27,19 @@ DEBUG = os.environ.get('DEBUG') == 'True'
 
 BASE_URL = os.environ.get('BASE_URL')
 
-ALLOWED_HOSTS = []
+# base url transformation so it fits allowed hosts format
+HOST_BASED_ON_BASE_URL = BASE_URL
 
+if BASE_URL.startswith('http://'):
+    HOST_BASED_ON_BASE_URL = BASE_URL[len('http://'):]
+
+if BASE_URL.startswith('https://'):
+    HOST_BASED_ON_BASE_URL = BASE_URL[len('https://'):]
+
+if BASE_URL.startswith('www.'):
+    HOST_BASED_ON_BASE_URL = BASE_URL[len('www.'):]
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', f'.{HOST_BASED_ON_BASE_URL}']
 
 # Application definition
 
@@ -132,3 +143,14 @@ STATIC_URL = '/static/'
 CELERY_BROKER_URL = 'amqp://rabbit'
 
 TASK_RESULTS_DIR = '/task-results'
+
+# email settings
+
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = os.environ.get('SENDGRID_USERNAME')
+EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_PASSWORD')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True

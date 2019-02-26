@@ -36,7 +36,7 @@ build-prod:
 
 run-prod:
 	grep changeme .env && { echo "YOU NEED TO SET PROPER DB PASSWORDS"; exit 1 ;} || true
-	docker-compose -f docker-compose.prod.yml up -d
+	docker-compose -f docker-compose.prod.yml up
 
 down-prod:
 	docker-compose -f docker-compose.prod.yml down -v
