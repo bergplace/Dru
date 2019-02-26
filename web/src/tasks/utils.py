@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 from hashlib import sha256
 from rest_framework.response import Response
@@ -20,7 +21,7 @@ def task_id_from_request(request):
 
 
 def task_result_response(task_id):
-    return Response({'result_url': f"{settings.BASE_URL}/api/result/{task_id}"})
+    return Response({'result_url': Tasks.url(task_id)})
 
 
 def save_task_result(task_id, result):
@@ -40,17 +41,21 @@ def task_path(task_id):
 def auto_save_result(fn):
     def wrapper(task_id, *args, **kwargs):
         task = Tasks.objects.get(id=task_id)
-        task.status = Tasks.PROCESSING
+        task.set_status(Tasks.PROCESSING)
+        task.processing_start_t = datetime.now()
         task.save()
         try:
             result = fn(*args, **kwargs)
             save_task_result(task.id, result)
-            task.status = Tasks.READY
+            task.set_status(Tasks.READY)
+            task.email = None
             task.save()
         except Exception:
-            task.status = Tasks.ERROR
+            task.set_status(Tasks.ERROR)
             task.save()
             # here some logging would be nice
             raise
+        finally:
+            task.end_t = datetime.now()
+            task.save()
     return wrapper
-

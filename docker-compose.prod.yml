@@ -77,6 +77,8 @@ services:
       - "DEBUG=False"
       - "BASE_URL=${server_location}"
       - "TYPE=django"
+      - "SENDGRID_USERNAME=${sendgrid_username}"
+      - "SENDGRID_PASSWORD=${sendgrid_password}"
     ports:
       - 127.0.0.1:8000:8000
     tty: true
