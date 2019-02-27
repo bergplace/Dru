@@ -31,8 +31,6 @@ services:
     depends_on:
       - mongo
     network_mode: "host"
-    volumes:
-      - ./block-engine/src:/src
     environment:
       - "MONGODB_ADMIN_USER=${db_admin_username}"
       - "MONGODB_ADMIN_PASS=${db_admin_password}"

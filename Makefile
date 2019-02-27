@@ -3,13 +3,9 @@ help:
 
 dev: build-dev down-dev run-dev
 
-block-engine-dev: build-block-engine-dev down-dev run-block-engine-dev
-
 web-dev: build-web-dev down-dev run-web-dev
 
 prod: build-prod down-prod run-prod
-
-block-engine-prod: build-block-engine-prod down-prod run-block-engine-prod
 
 html:
 	python3 transform_md_to_html.py
@@ -24,14 +20,6 @@ run-dev:
 
 down-dev:
 	docker-compose down -v
-
-# BLOCK ENGINE DEV
-
-build-block-engine-dev:
-	docker-compose build mongo mongo-express block-engine
-
-run-block-engine-dev:
-	docker-compose up mongo mongo-express block-engine
 
 # PURE WEB DEV
 
@@ -53,22 +41,10 @@ run-prod:
 down-prod:
 	docker-compose -f docker-compose.prod.yml down -v
 
-# BLOCK ENGINE PROD
-
-build-block-engine-prod:
-	docker-compose -f docker-compose.prod.yml build mongo block-engine
-
-run-block-engine-prod:
-	grep changeme .env && { echo "YOU NEED TO SET PROPER DB PASSWORDS"; exit 1 ;} || true
-	docker-compose -f docker-compose.prod.yml up -d mongo block-engine
-
 # UTILS
 
 django-shell:
 	docker-compose exec web python manage.py shell
-
-block-engine-shell:
-	docker-compose exec block-engine bash
 
 test:
 	echo "NO TESTS"
