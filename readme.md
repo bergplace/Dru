@@ -1,4 +1,4 @@
-# DRU - blockchain analysis platform
+# Dru - blockchain analysis platform
 
 Creates and maintains a database with cryptocurrency blocks and provides a API for querying it. All contained in docker.
 
