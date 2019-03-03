@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from api.models import Email
+from main.models import Email
 
 
 def index(request):

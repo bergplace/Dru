@@ -1,10 +1,11 @@
-import hashlib
+from datetime import timedelta
 
 from django.http import Http404
+from django.utils import timezone
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from api.models import Email
+from main.models import Email
 from tasks.utils import register_task, task_id_from_request, task_result_response, get_task_result
 from tasks.models import Tasks
 import tasks.tasks as tasks
@@ -56,14 +57,28 @@ def result(request, task_id):
 def register_email(request):
     if 'email' in request.data:
         obj, created = Email.objects.get_or_create(hash=Email.email_hash(request.data['email']))
+        if obj.verification_emails_sent > 10:
+            return Response({
+                'state': 'error',
+                'msg': "we've sent verification email 10 times already and we'll sent no more!"
+            })
+        if timezone.now() < obj.last_verification_email_sent_time + timedelta(seconds=10):
+            return Response({
+                'state': 'error',
+                'msg': "we've sent verification email less than 10 seconds ago already"
+            })
         send_mail(
             request.data['email'],
             'Email Verification',
             f'{BASE_URL}/verify-email/{obj.verification_string}'
         )
-        return Response({'state': 'ok'})
+        obj.verification_emails_sent += 1
+        obj.save()
+        if created:
+            return Response({'state': 'ok', 'msg': 'verification email sent'})
+        return Response({'state': 'ok', 'msg': 'verification email resent'})
     else:
-        return Response({'state': 'error', 'error-msg': 'no variable email in post request'})
+        return Response({'state': 'error', 'msg': 'no variable email in post request'})
 
 
 @api_view(['GET'])
