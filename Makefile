@@ -46,6 +46,9 @@ down-prod:
 django-shell:
 	docker-compose exec web python manage.py shell
 
+bash:
+	docker-compose exec web bash
+
 test:
 	echo "NO TESTS"
 

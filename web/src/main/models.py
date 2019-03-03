@@ -13,6 +13,8 @@ class Email(models.Model):
         default=randhex256,
         db_index=True,
     )
+    verification_emails_sent = models.IntegerField(default=0)
+    last_verification_email_sent_time = models.DateTimeField(auto_now=True)
 
     @classmethod
     def is_registered(cls, email):

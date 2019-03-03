@@ -27,10 +27,12 @@ USAGE
         make dev
     - run web without block-engine:
         make web-dev
-    - go into django-shell of web container:
-        make django-shell
 
     TOOLS
+    - go into django-shell of web container:
+        make django-shell
+    - go into bash shell of web container:
+        make bash
     - transform markdown files to html
         make html
 
