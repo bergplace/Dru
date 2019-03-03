@@ -54,4 +54,5 @@ def auto_save_result(fn):
             task.set_status(Tasks.ERROR)
             # here some logging would be nice
             raise
+    wrapper.__name__ = fn.__name__ + "_asr"
     return wrapper
