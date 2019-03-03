@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 
 from web.utils import send_mail
 
@@ -23,18 +24,22 @@ class Tasks(models.Model):
     )
     email = models.EmailField(null=True)
     received_t = models.DateTimeField(auto_now_add=True)
-    processing_start_t = models.DateTimeField(null=True)
+    start_t = models.DateTimeField(null=True)
     end_t = models.DateTimeField(null=True)
 
     def set_status(self, status):
         self.status = status
-        self.save()
+        if status == Tasks.PROCESSING:
+            self.start_t = timezone.now()
+        elif status in (Tasks.READY, Tasks.ERROR):
+            self.end_t = timezone.now()
         self.send_email()
+        self.save()
 
     def set_email(self, email):
         self.email = email
-        self.save()
         self.send_email()
+        self.save()
 
     def send_email(self):
         if self.email:
@@ -50,6 +55,7 @@ class Tasks(models.Model):
                     f'DRU Task finnished!',
                     f'DRU Task with id {self.id} changed state to READY, link to result: {Tasks.url(self.id)}'
                 )
+                self.email = None
 
     @staticmethod
     def url(task_id):
