@@ -19,6 +19,16 @@ from django.core.validators import validate_email
 def result(request, task_id):
     if Tasks.objects.filter(id=task_id).exists():
         task = Tasks.objects.get(id=task_id)
+
+        if request.method == 'GET':
+            if task.status != Tasks.READY:
+                return Response({'ready': False, 'status': task.status})
+            else:
+                return Response({
+                    'ready': True,
+                    'status': task.status,
+                    'data': get_task_result(task_id)
+                })
         if request.method == 'POST':
             if 'email' in request.data:
                 email = request.data['email']
@@ -41,15 +51,6 @@ def result(request, task_id):
                     'error': True,
                     'error-msg': 'email not specified'
                 })
-
-        if task.status != Tasks.READY:
-            return Response({'ready': False, 'status': task.status})
-        else:
-            return Response({
-                'ready': True,
-                'status': task.status,
-                'data': get_task_result(task_id)
-            })
     raise Http404()
 
 
@@ -62,7 +63,8 @@ def register_email(request):
                 'state': 'error',
                 'msg': "we've sent verification email 10 times already and we'll sent no more!"
             })
-        if timezone.now() < obj.last_verification_email_sent_time + timedelta(seconds=10):
+        if (obj.verification_emails_sent
+                and timezone.now() < obj.last_verification_email_sent_time + timedelta(seconds=10)):
             return Response({
                 'state': 'error',
                 'msg': "we've sent verification email less than 10 seconds ago already"
@@ -85,6 +87,13 @@ def register_email(request):
 def get_block_by_height(request, height):
     task_id = task_id_from_request(request)
     register_task(task_id, tasks.get_block_by_height, height)
+    return task_result_response(task_id)
+
+
+@api_view(['GET'])
+def wait_n_seconds(request, seconds):
+    task_id = task_id_from_request(request)
+    register_task(task_id, tasks.wait_n_seconds, seconds)
     return task_result_response(task_id)
 
 
