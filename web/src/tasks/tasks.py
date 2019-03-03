@@ -1,10 +1,9 @@
 import os
 import time
 
-from . import celery_app
+from web import celery_app
 from web.mongo import Mongo
 from .utils import auto_save_result
-from celery.contrib import rdb
 
 
 @celery_app.task
