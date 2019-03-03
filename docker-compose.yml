@@ -72,8 +72,6 @@ services:
       - "BASE_URL=http://localhost:8000"
       - "TYPE=celery"
       - "CELERY_RDB_HOST='0.0.0.0'"
-    ports:
-      - 127.0.0.1:7000-7100:6900-7000
 
   web:
     build:
