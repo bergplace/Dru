@@ -4,25 +4,26 @@ The most basic endpoint is returning the blocks given the following criteria:
 
 Endpoints - blocks:
 
-	getBlocks(startBlockID, endBlockID)
-    	Returns the blocks from startBlockID to endBlockID.
+	get_blocks_range(start_height, end_height)
+    	Returns the blocks from start_height to end_height.
 
     	Requires:
-			startBlockID >= 0
-			endBlockID >= startBlockID
-       		endBlockID, startBlockID <= maxBlockID
+			start_height >= 0
+			end_height >= start_height
+       		end_height, start_height <= max_height
 
        If the requirements are not met, the endpoint returns an error.
 
-	getBlocks(startBlockID, numOfBlocks)
-		Returns the numOfBloks blocks from startBlockID. This endpoint can
-		return blocks from startBlockID in both directions, i.e., lower than
-		and higher than startBlockID (including startBlockID).
+	get_blocks_range(start_height, num_of_blocks)
+		Returns the num_of_blocks blocks from start_height. This endpoint can
+		return blocks from start_height in both directions, i.e., lower than
+		and higher than start_height (including start_height).
 
 		Requires:
-			numOfBloks != 0
-			startBlockID + numOfBlocks >= 0
-			startBlockID + numOfBlocks <= maxBlockID
+			num_of_blocks != 0
+			start_height >= 0
+			start_height + num_of_blocks >= 0
+			start_height + num_of_blocks <= max_height
 
 Next level of abstraction is the list of nodes and edges as a future foundation of a graph
 for further processing.

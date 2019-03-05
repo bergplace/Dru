@@ -89,6 +89,17 @@ def get_block_by_height(request, height):
     register_task(task_id, tasks.get_block_by_height, height)
     return task_result_response(task_id)
 
+@api_view(['GET'])
+def get_blocks_range(request, start_height, end_height):
+    task_id = task_id_from_request(request)
+    register_task(task_id, tasks.get_blocks_range, start_height, end_height)
+    return task_result_response(task_id)
+
+@api_view(['GET'])
+def get_blocks_number(request, start_height, num_of_blocks):
+    task_id = task_id_from_request(request)
+    register_task(task_id, tasks.get_blocks_number, start_height, num_of_blocks)
+    return task_result_response(task_id)
 
 @api_view(['GET'])
 def wait_n_seconds(request, seconds):
