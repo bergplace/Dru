@@ -43,7 +43,7 @@ class Tasks(models.Model):
 
     def send_email(self):
         if self.email:
-            if self.status is not Tasks.READY:
+            if self.status != Tasks.READY:
                 send_mail(
                     self.email,
                     f'DRU Task changed state to {self.status}',

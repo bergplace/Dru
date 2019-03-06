@@ -140,11 +140,13 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # Celery settings
-CELERY_BROKER_URL = 'amqp://rabbit'
+BROKER_URL = 'amqp://rabbit'
 
 TASK_RESULTS_DIR = '/task-results'
 
 # email settings
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

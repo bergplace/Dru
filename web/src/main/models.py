@@ -18,7 +18,7 @@ class Email(models.Model):
 
     @classmethod
     def is_registered(cls, email):
-        return cls.objects.filter(hash=cls.email_hash(email)).exists()
+        return cls.objects.filter(hash=cls.email_hash(email), verified=True).exists()
 
     @classmethod
     def email_hash(cls, email):

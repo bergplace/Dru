@@ -1,4 +1,5 @@
 from datetime import datetime
+from time import time
 import json
 from hashlib import sha256
 
@@ -19,7 +20,7 @@ def register_task(task_id, task_fn, *args, **kwargs):
 
 
 def task_id_from_request(request):
-    return sha256((request.path + request.method).encode('utf-8')).hexdigest()
+    return sha256((request.path + request.method + str(time())).encode('utf-8')).hexdigest()
 
 
 def task_result_response(task_id):
@@ -43,15 +44,14 @@ def task_path(task_id):
 def auto_save_result(fn):
     def wrapper(task_id, *args, **kwargs):
         logger.debug(f"running task.{fn.__name__}, id: {task_id}")
-        task = Tasks.objects.get(id=task_id)
-        task.set_status(Tasks.PROCESSING)
+        Tasks.objects.get(id=task_id).set_status(Tasks.PROCESSING)
         try:
             result = fn(*args, **kwargs)
+            task = Tasks.objects.get(id=task_id)
             save_task_result(task.id, result)
             task.set_status(Tasks.READY)
-            task.save()
         except Exception:
-            task.set_status(Tasks.ERROR)
+            Tasks.objects.get(id=task_id).set_status(Tasks.ERROR)
             # here some logging would be nice
             raise
     wrapper.__name__ = fn.__name__ + "_asr"

@@ -33,7 +33,7 @@ def result(request, task_id):
             if 'email' in request.data:
                 email = request.data['email']
                 if not Email.is_registered(email):
-                    Response({
+                    return Response({
                         'error': True,
                         'error-msg': 'email not registered'
                     })
@@ -42,7 +42,7 @@ def result(request, task_id):
                     task.set_email(email)
                     return Response({'status': 'ok'})
                 except ValidationError:
-                    Response({
+                    return Response({
                         'error': True,
                         'error-msg': 'email is not valid'
                     })
