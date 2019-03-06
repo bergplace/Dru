@@ -9,7 +9,6 @@ from .utils import auto_save_result
 @celery_app.task
 @auto_save_result
 def get_block_by_height(height):
-    #rdb.set_trace()
     block = Mongo.db(os.environ['MONGODB_NAME']).blocks.find_one({'height': height})
     block['_id'] = ''  # mongo ObjectID is not JSON serializable, and I don't yet have nice solution
     return block
@@ -18,6 +17,5 @@ def get_block_by_height(height):
 @celery_app.task
 @auto_save_result
 def wait_n_seconds(seconds):
-    #rdb.set_trace()
     time.sleep(seconds)
     return {'result': f'waited {seconds}s'}
