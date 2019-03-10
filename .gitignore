@@ -1,3 +1,4 @@
+env
 .env
 *.gz
 *.aux
@@ -15,3 +16,6 @@ python-bitcoin-blockchain-parser/blockchain_parser/__pycache__/
 python-bitcoin-blockchain-parser/build/
 python-bitcoin-blockchain-parser/dist/
 __pycache*
+test-data
+data
+dru.conf
