@@ -1,11 +1,14 @@
+
 help:
 	less help-msg
 
-dev: build-dev down-dev run-dev
+dev: use-custom-conf build-dev down-dev run-dev
 
-web-dev: build-web-dev down-dev run-web-dev
+web-dev: use-custom-conf build-web-dev down-dev run-web-dev
 
-prod: build-prod down-prod run-prod
+prod: use-custom-conf build-prod down-prod run-prod
+
+test: use-test-conf clear-test-volumes build-test down-dev run-test
 
 html:
 	python3 transform_md_to_html.py
@@ -16,7 +19,7 @@ build-dev:
 	docker-compose build
 
 run-dev:
-	docker-compose up
+	docker-compose up --scale zcash=0
 
 down-dev:
 	docker-compose down -v
@@ -24,10 +27,10 @@ down-dev:
 # PURE WEB DEV
 
 build-web-dev:
-	docker-compose build mongo mongo-express rabbit postgres web celery
+	docker-compose build
 
 run-web-dev:
-	docker-compose up mongo mongo-express rabbit postgres web celery
+	docker-compose up --scale zcash=0 --scale block-engine=0
 
 # PROD
 
@@ -41,6 +44,14 @@ run-prod:
 down-prod:
 	docker-compose -f docker-compose.prod.yml down -v
 
+# TEST
+
+build-test:
+	docker-compose build
+
+run-test:
+	docker-compose up -V
+
 # UTILS
 
 django-shell:
@@ -49,10 +60,18 @@ django-shell:
 bash:
 	docker-compose exec web bash
 
-test:
-	echo "NO TESTS"
+use-custom-conf:
+	cp dru.conf .env
 
-## static code analysis
+use-test-conf:
+	cp dru.test.conf .env
+
+clear-test-volumes:
+	sudo rm -rf ./test-data
+
+
+# STATIC CODE ANALYSIS
+
 static_test: test-static-db_maintainer test-static-web_api test-static_tests test-static-usage_examples	
 
 test-static-db_maintainer:

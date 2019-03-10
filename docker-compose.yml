@@ -1,6 +1,16 @@
 version: "3.1"
 services:
 
+  zcash:
+    build:
+      context: zcash_node/
+    ports:
+      - 127.0.0.1:8232:8232
+    environment:
+      - "CRYPTO_USER=${cryptocurrency_rpc_username}"
+      - "CRYPTO_PASS=${cryptocurrency_rpc_password}"
+      - "CRYPTO_PORT=${cryptocurrency_rpc_port}"
+
   mongo:
     image: mongo:4.0.4-xenial
     volumes:
@@ -19,7 +29,7 @@ services:
     depends_on:
       - mongo
     ports:
-      - 127.0.0.1:${mongo_web_admin_port}:8081
+      - 127.0.0.1:8001:8081
     environment:
       - "ME_CONFIG_MONGODB_ADMINUSERNAME=${db_admin_username}"
       - "ME_CONFIG_MONGODB_ADMINPASSWORD=${db_admin_password}"
