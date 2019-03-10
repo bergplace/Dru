@@ -5,7 +5,7 @@ from perspective of Network science. Software used to get hold of
  blocks is our (https://github.com/bergplace/block-engine)
  which connects to cryptocurrency node, continuously extracts all blocks, 
  resolves transactions input addresses
- and saves them in mongoDB for ease of use.  
+ and saves them to mongoDB for ease of use.  
 ## BEFORE FIRST RUN
 
 - make sure you have docker and docker-compose installed
