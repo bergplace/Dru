@@ -8,30 +8,33 @@ from perspective of Network science. Software used to get hold of
  and saves them to mongoDB for ease of use.  
 ## BEFORE FIRST RUN
 
-- make sure you have docker and docker-compose installed
-- remember to create .env file with cp .env.dist .env
+- make sure you have `docker` and `docker-compose` installed
+- remember to create `dru.conf` file with  
+  `cp dru.default.conf dru.conf`
 - set RPC password and user on your cryptocurrency node
-- type those RPC credentials into .env file
+- type those RPC credentials into `dru.conf` file
 - run one of the commands listed below
 
 ## USAGE
 
 PRODUCTION
-- run full production version:
-    make prod
-- stop production:
-    make down-prod
+- run full production version:  
+    `make prod`
+- stop production:  
+    `make down-prod`
 
 DEVELOPMENT
-- run full version for local development:
-    make dev
-- run web without block-engine:
-    make web-dev
+- run full version for local development:  
+    `make dev`
+- run web without block-engine:  
+    `make web-dev`
+- run tests of the system:  
+    `make test`
 
 TOOLS
-- go into django-shell of web container:
-    make django-shell
-- go into bash shell of web container:
-    make bash
-- transform markdown files to html
-    make html
+- go into django-shell of web container:  
+    `make django-shell`
+- go into bash shell of web container:  
+    `make bash`
+- transform markdown files to html  
+    `make html`

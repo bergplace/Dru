@@ -9,9 +9,10 @@ WELCOME TO
 BEFORE FIRST RUN
 
 - make sure you have docker and docker-compose installed
-- remember to create .env file with cp .env.dist .env
+- remember to create dru.conf file with
+  cp dru.default.conf dru.conf
 - set RPC password and user on your cryptocurrency node
-- type those RPC credentials into .env file
+- type those RPC credentials into dru.conf file
 - run one of the commands listed below
 
 USAGE
@@ -27,13 +28,15 @@ USAGE
         make dev
     - run web without block-engine:
         make web-dev
+    - run tests of the system:
+        make test
 
     TOOLS
     - go into django-shell of web container:
         make django-shell
     - go into bash shell of web container:
         make bash
-    - transform markdown files to html
+    - transform markdown files to html:
         make html
 
 
