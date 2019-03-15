@@ -1,20 +1,21 @@
 version: "3.1"
 services:
 
-  zcash:
+  zcashd:
     build:
-      context: zcash_node/
-    ports:
-      - 127.0.0.1:8232:8232
+      context: zcashd/
     environment:
       - "CRYPTO_USER=${cryptocurrency_rpc_username}"
       - "CRYPTO_PASS=${cryptocurrency_rpc_password}"
       - "CRYPTO_PORT=${cryptocurrency_rpc_port}"
+      - "SYNCRONIZE=&{docker_zcash_node_test_mode}"
 
   mongo:
     image: mongo:4.0.4-xenial
     volumes:
-      - ${database_dir}:/data/db
+      type: volume
+      target: /data/db
+      - vol-mongo:
     environment:
       - "AUTH=yes"
       - "MONGO_INITDB_ROOT_USERNAME=${db_admin_username}"
@@ -40,7 +41,6 @@ services:
     image: bergplace/block-engine:1.02
     depends_on:
       - mongo
-    network_mode: "host"
     environment:
       - "MONGODB_ADMIN_USER=${db_admin_username}"
       - "MONGODB_ADMIN_PASS=${db_admin_password}"
@@ -65,7 +65,7 @@ services:
     build:
       context: web/
     volumes:
-      - ${task_result_dir}:/task-results
+      - vol-results:/task-results
       - ./web/src:/app
     depends_on:
       - postgres
@@ -88,7 +88,7 @@ services:
     build:
       context: web/
     volumes:
-      - ${task_result_dir}:/task-results
+      - vol-results:/task-results
       - ./web/src:/app
     depends_on:
       - postgres
@@ -110,3 +110,10 @@ services:
       - 127.0.0.1:8000:8000
     tty: true
     stdin_open: true
+
+volumes:
+  vol-results:
+  vol-mongo:
+  vol-pg:
+  vol-rabbit:
+  vol-zcash:
