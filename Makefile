@@ -8,7 +8,7 @@ web-dev: use-custom-conf build-web-dev down-dev run-web-dev
 
 prod: use-custom-conf build-prod down-prod run-prod
 
-test: use-test-conf clear-test-volumes build-test down-dev run-test-infra
+test: use-test-conf build-test down-test run-test
 
 html:
 	python3 transform_md_to_html.py
@@ -49,7 +49,10 @@ down-prod:
 build-test:
 	docker-compose build
 
-run-test-infra:
+down-test:
+	docker-compose down -v
+
+run-test:
 	docker-compose up -V
 
 run-test:
@@ -69,7 +72,7 @@ use-custom-conf:
 use-test-conf:
 	cp dru.test.conf .env
 
-clear-test-volumes:
+clear-test-volume:
 	sudo rm -rf ./test-data
 
 
