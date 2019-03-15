@@ -14,7 +14,7 @@ class Mongo:
         cls._connections[database_name] = MongoClient('mongodb://{}:{}@{}/{}'.format(
             urllib.parse.quote_plus(os.environ['MONGODB_READONLY_USER']),
             urllib.parse.quote_plus(os.environ['MONGODB_READONLY_PASS']),
-            os.environ['MONGODB_HOST'],
+            'mongo',
             database_name
         ))
         return cls._connections[database_name][database_name]
