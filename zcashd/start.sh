@@ -1,9 +1,11 @@
 #!/bin/bash
-if [ "SYNCRONIZE" = "true" ]
+if [ $TEST_MODE = "false" ]
     then
-        MAX_CONN=100
+        export MAX_CONN=100
+        export REINDEX=0
     else
-        MAX_CONN=0
+        export MAX_CONN=0
+        export REINDEX=1
 fi
 envsubst  < /root/template.zcash.conf | dd of=/root/.zcash/zcash.conf
 zcashd
