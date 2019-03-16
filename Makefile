@@ -2,49 +2,33 @@
 help:
 	less help-msg
 
-dev: use-custom-conf build-dev down-dev run-dev
-
-web-dev: use-custom-conf build-web-dev down-dev run-web-dev
-
-prod: use-custom-conf build-prod down-prod run-prod
+start: use-custom-conf build down run
 
 test: use-test-conf build-test down-test run-test
 
 html:
 	python3 transform_md_to_html.py
 
-# DEV
+# START
 
-build-dev:
+use-custom-conf:
+	./build/cp_conf_if_not_exists.sh
+	cp dru.conf .env
+
+build:
 	docker-compose build
-
-run-dev:
-	docker-compose up --scale zcash=0
 
 down-dev:
-	docker-compose down -v
+	./build/docker-compose-down.sh
 
-# PURE WEB DEV
+run-dev:
+	./build/docker-compose-down.sh
 
-build-web-dev:
-	docker-compose build
-
-run-web-dev:
-	docker-compose up --scale zcash=0 --scale block-engine=0
-
-# PROD
-
-build-prod:
-	docker-compose -f docker-compose.prod.yml build
-
-run-prod:
-	grep changeme .env && { echo "YOU NEED TO SET PROPER DB PASSWORDS";} || true
-	docker-compose -f docker-compose.prod.yml up
-
-down-prod:
-	docker-compose -f docker-compose.prod.yml down -v
 
 # TEST
+
+use-test-conf:
+	cp dru.test.conf .env
 
 build-test:
 	docker-compose build
@@ -62,16 +46,6 @@ django-shell:
 
 bash:
 	docker-compose exec web bash
-
-use-custom-conf:
-	cp dru.conf .env
-
-use-test-conf:
-	cp dru.test.conf .env
-
-clear-test-volume:
-	sudo rm -rf ./test-data
-
 
 # STATIC CODE ANALYSIS
 
