@@ -17,16 +17,14 @@ services:
   mongo:
     image: mongo:4.0.4-xenial
     volumes:
-      - type: volume
-        source: vol-mongo
+      - type: $mongo_volume_type
+        source: $mongo_volume_source
         target: /data/db
     environment:
       - "AUTH=yes"
-      - "MONGO_INITDB_ROOT_USERNAME=${db_admin_username}"
-      - "MONGO_INITDB_ROOT_PASSWORD=${db_admin_password}"
+      - "MONGO_INITDB_ROOT_USERNAME=${mongo_admin_username}"
+      - "MONGO_INITDB_ROOT_PASSWORD=${mongo_admin_password}"
       - "MONGO_INITDB_DATABASE=${cryptocurrency}"
-    ports:
-      - 127.0.0.1:${db_port}:27017
 
   mongo-express:
     image: mongo-express
@@ -36,25 +34,27 @@ services:
     ports:
       - 127.0.0.1:8001:8081
     environment:
-      - "ME_CONFIG_MONGODB_ADMINUSERNAME=${db_admin_username}"
-      - "ME_CONFIG_MONGODB_ADMINPASSWORD=${db_admin_password}"
-      - "ME_CONFIG_MONGODB_SERVER=${db_host}"
+      - "ME_CONFIG_MONGODB_ADMINUSERNAME=${mongo_admin_username}"
+      - "ME_CONFIG_MONGODB_ADMINPASSWORD=${mongo_admin_password}"
+      - "ME_CONFIG_MONGODB_SERVER=mongo"
       - "ME_CONFIG_MONGODB_AUTH_DATABASE=${cryptocurrency}"
 
   block-engine:
-    image: bergplace/block-engine:1.02
+    image: bergplace/block-engine:1.02-testing
     depends_on:
       - mongo
     environment:
-      - "MONGODB_ADMIN_USER=${db_admin_username}"
-      - "MONGODB_ADMIN_PASS=${db_admin_password}"
-      - "MONGODB_READONLY_USER=${db_readonly_username}"
-      - "MONGODB_READONLY_PASS=${db_readonly_password}"
-      - "MONGODB_PORT=${db_port}"
+      - "MONGODB_ADMIN_USER=${mongo_admin_username}"
+      - "MONGODB_ADMIN_PASS=${mongo_admin_password}"
+      - "MONGODB_READONLY_USER=${mongo_readonly_username}"
+      - "MONGODB_READONLY_PASS=${mongo_readonly_password}"
+      - "MONGODB_HOST=mongo"
+      - "MONGODB_PORT=27017"
       - "CRYPTO=${cryptocurrency}"
       - "CRYPTO_USER=${cryptocurrency_rpc_username}"
       - "CRYPTO_PASS=${cryptocurrency_rpc_password}"
       - "CRYPTO_PORT=${cryptocurrency_rpc_port}"
+      - "CRYPTO_HOST=zcashd"
       - "TX_ADDRESS_CACHE_LIMIT=${tx_address_cache_limit}"
 
   postgres:
@@ -76,9 +76,9 @@ services:
       - rabbit
       - mongo
     environment:
-      - "MONGODB_READONLY_USER=${db_readonly_username}"
-      - "MONGODB_READONLY_PASS=${db_readonly_password}"
-      - "MONGODB_HOST=${db_host}"
+      - "MONGODB_READONLY_USER=${mongo_readonly_username}"
+      - "MONGODB_READONLY_PASS=${mongo_readonly_password}"
+      - "MONGODB_HOST=mongo"
       - "MONGODB_NAME=${cryptocurrency}"
       - "DJANGO_SU_NAME=${web_admin_username}"
       - "DJANGO_SU_PASSWORD=${web_admin_password}"
@@ -99,9 +99,9 @@ services:
       - rabbit
       - mongo
     environment:
-      - "MONGODB_READONLY_USER=${db_readonly_username}"
-      - "MONGODB_READONLY_PASS=${db_readonly_password}"
-      - "MONGODB_HOST=${db_host}"
+      - "MONGODB_READONLY_USER=${mongo_readonly_username}"
+      - "MONGODB_READONLY_PASS=${mongo_readonly_password}"
+      - "MONGODB_HOST=mongo"
       - "MONGODB_NAME=${cryptocurrency}"
       - "DJANGO_SU_NAME=${web_admin_username}"
       - "DJANGO_SU_PASSWORD=${web_admin_password}"

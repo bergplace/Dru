@@ -7,6 +7,7 @@ if [ $use_docker_zcash_node = "true" ]
         ZCASH_NODES=1
     else
         ZCASH_NODES=0
+fi
 
 if [ $persist_data = "true" ]
     then

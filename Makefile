@@ -2,7 +2,7 @@
 help:
 	less help-msg
 
-start: use-custom-conf build down run
+start: manage-conf build down run
 
 test: use-test-conf build-test down-test run-test
 
@@ -11,18 +11,19 @@ html:
 
 # START
 
-use-custom-conf:
+manage-conf:
 	./build/cp_conf_if_not_exists.sh
 	cp dru.conf .env
+	./build/manage_env.sh
 
 build:
 	docker-compose build
 
-down-dev:
+down:
 	./build/docker-compose-down.sh
 
-run-dev:
-	./build/docker-compose-down.sh
+run:
+	./build/docker-compose-up.sh
 
 
 # TEST
