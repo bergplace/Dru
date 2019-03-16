@@ -1,4 +1,4 @@
-version: "3.2"
+version: "3.7"
 services:
 
   zcashd:
@@ -58,6 +58,10 @@ services:
 
   postgres:
     image: postgres:11
+    volumes:
+      - type: $postgres_volume_type
+        source: $postgres_volume_source
+        target: /var/lib/postgresql/data
 
   rabbit:
     image: rabbitmq:3.7-management
@@ -68,8 +72,10 @@ services:
     build:
       context: web/
     volumes:
-      - vol-results:/task-results
       - ./web/src:/app
+      - type: $results_volume_type
+        source: $results_volume_source
+        target: /task-results
     depends_on:
       - postgres
       - rabbit
@@ -91,12 +97,15 @@ services:
     build:
       context: web/
     volumes:
-      - vol-results:/task-results
       - ./web/src:/app
+      - type: $results_volume_type
+        source: $results_volume_source
+        target: /task-results
     depends_on:
       - postgres
       - rabbit
       - mongo
+      - celery
     environment:
       - "MONGODB_READONLY_USER=${mongo_readonly_username}"
       - "MONGODB_READONLY_PASS=${mongo_readonly_password}"
@@ -117,6 +126,5 @@ services:
 volumes:
   vol-results:
   vol-mongo:
-  vol-pg:
-  vol-rabbit:
+  vol-postgres:
   vol-zcashd:
