@@ -1,21 +1,25 @@
-version: "3.1"
+version: "3.2"
 services:
 
   zcashd:
     build:
       context: zcashd/
+    volumes:
+      - type: $zcashd_volume_type
+        source: $zcashd_volume_source
+        target: /root/.zcash
     environment:
       - "CRYPTO_USER=${cryptocurrency_rpc_username}"
       - "CRYPTO_PASS=${cryptocurrency_rpc_password}"
       - "CRYPTO_PORT=${cryptocurrency_rpc_port}"
-      - "SYNCRONIZE=&{docker_zcash_node_test_mode}"
+      - "TEST_MODE=${docker_zcash_node_test_mode}"
 
   mongo:
     image: mongo:4.0.4-xenial
     volumes:
-      type: volume
-      target: /data/db
-      - vol-mongo:
+      - type: volume
+        source: vol-mongo
+        target: /data/db
     environment:
       - "AUTH=yes"
       - "MONGO_INITDB_ROOT_USERNAME=${db_admin_username}"
@@ -116,4 +120,4 @@ volumes:
   vol-mongo:
   vol-pg:
   vol-rabbit:
-  vol-zcash:
+  vol-zcashd:
