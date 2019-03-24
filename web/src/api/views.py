@@ -102,6 +102,12 @@ def get_blocks_number(request, start_height, num_of_blocks):
     return task_result_response(task_id)
 
 @api_view(['GET'])
+def get_edges_range(request, start_height, end_height):
+    task_id = task_id_from_request(request)
+    register_task(task_id, tasks.get_edges_range, start_height, end_height)
+    return task_result_response(task_id)
+
+@api_view(['GET'])
 def wait_n_seconds(request, seconds):
     task_id = task_id_from_request(request)
     register_task(task_id, tasks.wait_n_seconds, seconds)
