@@ -128,3 +128,7 @@ volumes:
   vol-mongo:
   vol-postgres:
   vol-zcashd:
+  tmp-vol-results:
+  tmp-vol-mongo:
+  tmp-vol-postgres:
+  tmp-vol-zcashd:

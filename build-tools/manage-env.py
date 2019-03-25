@@ -10,13 +10,16 @@ with open(".env", "r") as env_file:
 
 for service in ('zcashd', 'mongo', 'postgres', 'results'):
     # this option will be overwritten if data persistence is on
-
-    vars[service + '_volume_source'] = 'vol-' + service
-    vars[service + '_volume_type'] = 'volume'
-
-    if vars['persist_data'] == 'true' and service + '_dir' in vars:
-        vars[service + '_volume_source'] = vars[service + '_dir']
-        vars[service + '_volume_type'] = 'bind'
+    if vars['persist_data'] == 'true':
+        if service + '_dir' in vars:
+            vars[service + '_volume_source'] = vars[service + '_dir']
+            vars[service + '_volume_type'] = 'bind'
+        else:
+            vars[service + '_volume_source'] = 'vol-' + service
+            vars[service + '_volume_type'] = 'volume'
+    else:
+        vars[service + '_volume_source'] = 'tmp-vol-' + service
+        vars[service + '_volume_type'] = 'volume'
 
 with open(".env", "w") as env_file:
     env_file.write("".join(["{}={}\n".format(k, v) for k, v in vars.items()]))
