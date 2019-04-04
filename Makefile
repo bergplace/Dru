@@ -8,7 +8,7 @@ web-dev: use-custom-conf build-web-dev down-dev run-web-dev
 
 prod: use-custom-conf build-prod down-prod run-prod
 
-test: use-test-conf clear-test-volumes build-test down-dev run-test
+test: use-test-conf clear-test-volumes build-test down-dev run-test-infra
 
 html:
 	python3 transform_md_to_html.py
@@ -49,8 +49,11 @@ down-prod:
 build-test:
 	docker-compose build
 
-run-test:
+run-test-infra:
 	docker-compose up -V
+
+run-test:
+	python3 -m unittest discover test
 
 # UTILS
 
