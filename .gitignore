@@ -18,3 +18,4 @@ __pycache*
 test-data
 data
 dru.conf
+web/src/supervisord*
