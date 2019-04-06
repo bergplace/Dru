@@ -5,19 +5,24 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     python3-dev \
     supervisor \
-    nginx
+    nginx \
+    libpcre3 libpcre3-dev
 
 COPY requirements.txt ./
 
 RUN pip3 install --no-cache-dir -r /requirements.txt
 
-RUN useradd -ms /bin/bash www-user
-RUN mkdir -p /var/log/uwsgi
+RUN mkdir -p /srv/conf
+RUN mkdir -p /srv/log
 
-COPY conf/uwsgi.ini /home/www-user/
-COPY conf/supervisord.conf /home/www-user/
+COPY conf/uwsgi.ini /srv/conf
+COPY conf/supervisord.conf /srv/conf
 COPY conf/web /etc/nginx/sites-available/
-RUN ln -s /etc/nginx/sites-available/web /etc/nginx/sites-enabled/
+RUN rm /etc/nginx/sites-enabled/default
+RUN ln -s /etc/nginx/sites-available/web /etc/nginx/sites-enabled/default
+
+RUN chown -R www-data /srv
+RUN chown -R www-data /etc/nginx
 
 WORKDIR /app
 

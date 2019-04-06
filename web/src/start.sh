@@ -14,7 +14,8 @@ if [ "$DEBUG" = "true" ]
             then
                 python3 /app/manage.py migrate
                 service nginx start
-                /usr/bin/supervisord -c /home/www-user/supervisord.conf
+                /usr/bin/supervisord -c /srv/conf/supervisord.conf
+                sleep infinity
             else
                 celery -A web worker -l info
         fi
