@@ -20,6 +20,11 @@ for service in ('zcash', 'mongo', 'postgres', 'task_results'):
         vars[service + '_volume_source'] = 'tmp-vol-' + service
         vars[service + '_volume_type'] = 'volume'
 
+if vars['use_docker_zcash_node'] == 'true':
+    vars['cryptocurrency_host'] = 'zcashd'
+else:
+    vars['cryptocurrency_host'] = ''
+
 with open(".env", "w") as env_file:
     env_file.write("".join(["{}={}\n".format(k, v) for k, v in vars.items()]))
     env_file.write('\n')

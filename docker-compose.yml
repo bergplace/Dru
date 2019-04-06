@@ -39,7 +39,7 @@ services:
       - "ME_CONFIG_MONGODB_AUTH_DATABASE=${cryptocurrency}"
 
   block-engine:
-    image: bergplace/block-engine:1.02-testing
+    image: bergplace/block-engine:1.03
     depends_on:
       - mongo
     environment:
@@ -53,7 +53,7 @@ services:
       - "CRYPTO_USER=${cryptocurrency_rpc_username}"
       - "CRYPTO_PASS=${cryptocurrency_rpc_password}"
       - "CRYPTO_PORT=${cryptocurrency_rpc_port}"
-      - "CRYPTO_HOST=zcashd"
+      - "CRYPTO_HOST=${cryptocurrency_host}"
       - "TX_ADDRESS_CACHE_LIMIT=${tx_address_cache_limit}"
 
   postgres:
