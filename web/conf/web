@@ -1,10 +1,11 @@
 server {
-    listen 80;
-
+    listen 80 default_server;
+    server_name _;
+    access_log /var/log/nginx/web.log;
     location = /favicon.ico { access_log off; log_not_found off; }
 
     location / {
         include         uwsgi_params;
-        uwsgi_pass      unix:/home/www-user/socket.sock;
+        uwsgi_pass      unix:/srv/socket.sock;
     }
 }
