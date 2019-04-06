@@ -9,9 +9,4 @@ if [ $use_docker_zcash_node = "true" ]
         ZCASH_NODES=0
 fi
 
-if [ $persist_data = "true" ]
-    then
-        docker-compose up $* --scale zcashd=$ZCASH_NODES
-    else
-        docker-compose up -v $* --scale zcashd=$ZCASH_NODES
-fi
+docker-compose up -V --scale zcashd=$ZCASH_NODES

@@ -5,8 +5,8 @@ services:
     build:
       context: zcashd/
     volumes:
-      - type: $zcashd_volume_type
-        source: $zcashd_volume_source
+      - type: $zcash_volume_type
+        source: $zcash_volume_source
         target: /root/.zcash
     environment:
       - "CRYPTO_USER=${cryptocurrency_rpc_username}"
@@ -73,8 +73,8 @@ services:
       context: web/
     volumes:
       - ./web/src:/app
-      - type: $results_volume_type
-        source: $results_volume_source
+      - type: $task_results_volume_type
+        source: $task_results_volume_source
         target: /task-results
     depends_on:
       - postgres
@@ -98,8 +98,8 @@ services:
       context: web/
     volumes:
       - ./web/src:/app
-      - type: $results_volume_type
-        source: $results_volume_source
+      - type: $task_results_volume_type
+        source: $task_results_volume_source
         target: /task-results
     depends_on:
       - postgres
@@ -124,11 +124,7 @@ services:
     stdin_open: true
 
 volumes:
-  vol-results:
-  vol-mongo:
-  vol-postgres:
-  vol-zcashd:
-  tmp-vol-results:
+  tmp-vol-task_results:
   tmp-vol-mongo:
   tmp-vol-postgres:
-  tmp-vol-zcashd:
+  tmp-vol-zcash:
