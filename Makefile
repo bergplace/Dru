@@ -4,7 +4,7 @@ help:
 
 start: manage-conf build down run
 
-test: manage-test-conf build-test down-test run-test
+test: manage-test-conf build down run
 
 html:
 	python3 transform_md_to_html.py
@@ -14,13 +14,13 @@ html:
 manage-conf:
 	./build-tools/cp_conf_if_not_exists.sh
 	cp dru.conf .env
-	python build-tools/manage-env.py
+	python3 build-tools/manage-env.py
 
 build:
 	docker-compose build
 
 down:
-	./build-tools/docker-compose-down.sh
+	docker-compose down -v
 
 run:
 	./build-tools/docker-compose-up.sh
@@ -30,16 +30,8 @@ run:
 
 manage-test-conf:
 	cp dru.test.conf .env
-	python build-tools/manage-env.py
+	python3 build-tools/manage-env.py
 
-build-test:
-	docker-compose build
-
-down-test:
-	docker-compose down -v
-
-run-test:
-	docker-compose up -V
 
 run-test:
 	python3 -m unittest discover test

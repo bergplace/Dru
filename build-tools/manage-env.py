@@ -1,3 +1,5 @@
+import os
+import pathlib
 
 vars = {}
 
@@ -8,15 +10,12 @@ with open(".env", "r") as env_file:
             var, val = line.split('=')
             vars[var.strip()] = val.strip()
 
-for service in ('zcashd', 'mongo', 'postgres', 'results'):
-    # this option will be overwritten if data persistence is on
-    if vars['persist_data'] == 'true':
-        if service + '_dir' in vars:
-            vars[service + '_volume_source'] = vars[service + '_dir']
-            vars[service + '_volume_type'] = 'bind'
-        else:
-            vars[service + '_volume_source'] = 'vol-' + service
-            vars[service + '_volume_type'] = 'volume'
+for service in ('zcash', 'mongo', 'postgres', 'task_results'):
+    if service + '_dir' in vars:
+        path = os.path.expanduser(vars[service + '_dir'])
+        pathlib.Path(path).mkdir(parents=True, exist_ok=True)
+        vars[service + '_volume_source'] = path
+        vars[service + '_volume_type'] = 'bind'
     else:
         vars[service + '_volume_source'] = 'tmp-vol-' + service
         vars[service + '_volume_type'] = 'volume'
