@@ -119,7 +119,7 @@ services:
       - "SENDGRID_USERNAME=${sendgrid_username}"
       - "SENDGRID_PASSWORD=${sendgrid_password}"
     ports:
-      - 127.0.0.1:${web_port}:80
+      - ${web_port}:80
     tty: true
     stdin_open: true
 

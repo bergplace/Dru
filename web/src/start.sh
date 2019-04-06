@@ -13,8 +13,8 @@ if [ "$DEBUG" = "true" ]
         if [ "$TYPE" = "django" ]
             then
                 python3 /app/manage.py migrate
-                /usr/bin/supervisord -c /home/www-user/supervisord.conf &
-                sleep infinity
+                service nginx start
+                /usr/bin/supervisord -c /home/www-user/supervisord.conf
             else
                 celery -A web worker -l info
         fi
