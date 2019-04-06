@@ -71,6 +71,7 @@ services:
   celery:
     build:
       context: web/
+    image: django
     volumes:
       - ./web/src:/app
       - type: $task_results_volume_type
@@ -87,15 +88,14 @@ services:
       - "MONGODB_NAME=${cryptocurrency}"
       - "DJANGO_SU_NAME=${web_admin_username}"
       - "DJANGO_SU_PASSWORD=${web_admin_password}"
-      - "DEBUG=True"
+      - "DEBUG=${debug}"
       - "BASE_URL=http://localhost:8000"
       - "TYPE=celery"
       - "SENDGRID_USERNAME=${sendgrid_username}"
       - "SENDGRID_PASSWORD=${sendgrid_password}"
 
   web:
-    build:
-      context: web/
+    image: django
     volumes:
       - ./web/src:/app
       - type: $task_results_volume_type
@@ -113,13 +113,13 @@ services:
       - "MONGODB_NAME=${cryptocurrency}"
       - "DJANGO_SU_NAME=${web_admin_username}"
       - "DJANGO_SU_PASSWORD=${web_admin_password}"
-      - "DEBUG=True"
+      - "DEBUG=${debug}"
       - "BASE_URL=http://localhost:8000"
       - "TYPE=django"
       - "SENDGRID_USERNAME=${sendgrid_username}"
       - "SENDGRID_PASSWORD=${sendgrid_password}"
     ports:
-      - 127.0.0.1:8000:8000
+      - 127.0.0.1:${web_port}:80
     tty: true
     stdin_open: true
 
