@@ -14,6 +14,7 @@ RUN pip3 install --no-cache-dir -r /requirements.txt
 
 RUN mkdir -p /srv/conf
 RUN mkdir -p /srv/log
+RUN mkdir -p /srv/static
 
 COPY conf/uwsgi.ini /srv/conf
 COPY conf/supervisord.conf /srv/conf
