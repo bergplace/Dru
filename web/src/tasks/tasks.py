@@ -1,25 +1,16 @@
 import os
 import time
+import igraph
 import pymongo
 import logging
-import pandas
 from web import celery_app
 from web.mongo import Mongo
 from .utils import auto_save_result
 from django.conf import settings
 from celery.utils.log import get_task_logger
+from .netutils import *
 
 logger = get_task_logger(__name__)
-
-# this will go to netutils.py
-
-def get_max_height():
-    max_height = \
-        Mongo.db(os.environ['MONGODB_NAME']).blocks.find_one(sort=[("height", pymongo.DESCENDING)])['height']
-
-    return max_height
-
-# this will go to netutils.py - end
 
 @celery_app.task
 @auto_save_result
@@ -30,88 +21,94 @@ def get_block_by_height(height):
 
 @celery_app.task
 @auto_save_result
-def get_blocks_range(start_height, end_height):
+def get_blocks(start_height, end_height):
     #rdb.set_trace()
     max_height = get_max_height()
 
     if (start_height >= 0) and (end_height >= start_height) and \
         (start_height <= max_height) and (end_height <= max_height):
 
-        blocks = Mongo.db(os.environ['MONGODB_NAME']).blocks.find( { 'height': { '$gte': start_height, \
-                                                                                 '$lte': end_height } } )
+        blocks = Mongo.db(os.environ['MONGODB_NAME']).blocks.find(
+            {
+                'height': {
+                        '$gte': start_height,
+                        '$lte': end_height
+                }
+            },
+            {
+                '_id': 0
+            }
+        )
 
-        blocks_all = []
-
-        for block in blocks:
-            block['_id'] = ''
-            blocks_all.append(block)
-        return blocks_all
+        return [b for b in blocks]
     else:
         return None
 
-
 @celery_app.task
 @auto_save_result
-def get_blocks_number(start_height, num_of_blocks):
-    #rdb.set_trace()
+def get_blocks_reduced(start_height, end_height):
+
     max_height = get_max_height()
 
-    if num_of_blocks > 0:
-        end_height = start_height + num_of_blocks - 1
-
-    if (num_of_blocks > 0) and (start_height >= 0) and (end_height >= start_height) and \
+    if (start_height >= 0) and (end_height >= start_height) and \
         (start_height <= max_height) and (end_height <= max_height):
 
-        blocks = Mongo.db(os.environ['MONGODB_NAME']).blocks.find( { 'height': { '$gte': start_height, \
-                                                                                 '$lte': end_height } } )
+        blocks = Mongo.db(os.environ['MONGODB_NAME']).blocks.find(
+            {
+                'height': {
+                        '$gte': start_height,
+                        '$lte': end_height
+                }
+            },
+            {
+                'height': 1,
+                'tx.txid': 1,
+                'tx.vin.addresses': 1,
+                'tx.vin.coinbase': 1,
+                'tx.vout.value': 1,
+                'tx.vout.scriptPubKey.addresses': 1,
+                '_id': 0
+            }
+        )
 
-        blocks_all = []
-
-        for block in blocks:
-            block['_id'] = ''
-            blocks_all.append(block)
-        return blocks_all
+        return [b for b in blocks]
     else:
         return None
 
 @celery_app.task
 @auto_save_result
-def get_edges_range(start_height, end_height):
+def get_edges(start_height, end_height):
     # rdb.set_trace()
     max_height = get_max_height()
 
     if (start_height >= 0) and (end_height >= start_height) and \
             (start_height <= max_height) and (end_height <= max_height):
 
-        blocks = Mongo.db(os.environ['MONGODB_NAME']).blocks.find({'height': {'$gte': start_height, \
-                                                                              '$lte': end_height}})
+        graph = get_graph(start_height, end_height)
 
-        transactions_all = []
+        # need to export properly below
+        return graph
+    else:
+        return None
 
-        for block in blocks:
-            logger.info('asdf')
-            block_height = block['height']
-            for transaction in block['tx']:
-                transaction_txid = transaction['txid']
-                transaction_vins = []
+@celery_app.task
+@auto_save_result
+def get_max_degree(start_height, end_height):
 
-                for transaction_vin in transaction['vin']:
-                    if 'coinbase' in transaction_vin:
-                        transaction_vins.append(transaction_vin['coinbase'][0])
-                    else:
-                        transaction_vins.append(transaction_vin['addresses'][0])
+    max_height = get_max_height()
 
-                transaction_vouts = {}
+    if (start_height >= 0) and (end_height >= start_height) and \
+            (start_height <= max_height) and (end_height <= max_height):
 
-                for transaction_vout in transaction['vout']:
-                    vout_value = transaction_vout['value']
+        graph = get_graph(start_height, end_height)
 
-                    vout_address = transaction_vout['scriptPubKey']['addresses'][0]
-                    transaction_vouts[vout_address] = vout_value
+        # logger.info(graph.vcount())
+        # logger.info(print(graph))
 
-        # CSV to be returned here
+        vertices_max_degree = [graph.vs.select(_degree=graph.maxdegree())["name"], graph.maxdegree()]
 
-        return transaction_txid
+        return vertices_max_degree
+
     else:
         return None
 
