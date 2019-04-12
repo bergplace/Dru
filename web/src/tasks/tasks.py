@@ -5,7 +5,7 @@ import pymongo
 import logging
 from web import celery_app
 from web.mongo import Mongo
-from .utils import auto_save_result
+from .utils import auto_save_result, heights_are_valid
 from django.conf import settings
 from celery.utils.log import get_task_logger
 from .netutils import *
@@ -22,12 +22,8 @@ def get_block_by_height(height):
 @celery_app.task
 @auto_save_result
 def get_blocks(start_height, end_height):
-    #rdb.set_trace()
-    max_height = get_max_height()
-
-    if (start_height >= 0) and (end_height >= start_height) and \
-        (start_height <= max_height) and (end_height <= max_height):
-
+    if heights_are_valid(start_height, end_height):
+        
         blocks = Mongo.db(os.environ['MONGODB_NAME']).blocks.find(
             {
                 'height': {
@@ -47,11 +43,7 @@ def get_blocks(start_height, end_height):
 @celery_app.task
 @auto_save_result
 def get_blocks_reduced(start_height, end_height):
-
-    max_height = get_max_height()
-
-    if (start_height >= 0) and (end_height >= start_height) and \
-        (start_height <= max_height) and (end_height <= max_height):
+    if heights_are_valid(start_height, end_height):
 
         blocks = Mongo.db(os.environ['MONGODB_NAME']).blocks.find(
             {
@@ -78,11 +70,7 @@ def get_blocks_reduced(start_height, end_height):
 @celery_app.task
 @auto_save_result
 def get_edges(start_height, end_height):
-    # rdb.set_trace()
-    max_height = get_max_height()
-
-    if (start_height >= 0) and (end_height >= start_height) and \
-            (start_height <= max_height) and (end_height <= max_height):
+    if heights_are_valid(start_height, end_height):
 
         graph = get_graph(start_height, end_height)
 
@@ -100,11 +88,7 @@ def get_edges(start_height, end_height):
 @celery_app.task
 @auto_save_result
 def get_max_degree(start_height, end_height):
-
-    max_height = get_max_height()
-
-    if (start_height >= 0) and (end_height >= start_height) and \
-            (start_height <= max_height) and (end_height <= max_height):
+    if heights_are_valid(start_height, end_height):
 
         graph = get_graph(start_height, end_height)
 

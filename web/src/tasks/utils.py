@@ -3,6 +3,8 @@ import json
 from hashlib import sha256
 
 from rest_framework.response import Response
+
+from tasks.netutils import get_max_height
 from .models import Tasks
 from django.conf import settings
 import logging
@@ -53,3 +55,7 @@ def auto_save_result(fn):
             raise
     wrapper.__name__ = fn.__name__ + "_asr"
     return wrapper
+
+
+def heights_are_valid(start_height, end_height):
+    return 0 <= start_height <= end_height <= get_max_height()
