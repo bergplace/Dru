@@ -7,7 +7,8 @@ with open(".env", "r") as env_file:
     for line in env_file.readlines():
         line = line.split('#')[0]
         if '=' in line:
-            var, val = line.split('=')
+            var, *val = line.split('=')
+            val = '='.join(val)
             vars[var.strip()] = val.strip()
 
 for service in ('zcash', 'mongo', 'postgres', 'task_results'):
