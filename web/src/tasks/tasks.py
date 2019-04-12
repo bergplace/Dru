@@ -86,9 +86,14 @@ def get_edges(start_height, end_height):
 
         graph = get_graph(start_height, end_height)
 
-        # need to export properly below
-        edgelist = graph.get_edgelist()
-        return [[graph.vs[s]['name'], graph.vs[t]['name']] for s, t in edgelist]
+        return [
+            {
+                'source': graph.vs[es.source]['name'],
+                'target': graph.vs[es.target]['name'],
+                'value': es['value'],
+                'block_height': es['height']
+            } for es in graph.es
+        ]
     else:
         return None
 
