@@ -88,18 +88,16 @@ def get_edges(start_height, end_height):
 @celery_app.task
 @auto_save_result
 def get_degree_max(start_height, end_height, mode):
-    if heights_are_valid(start_height, end_height) and type in ('all', 'in', 'out'):
+    if heights_are_valid(start_height, end_height) and mode in ('all', 'in', 'out'):
 
-        mode = type.upper()
+        mode = mode.upper()
 
-        if type == 'ALL':
+        if mode == 'ALL':
             graph = get_graph(start_height, end_height, False)
         else:
             graph = get_graph(start_height, end_height, True)
 
-        vertices_degree_max = [graph.vs.select(_degree=graph.maxdegree(mode=mode))["name"], graph.maxdegree(mode=mode)]
-
-        return vertices_degree_max
+        return dict.fromkeys(graph.vs.select(_degree=graph.maxdegree(mode=mode))["name"], graph.maxdegree(mode=mode))
 
     else:
         return None
@@ -107,18 +105,16 @@ def get_degree_max(start_height, end_height, mode):
 @celery_app.task
 @auto_save_result
 def get_degree(start_height, end_height, mode):
-    if heights_are_valid(start_height, end_height):
+    if heights_are_valid(start_height, end_height) and mode in ('all', 'in', 'out'):
 
-        mode = type.upper()
+        mode = mode.upper()
 
-        if type == 'ALL':
+        if mode == 'ALL':
             graph = get_graph(start_height, end_height, False)
         else:
             graph = get_graph(start_height, end_height, True)
 
-        vertices_degree = [graph.vs(), graph.degree(mode=mode)]
-
-        return vertices_degree
+        return dict(zip(graph.vs()["name"], graph.degree(mode=mode)))
 
     else:
         return None
@@ -126,13 +122,11 @@ def get_degree(start_height, end_height, mode):
 @celery_app.task
 @auto_save_result
 def get_betweenness_max(start_height, end_height, directed):
-    if heights_are_valid(start_height, end_height):
+    if heights_are_valid(start_height, end_height) and directed in ('true', 'false'):
 
         graph = get_graph(start_height, end_height, directed == "true")
 
-        vertices_betweenness_max = [graph.vs.select(_betweenness=max(graph.betweenness()))["name"], max(graph.betweenness())]
-
-        return vertices_betweenness_max
+        return dict.fromkeys(graph.vs.select(_betweenness=max(graph.betweenness()))["name"], max(graph.betweenness()))
 
     else:
         return None
@@ -140,12 +134,10 @@ def get_betweenness_max(start_height, end_height, directed):
 @celery_app.task
 @auto_save_result
 def get_betweenness(start_height, end_height, directed):
-    if heights_are_valid(start_height, end_height):
+    if heights_are_valid(start_height, end_height) and directed in ('true', 'false'):
         graph = get_graph(start_height, end_height, directed == "true")
 
-        vertices_betweenness = [graph.vs(), graph.betweenness()]
-
-        return vertices_betweenness
+        return dict(zip(graph.vs(), graph.betweenness()))
 
     else:
         return None
