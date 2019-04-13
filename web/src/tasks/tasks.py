@@ -92,10 +92,7 @@ def get_degree_max(start_height, end_height, mode):
 
         mode = mode.upper()
 
-        if mode == 'ALL':
-            graph = get_graph(start_height, end_height, False)
-        else:
-            graph = get_graph(start_height, end_height, True)
+        graph = get_graph(start_height, end_height, mode != 'ALL')
 
         return dict.fromkeys(graph.vs.select(_degree=graph.maxdegree(mode=mode))["name"], graph.maxdegree(mode=mode))
 
@@ -109,10 +106,7 @@ def get_degree(start_height, end_height, mode):
 
         mode = mode.upper()
 
-        if mode == 'ALL':
-            graph = get_graph(start_height, end_height, False)
-        else:
-            graph = get_graph(start_height, end_height, True)
+        graph = get_graph(start_height, end_height, mode != 'ALL')
 
         return dict(zip(graph.vs()["name"], graph.degree(mode=mode)))
 
