@@ -9,4 +9,4 @@ if [ $use_docker_zcash_node = "true" ]
         ZCASH_NODES=0
 fi
 
-docker-compose up -V --scale zcashd=$ZCASH_NODES
+docker-compose up -V --scale zcashd=$ZCASH_NODES $1
