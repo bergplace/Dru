@@ -87,17 +87,65 @@ def get_edges(start_height, end_height):
 
 @celery_app.task
 @auto_save_result
-def get_max_degree(start_height, end_height):
+def get_degree_max(start_height, end_height, mode):
+    if heights_are_valid(start_height, end_height) and type in ('all', 'in', 'out'):
+
+        mode = type.upper()
+
+        if type == 'ALL':
+            graph = get_graph(start_height, end_height, False)
+        else:
+            graph = get_graph(start_height, end_height, True)
+
+        vertices_degree_max = [graph.vs.select(_degree=graph.maxdegree(mode=mode))["name"], graph.maxdegree(mode=mode)]
+
+        return vertices_degree_max
+
+    else:
+        return None
+
+@celery_app.task
+@auto_save_result
+def get_degree(start_height, end_height, mode):
     if heights_are_valid(start_height, end_height):
 
-        graph = get_graph(start_height, end_height)
+        mode = type.upper()
 
-        # logger.info(graph.vcount())
-        # logger.info(print(graph))
+        if type == 'ALL':
+            graph = get_graph(start_height, end_height, False)
+        else:
+            graph = get_graph(start_height, end_height, True)
 
-        vertices_max_degree = [graph.vs.select(_degree=graph.maxdegree())["name"], graph.maxdegree()]
+        vertices_degree = [graph.vs(), graph.degree(mode=mode)]
 
-        return vertices_max_degree
+        return vertices_degree
+
+    else:
+        return None
+
+@celery_app.task
+@auto_save_result
+def get_betweenness_max(start_height, end_height, directed):
+    if heights_are_valid(start_height, end_height):
+
+        graph = get_graph(start_height, end_height, directed == "true")
+
+        vertices_betweenness_max = [graph.vs.select(_betweenness=max(graph.betweenness()))["name"], max(graph.betweenness())]
+
+        return vertices_betweenness_max
+
+    else:
+        return None
+
+@celery_app.task
+@auto_save_result
+def get_betweenness(start_height, end_height, directed):
+    if heights_are_valid(start_height, end_height):
+        graph = get_graph(start_height, end_height, directed == "true")
+
+        vertices_betweenness = [graph.vs(), graph.betweenness()]
+
+        return vertices_betweenness
 
     else:
         return None

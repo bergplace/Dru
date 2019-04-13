@@ -5,13 +5,15 @@ import logging
 
 from web.mongo import Mongo
 
+
 def get_max_height():
     max_height = \
         Mongo.db(os.environ['MONGODB_NAME']).blocks.find_one(sort=[("height", pymongo.DESCENDING)])['height']
 
     return max_height
 
-def get_graph(start_height, end_height):
+
+def get_graph(start_height, end_height, directed):
     blocks = Mongo.db(os.environ['MONGODB_NAME']).blocks.find(
         {
             'height': {
@@ -30,7 +32,7 @@ def get_graph(start_height, end_height):
         }
     )
 
-    graph = igraph.Graph()
+    graph = igraph.Graph(directed=directed)
 
     for block in blocks:
         block_height = block['height']

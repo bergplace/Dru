@@ -8,6 +8,9 @@ urlpatterns = [
     path('get_blocks/<int:start_height>/<int:end_height>', views.get_blocks),
     path('get_blocks_reduced/<int:start_height>/<int:end_height>', views.get_blocks_reduced),
     path('get_edges/<int:start_height>/<int:end_height>', views.get_edges),
-    path('get_max_degree/<int:start_height>/<int:end_height>', views.get_max_degree),
+    path('get_degree/<int:start_height>/<int:end_height>/<str:mode>', views.get_degree),
+    path('get_degree_max/<int:start_height>/<int:end_height>/<str:mode>', views.get_degree_max),
+    path('get_betweenness/<int:start_height>/<int:end_height>/<str:directed>', views.get_betweenness),
+    path('get_betweenness_max/<int:start_height>/<int:end_height>/<str:directed>', views.get_betweenness_max),
     path('wait_n_seconds/<int:seconds>', views.wait_n_seconds)
 ]
