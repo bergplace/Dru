@@ -6,6 +6,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from main.models import Email
+from tasks.netutils import get_max_height
 from tasks.utils import register_task, task_id_from_request, task_result_response, get_task_result
 from tasks.models import Tasks
 import tasks.tasks as tasks
@@ -82,6 +83,9 @@ def register_email(request):
     else:
         return Response({'state': 'error', 'msg': 'no variable email in post request'})
 
+@api_view(['GET'])
+def current_block_height(request):
+    return Response({'height': get_max_height()})
 
 @api_view(['GET'])
 def get_block_by_height(request, height):
@@ -118,5 +122,3 @@ def wait_n_seconds(request, seconds):
     task_id = task_id_from_request(request)
     register_task(task_id, tasks.wait_n_seconds, seconds)
     return task_result_response(task_id)
-
-
