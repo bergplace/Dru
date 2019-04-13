@@ -4,7 +4,7 @@ help:
 
 start: manage-conf build down run
 
-test: manage-test-conf build down run
+test: manage-test-conf build down run-detached sleep run-test
 
 html:
 	python3 transform_md_to_html.py
@@ -25,8 +25,13 @@ down:
 run:
 	./build-tools/docker-compose-up.sh
 
-
 # TEST
+
+run-detached:
+	docker-compose up -d
+
+sleep:
+	sleep 30
 
 manage-test-conf:
 	cp dru.test.conf .env
