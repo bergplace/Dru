@@ -1,7 +1,5 @@
 #!/bin/bash
 
-RUN python3 /app/manage.py collectstatic
-
 if [ "$TYPE" = "django" ]
     then
         python3 /app/manage.py collectstatic

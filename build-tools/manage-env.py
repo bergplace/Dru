@@ -11,7 +11,7 @@ with open(".env", "r") as env_file:
             val = '='.join(val)
             vars[var.strip()] = val.strip()
 
-for service in ('zcash', 'mongo', 'postgres', 'task_results'):
+for service in ('zcash', 'mongo', 'postgres', 'task_results', 'rabbit'):
     if service + '_dir' in vars:
         path = os.path.expanduser(vars[service + '_dir'])
         pathlib.Path(path).mkdir(parents=True, exist_ok=True)

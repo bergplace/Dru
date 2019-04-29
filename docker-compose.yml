@@ -65,6 +65,11 @@ services:
 
   rabbit:
     image: rabbitmq:3.7-management
+    hostname: dru-rabbit
+    volumes:
+      - type: $rabbit_volume_type
+        source: $rabbit_volume_source
+        target: /var/lib/rabbitmq
     ports:
       - 127.0.0.1:8002:15672
 
@@ -128,3 +133,4 @@ volumes:
   tmp-vol-mongo:
   tmp-vol-postgres:
   tmp-vol-zcash:
+  tmp-vol-rabbit:
