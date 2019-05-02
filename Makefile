@@ -49,7 +49,7 @@ run-test:
 # UTILS
 
 django-shell:
-	docker-compose exec web python manage.py shell
+	docker-compose exec web python3 manage.py shell
 
 bash:
 	docker-compose exec web bash
