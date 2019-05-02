@@ -25,29 +25,21 @@ SECRET_KEY = 'i2sm+89p-m8)zq$lsbli#$(#w9bd4sn-$yjfqr*#0z1w^s+&+_'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG') == 'true'
 
-BASE_URL = os.environ.get('WEB_HOST')
+# Crafting BASE_URL
+WEB_HOST = os.environ.get('WEB_HOST')
 WEB_PORT = os.environ.get('WEB_PORT')
+
 if int(WEB_PORT) > 1000:
-    BASE_URL += f':{WEB_PORT}'
-
-# base url transformation so it fits allowed hosts format
-HOST_BASED_ON_BASE_URL = BASE_URL
-
-if BASE_URL.startswith('http://'):
-    HOST_BASED_ON_BASE_URL = BASE_URL[len('http://'):]
-
-if BASE_URL.startswith('https://'):
-    HOST_BASED_ON_BASE_URL = BASE_URL[len('https://'):]
-
-if BASE_URL.startswith('www.'):
-    HOST_BASED_ON_BASE_URL = BASE_URL[len('www.'):]
+    BASE_URL = f'{WEB_HOST}:{WEB_PORT}'
+else:
+    BASE_URL = WEB_HOST
 
 if os.environ.get('HTTPS') == 'true':
     BASE_URL = f'https://{BASE_URL}'
 else:
     BASE_URL = f'http://{BASE_URL}'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', f'.{HOST_BASED_ON_BASE_URL}']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', f'.{WEB_HOST}']
 
 # Application definition
 
