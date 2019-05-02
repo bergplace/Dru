@@ -4,6 +4,8 @@ help:
 
 start: manage-conf build down run
 
+start-detached: manage-conf build down run-detached
+
 test: manage-test-conf build down run-detached sleep run-test
 
 html:
@@ -24,6 +26,9 @@ down:
 
 run:
 	./build-tools/docker-compose-up.sh
+
+run-detached:
+	./build-tools/docker-compose-up.sh -d
 
 # TEST
 
