@@ -6,6 +6,15 @@ if [ "$TYPE" = "django" ]
         chown -R www-data /srv
 fi
 
+if [ "$HTTPS" = "true" ]
+    then
+        ln -s /etc/nginx/sites-available/web-tls-on /etc/nginx/sites-enabled/default
+    else
+        ln -s /etc/nginx/sites-available/web-tls-off /etc/nginx/sites-enabled/default
+fi
+
+chown -R www-data /etc/nginx
+
 if [ "$DEBUG" = "true" ]
     then
         if [ "$TYPE" = "django" ]

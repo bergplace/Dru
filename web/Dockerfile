@@ -18,9 +18,10 @@ RUN mkdir -p /srv/static
 
 COPY conf/uwsgi.ini /srv/conf
 COPY conf/supervisord.conf /srv/conf
-COPY conf/web /etc/nginx/sites-available/
+COPY conf/web-tls-off /etc/nginx/sites-available/
+COPY conf/web-tls-on /etc/nginx/sites-available/
 RUN rm /etc/nginx/sites-enabled/default
-RUN ln -s /etc/nginx/sites-available/web /etc/nginx/sites-enabled/default
+
 
 RUN chown -R www-data /srv
 RUN chown -R www-data /etc/nginx
