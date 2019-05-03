@@ -132,6 +132,18 @@ def get_betweenness(request, start_height, end_height, directed):
     return task_result_response(task_id)
 
 @api_view(['GET'])
+def get_closeness_max(request, start_height, end_height, directed):
+    task_id = task_id_from_request(request)
+    register_task(task_id, tasks.get_closeness_max, start_height, end_height, directed)
+    return task_result_response(task_id)
+
+@api_view(['GET'])
+def get_closeness(request, start_height, end_height, directed):
+    task_id = task_id_from_request(request)
+    register_task(task_id, tasks.get_closeness, start_height, end_height, directed)
+    return task_result_response(task_id)
+
+@api_view(['GET'])
 def wait_n_seconds(request, seconds):
     task_id = task_id_from_request(request)
     register_task(task_id, tasks.wait_n_seconds, seconds)

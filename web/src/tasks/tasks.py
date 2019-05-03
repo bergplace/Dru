@@ -54,6 +54,7 @@ def get_blocks_reduced(start_height, end_height):
             },
             {
                 'height': 1,
+                'time': 1,
                 'tx.txid': 1,
                 'tx.vin.addresses': 1,
                 'tx.vin.coinbase': 1,
@@ -72,14 +73,15 @@ def get_blocks_reduced(start_height, end_height):
 def get_edges(start_height, end_height):
     if heights_are_valid(start_height, end_height):
 
-        graph = get_graph(start_height, end_height)
+        graph = get_graph(start_height, end_height, 'false')
 
         return [
             {
                 'source': graph.vs[es.source]['name'],
                 'target': graph.vs[es.target]['name'],
                 'value': es['value'],
-                'block_height': es['height']
+                'block_height': es['height'],
+                'block_time': es['time']
             } for es in graph.es
         ]
     else:
@@ -130,8 +132,31 @@ def get_betweenness_max(start_height, end_height, directed):
 def get_betweenness(start_height, end_height, directed):
     if heights_are_valid(start_height, end_height) and directed in ('true', 'false'):
         graph = get_graph(start_height, end_height, directed == "true")
+        logger.info(graph.betweenness())
+        return dict(zip(graph.vs()["name"], graph.betweenness()))
+        #return None
+    else:
+        return None
 
-        return dict(zip(graph.vs(), graph.betweenness()))
+@celery_app.task
+@auto_save_result
+def get_closeness(start_height, end_height, directed):
+    if heights_are_valid(start_height, end_height) and directed in ('true', 'false'):
+        graph = get_graph(start_height, end_height, directed == "true")
+
+        return dict(zip(graph.vs()["name"], graph.closeness()))
+
+    else:
+        return None
+
+
+@celery_app.task
+@auto_save_result
+def get_closeness_max(start_height, end_height, directed):
+    if heights_are_valid(start_height, end_height) and directed in ('true', 'false'):
+        graph = get_graph(start_height, end_height, directed == "true")
+
+        return dict(zip(graph.vs()["name"], graph.closeness()))
 
     else:
         return None
