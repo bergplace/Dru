@@ -23,6 +23,7 @@ def get_graph(start_height, end_height, directed):
         },
         {
             'height': 1,
+            'time': 1,
             'tx.txid': 1,
             'tx.vin.addresses': 1,
             'tx.vin.coinbase': 1,
@@ -36,6 +37,7 @@ def get_graph(start_height, end_height, directed):
 
     for block in blocks:
         block_height = block['height']
+        block_time = block['time']
 
         for transaction in block['tx']:
             transaction_txid = transaction['txid']
@@ -71,6 +73,6 @@ def get_graph(start_height, end_height, directed):
 
                 for transaction_vout, transaction_value in transaction_vouts.items():
                     graph.add_edge(transaction_vin, transaction_vout, value=transaction_value, txid=transaction_txid,
-                                   height=block_height)
+                                   height=block_height, time=block_time)
 
     return graph
