@@ -96,7 +96,6 @@ services:
       - "DEBUG=${debug}"
       - "WEB_HOST=${web_host}"
       - "WEB_PORT=${web_port}"
-      - "HTTPS=${web_enable_ssl}"
       - "TYPE=celery"
       - "SENDGRID_USERNAME=${sendgrid_username}"
       - "SENDGRID_PASSWORD=${sendgrid_password}"
@@ -108,6 +107,12 @@ services:
       - type: $task_results_volume_type
         source: $task_results_volume_source
         target: /task-results
+      - type: bind
+        source: "${web_ssl_key_path}"
+        target: /etc/ssl/private/server.key
+      - type: bind
+        source: "${web_ssl_cert_path}"
+        target: /etc/ssl/certs/server.pem
     depends_on:
       - postgres
       - rabbit
@@ -129,6 +134,7 @@ services:
       - "SENDGRID_PASSWORD=${sendgrid_password}"
     ports:
       - ${web_port}:80
+      - 443:443
     tty: true
     stdin_open: true
 

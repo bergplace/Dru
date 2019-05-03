@@ -26,6 +26,9 @@ if vars['use_docker_zcash_node'] == 'true':
 else:
     vars['cryptocurrency_host'] = ''
 
+vars['web_port'] = '8000' if vars['debug'] == 'true' else '80'
+
+
 with open(".env", "w") as env_file:
     env_file.write("".join(["{}={}\n".format(k, v) for k, v in vars.items()]))
     env_file.write('\n')

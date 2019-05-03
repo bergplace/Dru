@@ -1,0 +1,42 @@
+
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    access_log /var/log/nginx/web.log;
+    location = /favicon.ico { access_log off; log_not_found off; }
+
+    location = / {
+        return 301 https://$host;
+    }
+
+    location / {
+        include         uwsgi_params;
+        uwsgi_pass      unix:/srv/socket.sock;
+    }
+
+    location /static {
+        autoindex on;
+        alias   /srv/static/;
+    }
+}
+server {
+    listen 443 ssl default_server;
+    listen [::]:443 ssl default_server;
+
+    ssl_certificate     /etc/ssl/certs/server.pem;
+    ssl_certificate_key /etc/ssl/private/server.key;
+
+    access_log /var/log/nginx/web.log;
+    location = /favicon.ico { access_log off; log_not_found off; }
+
+    location / {
+        include         uwsgi_params;
+        uwsgi_pass      unix:/srv/socket.sock;
+    }
+
+    location /static {
+        autoindex on;
+        alias   /srv/static/;
+    }
+}
