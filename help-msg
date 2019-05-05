@@ -25,13 +25,19 @@ USAGE
 - run Dru:
     make start
 - stop Dru:
-    make down
+    make stop
+- restart Dru:
+    make restart
 
 DEVELOPMENT
 - run tests on system with test configuration:
     make test
 - run tests on already running system
     make run-test
+- follow logs:
+    make logs
+- follow celery logs:
+    make logs-celery
 - transform markdown files to html:
     make html
 

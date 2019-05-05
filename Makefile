@@ -2,11 +2,11 @@
 help:
 	less help-msg
 
-start: manage-conf build down run
+restart: start
 
-start-detached: manage-conf build down run-detached
+start: manage-conf build stop run
 
-test: manage-test-conf build down run-detached sleep run-test
+test: manage-test-conf build stop run sleep run-test
 
 html:
 	python3 transform_md_to_html.py
@@ -21,19 +21,13 @@ manage-conf:
 build:
 	docker-compose build
 
-down:
+stop:
 	docker-compose down -v
 
 run:
-	./build-tools/docker-compose-up.sh
-
-run-detached:
 	./build-tools/docker-compose-up.sh -d
 
 # TEST
-
-run-detached:
-	docker-compose up -d
 
 sleep:
 	sleep 30
@@ -53,6 +47,12 @@ django-shell:
 
 bash:
 	docker-compose exec web bash
+
+logs:
+	docker-compose logs -f
+
+logs-celery:
+	docker-compose logs -f celery
 
 # STATIC CODE ANALYSIS
 
