@@ -6,7 +6,7 @@ restart: start
 
 start: manage-conf build stop run
 
-test: manage-test-conf build stop run sleep run-test
+test: manage-test-conf build stop run-on-travis sleep run-test
 
 html:
 	python3 transform_md_to_html.py
@@ -36,6 +36,8 @@ manage-test-conf:
 	cp dru.test.conf .env
 	python3 build-tools/manage-env.py
 
+run-on-travis:
+	docker-compose up -d
 
 run-test:
 	python3 -m unittest discover test
