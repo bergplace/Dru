@@ -89,20 +89,6 @@ def get_edges(start_height, end_height):
 
 @celery_app.task
 @auto_save_result
-def get_degree_max(start_height, end_height, mode):
-    if heights_are_valid(start_height, end_height) and mode in ('all', 'in', 'out'):
-
-        mode = mode.upper()
-
-        graph = get_graph(start_height, end_height, mode != 'ALL')
-
-        return dict.fromkeys(graph.vs.select(_degree=graph.maxdegree(mode=mode))["name"], graph.maxdegree(mode=mode))
-
-    else:
-        return None
-
-@celery_app.task
-@auto_save_result
 def get_degree(start_height, end_height, mode):
     if heights_are_valid(start_height, end_height) and mode in ('all', 'in', 'out'):
 
@@ -117,12 +103,14 @@ def get_degree(start_height, end_height, mode):
 
 @celery_app.task
 @auto_save_result
-def get_betweenness_max(start_height, end_height, directed):
-    if heights_are_valid(start_height, end_height) and directed in ('true', 'false'):
+def get_degree_max(start_height, end_height, mode):
+    if heights_are_valid(start_height, end_height) and mode in ('all', 'in', 'out'):
 
-        graph = get_graph(start_height, end_height, directed == "true")
+        mode = mode.upper()
 
-        return dict.fromkeys(graph.vs.select(_betweenness=max(graph.betweenness()))["name"], max(graph.betweenness()))
+        graph = get_graph(start_height, end_height, mode != 'ALL')
+
+        return dict.fromkeys(graph.vs.select(_degree=graph.maxdegree(mode=mode))["name"], graph.maxdegree(mode=mode))
 
     else:
         return None
@@ -138,6 +126,19 @@ def get_betweenness(start_height, end_height, directed):
     else:
         return None
 
+
+@celery_app.task
+@auto_save_result
+def get_betweenness_max(start_height, end_height, directed):
+    if heights_are_valid(start_height, end_height) and directed in ('true', 'false'):
+
+        graph = get_graph(start_height, end_height, directed == "true")
+
+        return dict.fromkeys(graph.vs.select(_betweenness=max(graph.betweenness()))["name"], max(graph.betweenness()))
+
+    else:
+        return None
+
 @celery_app.task
 @auto_save_result
 def get_closeness(start_height, end_height, directed):
@@ -149,7 +150,6 @@ def get_closeness(start_height, end_height, directed):
     else:
         return None
 
-
 @celery_app.task
 @auto_save_result
 def get_closeness_max(start_height, end_height, directed):
@@ -157,6 +157,17 @@ def get_closeness_max(start_height, end_height, directed):
         graph = get_graph(start_height, end_height, directed == "true")
 
         return dict(zip(graph.vs()["name"], graph.closeness()))
+
+    else:
+        return None
+
+@celery_app.task
+@auto_save_result
+def get_transitivity(start_height, end_height):
+    if heights_are_valid(start_height, end_height):
+        graph = get_graph(start_height, end_height, "true")
+
+        return dict(zip(graph.vs()["name"], graph.transitivity_local_undirected()))
 
     else:
         return None

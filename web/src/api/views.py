@@ -108,21 +108,15 @@ def get_edges(request, start_height, end_height):
     return task_result_response(task_id)
 
 @api_view(['GET'])
-def get_degree_max(request, start_height, end_height, mode):
-    task_id = task_id_from_request(request)
-    register_task(task_id, tasks.get_degree_max, start_height, end_height, mode)
-    return task_result_response(task_id)
-
-@api_view(['GET'])
 def get_degree(request, start_height, end_height, mode):
     task_id = task_id_from_request(request)
     register_task(task_id, tasks.get_degree, start_height, end_height, mode)
     return task_result_response(task_id)
 
 @api_view(['GET'])
-def get_betweenness_max(request, start_height, end_height, directed):
+def get_degree_max(request, start_height, end_height, mode):
     task_id = task_id_from_request(request)
-    register_task(task_id, tasks.get_betweenness_max, start_height, end_height, directed)
+    register_task(task_id, tasks.get_degree_max, start_height, end_height, mode)
     return task_result_response(task_id)
 
 @api_view(['GET'])
@@ -132,15 +126,27 @@ def get_betweenness(request, start_height, end_height, directed):
     return task_result_response(task_id)
 
 @api_view(['GET'])
-def get_closeness_max(request, start_height, end_height, directed):
+def get_betweenness_max(request, start_height, end_height, directed):
     task_id = task_id_from_request(request)
-    register_task(task_id, tasks.get_closeness_max, start_height, end_height, directed)
+    register_task(task_id, tasks.get_betweenness_max, start_height, end_height, directed)
     return task_result_response(task_id)
 
 @api_view(['GET'])
 def get_closeness(request, start_height, end_height, directed):
     task_id = task_id_from_request(request)
     register_task(task_id, tasks.get_closeness, start_height, end_height, directed)
+    return task_result_response(task_id)
+
+@api_view(['GET'])
+def get_closeness_max(request, start_height, end_height, directed):
+    task_id = task_id_from_request(request)
+    register_task(task_id, tasks.get_closeness_max, start_height, end_height, directed)
+    return task_result_response(task_id)
+
+@api_view(['GET'])
+def get_transitivity(request, start_height, end_height):
+    task_id = task_id_from_request(request)
+    register_task(task_id, tasks.get_transitivity, start_height, end_height)
     return task_result_response(task_id)
 
 @api_view(['GET'])

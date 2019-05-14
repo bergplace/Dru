@@ -14,5 +14,6 @@ urlpatterns = [
     path('get_betweenness_max/<int:start_height>/<int:end_height>/<str:directed>', views.get_betweenness_max),
     path('get_closeness/<int:start_height>/<int:end_height>/<str:directed>', views.get_closeness),
     path('get_closeness_max/<int:start_height>/<int:end_height>/<str:directed>', views.get_closeness_max),
+    path('get_transitivity/<int:start_height>/<int:end_height>', views.get_transitivity),
     path('wait_n_seconds/<int:seconds>', views.wait_n_seconds)
 ]
