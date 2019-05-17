@@ -118,6 +118,12 @@ def get_degree(request, start_height, end_height, mode):
     return task_result_response(task_id)
 
 @api_view(['GET'])
+def get_degree_by_block(request, start_height, end_height, address, mode):
+    task_id = task_id_from_request(request)
+    register_task(task_id, tasks.get_degree_by_block, start_height, end_height, address, mode)
+    return task_result_response(task_id)
+
+@api_view(['GET'])
 def get_degree_max(request, start_height, end_height, mode):
     task_id = task_id_from_request(request)
     register_task(task_id, tasks.get_degree_max, start_height, end_height, mode)
@@ -151,6 +157,36 @@ def get_closeness_max(request, start_height, end_height, directed):
 def get_transitivity(request, start_height, end_height):
     task_id = task_id_from_request(request)
     register_task(task_id, tasks.get_transitivity, start_height, end_height)
+    return task_result_response(task_id)
+
+@api_view(['GET'])
+def get_transitivity_global(request, start_height, end_height):
+    task_id = task_id_from_request(request)
+    register_task(task_id, tasks.get_transitivity_global, start_height, end_height)
+    return task_result_response(task_id)
+
+@api_view(['GET'])
+def get_diameter(request, start_height, end_height, directed):
+    task_id = task_id_from_request(request)
+    register_task(task_id, tasks.get_diameter, start_height, end_height, directed)
+    return task_result_response(task_id)
+
+@api_view(['GET'])
+def get_density(request, start_height, end_height, directed, loops):
+    task_id = task_id_from_request(request)
+    register_task(task_id, tasks.get_density, start_height, end_height, directed, loops)
+    return task_result_response(task_id)
+
+@api_view(['GET'])
+def are_connected(request, start_height, end_height, address1, address2, directed):
+    task_id = task_id_from_request(request)
+    register_task(task_id, tasks.are_connected, start_height, end_height, address1, address2, directed)
+    return task_result_response(task_id)
+
+@api_view(['GET'])
+def get_transactions_value(request, start_height, end_height, address1, address2):
+    task_id = task_id_from_request(request)
+    register_task(task_id, tasks.get_transactions_value, start_height, end_height, address1, address2)
     return task_result_response(task_id)
 
 @api_view(['GET'])
