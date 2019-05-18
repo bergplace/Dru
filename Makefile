@@ -8,6 +8,9 @@ start: manage-conf build stop run
 
 test: manage-test-conf build stop run-on-travis sleep run-test
 
+fuzz:
+	python3 test/fuzz.py
+
 html:
 	python3 transform_md_to_html.py
 
