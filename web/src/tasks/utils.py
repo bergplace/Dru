@@ -47,7 +47,7 @@ def auto_save_result(fn):
         task = lambda: Tasks.objects.get(id=task_id)
         logger.debug(f"running task.{fn.__name__}, id: {task_id}")
         task().set_status(Tasks.PROCESSING).set_debug_info(
-            task_name=fn.__name__, params=[args, kwargs]
+            task_name=fn.__name__, args=args, kwargs=kwargs
         )
         try:
             result = fn(*args, **kwargs)
