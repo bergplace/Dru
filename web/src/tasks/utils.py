@@ -19,6 +19,7 @@ def register_task(task_id, task_fn, *args, **kwargs):
         logger.debug(f"accepted task {task_id} for processing")
         task_fn.delay(task_id, *args, **kwargs)
 
+
 def task_id_from_request(request):
     return sha256((request.path + request.method + str(time())).encode('utf-8')).hexdigest()
 
