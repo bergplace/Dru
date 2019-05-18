@@ -5,12 +5,13 @@ from utils import Dru, fixture
 class TestBlockByHeightAPI(TestCase):
 
     def test_genesis_block(self):
-        block = Dru.get('/api/block_by_height/0')
+        blocks = Dru.get('/api/get_blocks/0/0')
         test_block = fixture('zcash_genesis_block.json')
 
-        for b in block, test_block:
+        for b in blocks + [test_block]:
             # this value changes!
+            b['_id'] = None
             b['confirmations'] = None
             b['valuePools'] = None
 
-        self.assertEqual(block, test_block)
+        self.assertEqual(blocks[0], test_block)

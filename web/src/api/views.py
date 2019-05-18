@@ -88,12 +88,6 @@ def current_block_height(request):
     return Response({'height': get_max_height()})
 
 @api_view(['GET'])
-def get_block_by_height(request, height):
-    task_id = task_id_from_request(request)
-    register_task(task_id, tasks.get_block_by_height, height)
-    return task_result_response(task_id)
-
-@api_view(['GET'])
 def get_blocks(request, start_height, end_height):
     task_id = task_id_from_request(request)
     register_task(task_id, tasks.get_blocks, start_height, end_height)
@@ -187,10 +181,4 @@ def are_connected(request, start_height, end_height, address1, address2, directe
 def get_transactions_value(request, start_height, end_height, address1, address2):
     task_id = task_id_from_request(request)
     register_task(task_id, tasks.get_transactions_value, start_height, end_height, address1, address2)
-    return task_result_response(task_id)
-
-@api_view(['GET'])
-def wait_n_seconds(request, seconds):
-    task_id = task_id_from_request(request)
-    register_task(task_id, tasks.wait_n_seconds, seconds)
     return task_result_response(task_id)

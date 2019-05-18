@@ -4,7 +4,6 @@ from . import views
 urlpatterns = [
     path('result/<str:task_id>', views.result),
     path('register-email', views.register_email),
-    path('block_by_height/<int:height>', views.get_block_by_height),
     path('current_block_height', views.current_block_height),
     path('get_blocks/<int:start_height>/<int:end_height>', views.get_blocks),
     path('get_blocks_reduced/<int:start_height>/<int:end_height>', views.get_blocks_reduced),
@@ -24,5 +23,4 @@ urlpatterns = [
          views.are_connected),
     path('get_transactions_value/<int:start_height>/<int:end_height>/<str:address1>/<str:address2>',
          views.get_transactions_value),
-    path('wait_n_seconds/<int:seconds>', views.wait_n_seconds)
 ]
