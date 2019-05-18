@@ -1,6 +1,7 @@
 from time import time
 import json
 from hashlib import sha256
+import traceback
 
 from rest_framework.response import Response
 
@@ -42,16 +43,17 @@ def task_path(task_id):
 
 def auto_save_result(fn):
     def wrapper(task_id, *args, **kwargs):
+        task = lambda: Tasks.objects.get(id=task_id)
         logger.debug(f"running task.{fn.__name__}, id: {task_id}")
-        Tasks.objects.get(id=task_id).set_status(Tasks.PROCESSING)
+        task().set_status(Tasks.PROCESSING).set_debug_info(
+            task_name=fn.__name__, params=[args, kwargs]
+        )
         try:
             result = fn(*args, **kwargs)
-            task = Tasks.objects.get(id=task_id)
-            save_task_result(task.id, result)
-            task.set_status(Tasks.READY)
-        except Exception:
-            Tasks.objects.get(id=task_id).set_status(Tasks.ERROR)
-            # here some logging would be nice
+            save_task_result(task_id, result)
+            task().set_status(Tasks.READY)
+        except Exception as e:
+            task().set_status(Tasks.ERROR).set_error_info(type(e).__name__, traceback.format_exc())
             raise
     wrapper.__name__ = fn.__name__ + "_asr"
     return wrapper

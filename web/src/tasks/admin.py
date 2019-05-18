@@ -5,4 +5,5 @@ from .models import Tasks
 
 @admin.register(Tasks)
 class TaskAdmin(admin.ModelAdmin):
-    list_filter = ('id', 'status', 'email', 'received_t', 'start_t', 'end_t')
+    list_display = ('endpoint', 'received_t', 'status')
+    list_filter = ('endpoint', 'error_type', 'status', 'email', 'received_t', 'start_t', 'end_t')

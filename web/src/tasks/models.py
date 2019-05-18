@@ -22,6 +22,10 @@ class Tasks(models.Model):
         default=QUEUED,
         max_length=14
     )
+    endpoint = models.TextField(null=True)
+    params = models.TextField(null=True)
+    error_type = models.TextField(null=True)
+    stacktrace = models.TextField(null=True)
     email = models.EmailField(null=True)
     received_t = models.DateTimeField(auto_now_add=True)
     start_t = models.DateTimeField(null=True)
@@ -34,6 +38,17 @@ class Tasks(models.Model):
         elif status in (Tasks.READY, Tasks.ERROR):
             self.end_t = timezone.now()
         self.send_email()
+        self.save()
+        return self
+
+    def set_debug_info(self, task_name, params):
+        self.endpoint = task_name
+        self.params = str(params)
+        self.save()
+
+    def set_error_info(self, exc_name, stacktrace):
+        self.error_type = exc_name
+        self.stacktrace = stacktrace
         self.save()
 
     def set_email(self, email):

@@ -23,7 +23,6 @@ def get_blocks(start_height, end_height):
     Note that this endpoint returns whole blocks, no attributes are stripped.
 
     """
-
     if heights_are_valid(start_height, end_height):
         
         blocks = Mongo.db(os.environ['MONGODB_NAME']).blocks.find(
