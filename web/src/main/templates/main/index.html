@@ -1,60 +1,102 @@
 
         {% extends "main/base.html" %}
         {% block content %}
-    <h1>This is only exemplary md file transformed to html</h1>
+    <h1>Using email notifications</h1>
 
-<p>creates and maintains MongoDB with Bitcoin blocks, contained in docker</p>
+<ul>
+<li>type and send your email address in box above</li>
+<li>click verification link you'll get in email</li>
+<li>now you can POST your email to the result links in form of <code>{"email": "joe.doe@mail.com"}</code> so that you'll 
+be notified when the task has finished </li>
+</ul>
 
-<h2>Installation</h2>
+<h1>Available APIs</h1>
 
-<h3>prerequisites</h3>
+<ul>
+<li><p>Current height of collected blockchain</p>
 
-<ol>
-<li>linux system</li>
-<li>full bitcoin node</li>
-<li>about 500Gb free space (full node + DB)</li>
-<li><code>docker</code> &amp; <code>docker-compose</code></li>
-<li><code>build-essential</code> (maketools)</li>
-<li><code>pycodestyle</code> &amp; <code>pylint</code></li>
-</ol>
+<ul>
+<li><code>/api/current_block_height</code></li>
+</ul></li>
+<li><p>Blocks</p>
 
-<h3>installation</h3>
+<ul>
+<li><code>/api/get_blocks/&lt;start_height&gt;/&lt;end_height&gt;</code></li>
+</ul></li>
+<li><p>Blocks with reduced amount of info</p>
 
-<ol>
-<li><code>cp -v .env.dist .env</code></li>
-<li>set variables in <code>.env</code></li>
-<li>run <code>make</code></li>
-<li>now you can connect to DB on port specified in <code>.env</code></li>
-<li>web api is available on <code>http://localhost:${api_port}</code></li>
-</ol>
+<ul>
+<li><code>/api/get_blocks_reduced/&lt;start_height&gt;/&lt;end_height&gt;</code></li>
+</ul></li>
+<li><p>Edges of transaction graph</p>
 
-<h2>Management</h2>
+<ul>
+<li><code>/api/get_edges/&lt;start_height&gt;/&lt;end_height&gt;</code></li>
+</ul></li>
+<li><p>Degree of transaction graph</p>
 
-<h3>connect to mongo shell</h3>
+<ul>
+<li><code>/api/get_degree/&lt;start_height&gt;/&lt;end_height&gt;/&lt;mode: all|in|out&gt;</code></li>
+</ul></li>
+<li><p>Degree of transaction graph by block</p>
 
-<p><code>docker-compose exec mongo mongo auth</code></p>
+<ul>
+<li><code>/api/get_degree_by_block/&lt;start_height&gt;/end_height&gt;/&lt;address&gt;/&lt;mode: all|in|out&gt;</code></li>
+</ul></li>
+<li><p>Max degree</p>
 
-<p>then to authenticate, type into the shell</p>
+<ul>
+<li><code>/api/get_degree_max/&lt;start_height&gt;/&lt;end_height&gt;/&lt;all|in|out&gt;</code></li>
+</ul></li>
+<li><p>Betweenness</p>
 
-<p><code>db.auth('username', 'password')</code></p>
+<ul>
+<li><code>/api/get_betweenness/&lt;start_height&gt;/&lt;end_height&gt;/&lt;directed: true|false&gt;</code></li>
+</ul></li>
+<li><p>Max betweenness</p>
 
-<h3>folow logs of db maintainer</h3>
+<ul>
+<li><code>/api/get_betweenness_max/&lt;start_height&gt;/&lt;end_height&gt;/&lt;directed: true|false&gt;</code></li>
+</ul></li>
+<li><p>Closeness</p>
 
-<p><code>docker-compose logs db_maintainer</code></p>
+<ul>
+<li><code>/api/get_closeness/&lt;start_height&gt;/&lt;end_height&gt;/&lt;directed: true|false&gt;</code></li>
+</ul></li>
+<li><p>Max closeness</p>
 
-<h2>Usage in python</h2>
+<ul>
+<li><code>/api/get_closeness_max/&lt;start_height&gt;/&lt;end_height&gt;/&lt;directed: true|false&gt;</code></li>
+</ul></li>
+<li><p>Transitivity</p>
 
-<h3>connect to database</h3>
+<ul>
+<li><code>/api/get_transitivity/&lt;start_height&gt;/&lt;end_height&gt;</code></li>
+</ul></li>
+<li><p>Global transitivity</p>
 
-<p>to connect to database you can use 'mongo<em>connection.py' from usage-examples directory
-than create mongo</em>credentials.py to hold variables like MONGO<em>USER, MONGO</em>PASS etc.
-and now you are ready to use your database!</p>
+<ul>
+<li><code>/api/get_transitivity_global/&lt;start_height&gt;/&lt;end_height&gt;</code></li>
+</ul></li>
+<li><p>Diameter</p>
 
-<h3>getting last block</h3>
+<ul>
+<li><code>/api/get_diameter/&lt;start_height&gt;/&lt;end_height&gt;/&lt;directed: true|false&gt;</code></li>
+</ul></li>
+<li><p>Density</p>
 
-<p><code>python
-from mongo_connection import get_db_connection
-db = get_db_connection()
-last_block = db.blocks.find().sort([('height', -1)])[0]
-</code></p>
+<ul>
+<li><code>/api/get_density/&lt;start_height&gt;/&lt;end_height&gt;/&lt;directed: true|false&gt;/&lt;loops: true|false&gt;</code></li>
+</ul></li>
+<li><p>Are connected</p>
+
+<ul>
+<li><code>/api/get_density/&lt;start_height&gt;/&lt;end_height&gt;/&lt;address-1&gt;/&lt;address-2&gt;/&lt;directed: true|false&gt;</code></li>
+</ul></li>
+<li><p>Transactions value</p>
+
+<ul>
+<li><code>/api/get_density/&lt;start_height&gt;/&lt;end_height&gt;/&lt;address-1&gt;/&lt;address-2&gt;/&lt;directed: true|false&gt;</code></li>
+</ul></li>
+</ul>
 {% endblock %}

@@ -31,6 +31,13 @@ class Tasks(models.Model):
     start_t = models.DateTimeField(null=True)
     end_t = models.DateTimeField(null=True)
 
+    @property
+    def duration(self):
+        if self.start_t and self.end_t:
+            return f"{(self.end_t - self.start_t).total_seconds():.2f}s"
+        else:
+            return "-"
+
     def set_status(self, status):
         self.status = status
         if status == Tasks.PROCESSING:
