@@ -50,7 +50,11 @@ class Tasks(models.Model):
 
     def set_debug_info(self, task_name, args, kwargs):
         self.endpoint = task_name
-        self.params = str(args) if not kwargs else str([args, kwargs])
+        self.params = ''
+        if args:
+            self.params += str(args)
+        if kwargs:
+            self.params += ', '.join(f'{k}: {v}' for k, v in kwargs.items())
         self.save()
 
     def set_error_info(self, exc_name, stacktrace):

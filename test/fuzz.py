@@ -4,21 +4,22 @@ import asyncio
 
 URL = 'http://localhost:8000'
 REPEAT_NUMBER = 10
+SPREAD = 100
 
 APIS = [
-    lambda: f'get_blocks/{randint(0, 1000)}/{randint(1000, 2000)}',
-    lambda: f'get_blocks_reduced/{randint(0, 1000)}/{randint(1000, 2000)}',
-    lambda: f'get_edges/{randint(0, 1000)}/{randint(1000, 2000)}',
-    lambda: f'get_degree/{randint(0, 1000)}/{randint(1000, 2000)}/{choice(("all", "in", "out"))}',
-    lambda: f'get_degree_max/{randint(0, 1000)}/{randint(1000, 2000)}/{choice(("all", "in", "out"))}',
-    lambda: f'get_betweenness/{randint(0, 1000)}/{randint(1000, 2000)}/{choice(("true", "false"))}',
-    lambda: f'get_betweenness_max/{randint(0, 1000)}/{randint(1000, 2000)}/{choice(("true", "false"))}',
-    lambda: f'get_closeness/{randint(0, 1000)}/{randint(1000, 2000)}/{choice(("true", "false"))}',
-    lambda: f'get_closeness_max/{randint(0, 1000)}/{randint(1000, 2000)}/{choice(("true", "false"))}',
-    lambda: f'get_transitivity/{randint(0, 1000)}/{randint(1000, 2000)}',
-    lambda: f'get_transitivity_global/{randint(0, 1000)}/{randint(1000, 2000)}',
-    lambda: f'get_diameter/{randint(0, 1000)}/{randint(1000, 2000)}/{choice(("true", "false"))}',
-    lambda: f'get_density/{randint(0, 1000)}/{randint(1000, 2000)}/'
+    lambda: f'get_blocks/{randint(0, SPREAD)}/{randint(SPREAD, SPREAD * 2)}',
+    lambda: f'get_blocks_reduced/{randint(0, SPREAD)}/{randint(SPREAD, SPREAD * 2)}',
+    lambda: f'get_edges/{randint(0, SPREAD)}/{randint(SPREAD, SPREAD * 2)}',
+    lambda: f'get_degree/{randint(0, SPREAD)}/{randint(SPREAD, SPREAD * 2)}/{choice(("all", "in", "out"))}',
+    lambda: f'get_degree_max/{randint(0, SPREAD)}/{randint(SPREAD, SPREAD * 2)}/{choice(("all", "in", "out"))}',
+    lambda: f'get_betweenness/{randint(0, SPREAD)}/{randint(SPREAD, SPREAD * 2)}/{choice(("true", "false"))}',
+    lambda: f'get_betweenness_max/{randint(0, SPREAD)}/{randint(SPREAD, SPREAD * 2)}/{choice(("true", "false"))}',
+    lambda: f'get_closeness/{randint(0, SPREAD)}/{randint(SPREAD, SPREAD * 2)}/{choice(("true", "false"))}',
+    lambda: f'get_closeness_max/{randint(0, SPREAD)}/{randint(SPREAD, SPREAD * 2)}/{choice(("true", "false"))}',
+    lambda: f'get_transitivity/{randint(0, SPREAD)}/{randint(SPREAD, SPREAD * 2)}',
+    lambda: f'get_transitivity_global/{randint(0, SPREAD)}/{randint(SPREAD, SPREAD * 2)}',
+    lambda: f'get_diameter/{randint(0, SPREAD)}/{randint(SPREAD, SPREAD * 2)}/{choice(("true", "false"))}',
+    lambda: f'get_density/{randint(0, SPREAD)}/{randint(SPREAD, SPREAD * 2)}/'
             f'{choice(("true", "false"))}/{choice(("true", "false"))}',
 ]
 
