@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-7
 #
 # Configuration file for the Sphinx documentation builder.
 #
@@ -20,8 +20,8 @@
 # -- Project information -----------------------------------------------------
 
 project = 'Dru'
-copyright = '2019, Radosław Michalski, Marcin Pieczka, Weronika Mrugała'
-author = 'Radosław Michalski, Marcin Pieczka, Weronika Mrugała'
+copyright = '2018-2019, BERG members: Marcin Pieczka, Radosław Michalski, Weronika Mrugała'
+author = 'Marcin Pieczka, Radosław Michalski, Weronika Mrugała'
 
 # The short X.Y version
 version = ''
@@ -129,7 +129,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'Dru.tex', 'Dru Documentation',
-     'Radosław Michalski, Marcin Pieczka, Weronika Mrugała', 'manual'),
+     'BERG Group Members - Marcin Pieczka, Radosław Michalski, Weronika Mrugała', 'manual'),
 ]
 
 

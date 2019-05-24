@@ -1,0 +1,4 @@
+.. _Server:
+
+Dru instance
+============
