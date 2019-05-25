@@ -1,4 +1,4 @@
-.. _api-docs:
+.. _api:
 
-API documentation
-=================
+API endpoints
+=============

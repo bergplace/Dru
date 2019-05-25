@@ -33,10 +33,12 @@ Great! Please have a look at the :ref:`getting-started` guide.
    :caption: Contents:
 
    docs/getting-started
-   docs/version-history
+   docs/configuration
    docs/api-docs
    docs/server
+   docs/version-history
    docs/source-code
    docs/authors
    docs/funding
    docs/license
+   docs/contact
