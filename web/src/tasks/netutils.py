@@ -60,14 +60,15 @@ def get_graph(start_height, end_height, directed):
 
             for transaction_vout in transaction['vout']:
                 vout_value = transaction_vout['value']
+                vout_addresses = transaction_vout['scriptPubKey'].get('addresses')
+                if vout_addresses:
+                    vout_address = vout_addresses[0]
+                    transaction_vouts[vout_address] = vout_value
 
-                vout_address = transaction_vout['scriptPubKey']['addresses'][0]
-                transaction_vouts[vout_address] = vout_value
-
-                try:
-                    vertex = graph.vs.find(vout_address)
-                except ValueError:
-                    graph.add_vertex(vout_address)
+                    try:
+                        vertex = graph.vs.find(vout_address)
+                    except ValueError:
+                        graph.add_vertex(vout_address)
 
             for transaction_vin in transaction_vins:
 
