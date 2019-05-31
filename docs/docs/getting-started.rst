@@ -25,6 +25,8 @@ If you have Docker CE installed, you can proceed to cloning the Dru repository::
 
     git clone https://github.com/bergplace/Dru.git
 
+Note, that the Docker compose file provided by Dru has version 3.3 and as such it requires Docker in version 17.06.0 or above. For more details on compatibility, please visit this webpage: https://docs.docker.com/v17.09/compose/compose-file/
+
 Creating the configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -33,12 +35,12 @@ Next, use the default configuration file as a template for your Dru instance con
     cd Dru
     cp dru.conf.default dru.conf
 
-Please do edit the dru.conf to suite your needs according to the :ref:`configuration` section.
+Then, edit the dru.conf to suite your needs according to the :ref:`configuration` section.
 
 Starting Dru
 ~~~~~~~~~~~~
 
-When you prepared the configuration file, you are ready to start Dru. But before please have a look also at all make options by issuing the following command::
+When you prepared the configuration file, you are ready to start Dru. But before have a look also at all make targets by issuing the following command::
 
     make help
 
@@ -46,6 +48,28 @@ Most likely, you will want to start Dru in the following manner::
 
     make start
 
+All make targets are described in the :ref:`maketargets` section.
+
+Using Dru
+~~~~~~~~~
+
+When Dru runs for the first time, it imports all blockchain blocks information into its MongoDB instance. This will take some time and you can see the progress using the following make target::
+
+    make logs
+
+Nevertheless, as soon as some blocks are in MongoDB, you can communicate with the endpoints.
+
+Assuming that the Dru instance is installed on your localhost, you can try to test the environment by querying the API for a genesis block. To do so, use your REST client (e.g. web browser) and make the following query::
+
+    http://localhost:8000/api/get_blocks/1/1
+
+If you are running Dru for Zcash, this call return the Zcash genesis block::
+
+    asdf
+
+If everything worked well, you can continue using Dru.
+
+For the documentation of all Dru API endpoints, see :ref:`endpoints` section.
 
 Stopping Dru
 ~~~~~~~~~~~~

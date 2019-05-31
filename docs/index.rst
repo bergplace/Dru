@@ -39,6 +39,7 @@ Great! Please have a look at the :ref:`getting-started` guide.
 
    docs/getting-started
    docs/configuration
+   docs/maketargets
    docs/api-docs
    docs/server
    docs/version-history
