@@ -1,0 +1,4 @@
+.. _maketargets:
+
+Make targets
+============

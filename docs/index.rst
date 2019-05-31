@@ -47,4 +47,5 @@ Great! Please have a look at the :ref:`getting-started` guide.
    docs/authors
    docs/funding
    docs/license
+   docs/support
    docs/contact

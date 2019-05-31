@@ -59,17 +59,15 @@ When Dru runs for the first time, it imports all blockchain blocks information i
 
 Nevertheless, as soon as some blocks are in MongoDB, you can communicate with the endpoints.
 
-Assuming that the Dru instance is installed on your localhost, you can try to test the environment by querying the API for a genesis block. To do so, use your REST client (e.g. web browser) and make the following query::
+Assuming that the Dru instance is installed on your localhost, you can try to test the environment by querying the API for a block. To do so, use your REST client (e.g. web browser) and make the following query::
 
     http://localhost:8000/api/get_blocks/1/1
 
-If you are running Dru for Zcash, this call return the Zcash genesis block::
+This call will return a JSON object that contains the URL to the actual result (result_url). If you follow this URL, you will get another JSON that contains the status of the query in the field "status". If the results are already available, they will be in the "data" field.
 
-    asdf
+If you are running Dru for Zcash, this call return the Zcash genesis block.
 
-If everything worked well, you can continue using Dru.
-
-For the documentation of all Dru API endpoints, see :ref:`endpoints` section.
+If everything worked well, you can continue using Dru. For the documentation of all Dru API endpoints, see :ref:`api` section. Otherwise, please look at Dru logs by running the command "make logs". If you won't find anything helpful, try to look for support using the :ref:`support` section.
 
 Stopping Dru
 ~~~~~~~~~~~~
