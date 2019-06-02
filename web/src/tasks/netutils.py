@@ -30,7 +30,8 @@ def get_graph(start_height, end_height, directed):
             'tx.vout.value': 1,
             'tx.vout.scriptPubKey.addresses': 1,
             '_id': 0
-        }
+        },
+        no_cursor_timeout=True
     )
 
     graph = igraph.Graph(directed=directed)

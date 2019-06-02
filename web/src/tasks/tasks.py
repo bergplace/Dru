@@ -34,7 +34,8 @@ def get_blocks(start_height, end_height):
             },
             {
                 '_id': 0
-            }
+            },
+            no_cursor_timeout=True
         )
 
         return [b for b in blocks]
@@ -79,7 +80,8 @@ def get_blocks_reduced(start_height, end_height):
                 'tx.vout.value': 1,
                 'tx.vout.scriptPubKey.addresses': 1,
                 '_id': 0
-            }
+            },
+            no_cursor_timeout=True
         )
 
         return [b for b in blocks]
