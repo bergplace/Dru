@@ -2,25 +2,33 @@ from random import randint, choice
 import aiohttp
 import asyncio
 
-URL = 'http://localhost:8000'
-REPEAT_NUMBER = 10
-SPREAD = 100
+URL = 'http://dru.bergplace.org'
+REPEAT_NUMBER = 100
+SPREAD = 1000
+CURRENT_HEIGHT = 543361
 
 APIS = [
-    lambda: f'get_blocks/{randint(0, SPREAD)}/{randint(SPREAD, SPREAD * 2)}',
-    lambda: f'get_blocks_reduced/{randint(0, SPREAD)}/{randint(SPREAD, SPREAD * 2)}',
-    lambda: f'get_edges/{randint(0, SPREAD)}/{randint(SPREAD, SPREAD * 2)}',
-    lambda: f'get_degree/{randint(0, SPREAD)}/{randint(SPREAD, SPREAD * 2)}/{choice(("all", "in", "out"))}',
-    lambda: f'get_degree_max/{randint(0, SPREAD)}/{randint(SPREAD, SPREAD * 2)}/{choice(("all", "in", "out"))}',
-    lambda: f'get_betweenness/{randint(0, SPREAD)}/{randint(SPREAD, SPREAD * 2)}/{choice(("true", "false"))}',
-    lambda: f'get_betweenness_max/{randint(0, SPREAD)}/{randint(SPREAD, SPREAD * 2)}/{choice(("true", "false"))}',
-    lambda: f'get_closeness/{randint(0, SPREAD)}/{randint(SPREAD, SPREAD * 2)}/{choice(("true", "false"))}',
-    lambda: f'get_closeness_max/{randint(0, SPREAD)}/{randint(SPREAD, SPREAD * 2)}/{choice(("true", "false"))}',
-    lambda: f'get_transitivity/{randint(0, SPREAD)}/{randint(SPREAD, SPREAD * 2)}',
-    lambda: f'get_transitivity_global/{randint(0, SPREAD)}/{randint(SPREAD, SPREAD * 2)}',
-    lambda: f'get_diameter/{randint(0, SPREAD)}/{randint(SPREAD, SPREAD * 2)}/{choice(("true", "false"))}',
-    lambda: f'get_density/{randint(0, SPREAD)}/{randint(SPREAD, SPREAD * 2)}/'
-            f'{choice(("true", "false"))}/{choice(("true", "false"))}',
+    lambda offset: f'get_blocks/{offset}/{offset + randint(0, SPREAD)}',
+    lambda offset: f'get_blocks_reduced/{offset}/{offset + randint(0, SPREAD)}',
+    lambda offset: f'get_edges/{offset}/{offset + randint(0, SPREAD)}',
+    lambda offset: f'get_degree/{offset}/{offset + randint(0, SPREAD)}/'
+                   f'{choice(("all", "in", "out"))}',
+    lambda offset: f'get_degree_max/{offset}/{offset + randint(0, SPREAD)}/'
+                   f'{choice(("all", "in", "out"))}',
+    lambda offset: f'get_betweenness/{offset}/{offset + randint(0, SPREAD)}/'
+                   f'{choice(("true", "false"))}',
+    lambda offset: f'get_betweenness_max/{offset}/{offset + randint(0, SPREAD)}/'
+                   f'{choice(("true", "false"))}',
+    lambda offset: f'get_closeness/{offset}/{offset + randint(0, SPREAD)}/'
+                   f'{choice(("true", "false"))}',
+    lambda offset: f'get_closeness_max/{offset}/{offset + randint(0, SPREAD)}/'
+                   f'{choice(("true", "false"))}',
+    lambda offset: f'get_transitivity/{offset}/{offset + randint(0, SPREAD)}',
+    lambda offset: f'get_transitivity_global/{offset}/{offset + randint(0, SPREAD)}',
+    lambda offset: f'get_diameter/{offset}/{offset + randint(0, SPREAD)}/'
+                   f'{choice(("true", "false"))}',
+    lambda offset: f'get_density/{offset}/{offset + randint(0, SPREAD)}/'
+                   f'{choice(("true", "false"))}/{choice(("true", "false"))}',
 ]
 
 
@@ -33,7 +41,7 @@ async def call_apis():
     async with aiohttp.ClientSession() as session:
         for api in APIS:
             for _ in range(REPEAT_NUMBER):
-                url = f'{URL}/api/{api()}'
+                url = f'{URL}/api/{api(randint(0, CURRENT_HEIGHT - SPREAD))}'
                 await fetch(session, url)
                 print(url)
 
