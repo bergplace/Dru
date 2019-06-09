@@ -18,7 +18,7 @@ Web server section
 
 ``debug=false|true``
 
-Logs the web server debugging information into the main logging output.
+Puts Dru in debug mode, not suitable for regular use, when dru is in debug mode it will return debug information in case of error.
 
 ``web_host=localhost|ip_address``
 
@@ -46,7 +46,7 @@ The path for mongo database containing blocks. Space requirements for this datab
 
 ``postgres_dir=~/dru-data/pg``
 
-The path for postfix database containing supplementary information for Dru.
+The path for Postgres database containing supplementary information for Dru.
 
 
 ``task_results_dir=~/dru-data/task-results/``
@@ -59,7 +59,7 @@ The path where given cryptocurrency blockchain is stored.
 
 ``rabbit_dir=~/dru-data/rabbit``
 
-The path for Rabbit-related files.
+The path for RabbitMQ-related files.
 
 Cryptocurrency node section
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
