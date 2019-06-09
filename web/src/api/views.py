@@ -9,15 +9,19 @@ from main.models import Email
 from tasks.netutils import get_max_height
 from tasks.utils import register_task, task_id_from_request, task_result_response, get_task_result
 from tasks.models import Tasks
-import tasks.tasks as tasks
 from web.settings import BASE_URL
 from web.utils import send_mail
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, SuspiciousOperation
 from django.core.validators import validate_email
 
 
 @api_view(['GET', 'POST'])
 def result(request, task_id):
+    try:
+        int(task_id, base=16)
+    except ValueError:
+        raise SuspiciousOperation("Task ID in url does not seam to be correct, should be hex")
+
     if Tasks.objects.filter(id=task_id).exists():
         task = Tasks.objects.get(id=task_id)
 
