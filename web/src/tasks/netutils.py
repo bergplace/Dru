@@ -35,7 +35,7 @@ def get_graph(start_height, end_height, directed):
     )
 
     graph = igraph.Graph(directed=directed)
-
+    blocks = [block for block in blocks]
     for block in blocks:
         block_height = block['height']
         block_time = block['time']
