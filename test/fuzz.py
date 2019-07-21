@@ -3,8 +3,8 @@ import aiohttp
 import asyncio
 
 URL = 'http://dru.bergplace.org'
-REPEAT_NUMBER = 100
-SPREAD = 1000
+REPEAT_NUMBER = 10
+SPREAD = 10000
 CURRENT_HEIGHT = 543361
 
 APIS = [
