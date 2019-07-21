@@ -76,8 +76,11 @@ def register_email(request):
             })
         send_mail(
             request.data['email'],
-            'Email Verification',
-            f'{BASE_URL}/verify-email/{obj.verification_string}'
+            'Email verification for Dru processing platform',
+            f"""
+            Click the link below if you want to be able to email-track progress of Dru tasks
+            {BASE_URL}/verify-email/{obj.verification_string}
+            """
         )
         obj.verification_emails_sent += 1
         obj.save()
