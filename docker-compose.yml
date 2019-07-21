@@ -99,6 +99,8 @@ services:
       - "TYPE=celery"
       - "SENDGRID_USERNAME=${sendgrid_username}"
       - "SENDGRID_PASSWORD=${sendgrid_password}"
+      - "EMAIL_ADDRESS=${email_address}"
+      - "EMAIL_REPLY_TO_ADDRESS=${email_reply_to_address}"
 
   web:
     image: django
@@ -132,6 +134,8 @@ services:
       - "TYPE=django"
       - "SENDGRID_USERNAME=${sendgrid_username}"
       - "SENDGRID_PASSWORD=${sendgrid_password}"
+      - "EMAIL_ADDRESS=${email_address}"
+      - "EMAIL_REPLY_TO_ADDRESS=${email_reply_to_address}"
     ports:
       - ${web_port}:80
       - 443:443
