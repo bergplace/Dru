@@ -11,6 +11,8 @@ class Dru:
 
     @staticmethod
     def get(url):
+        if not Dru.blocks_ready:
+            Dru._wait_for_blocks()
         return Dru.get_result(requests.get(Dru._url(url)))
 
     @staticmethod
@@ -32,8 +34,6 @@ class Dru:
 
     @staticmethod
     def get_result(response):
-        if not Dru.blocks_ready:
-            Dru._wait_for_blocks()
         while True:
             result_url = response.json()['result_url']
             result = requests.get(result_url).json()
