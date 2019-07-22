@@ -20,8 +20,8 @@
 # -- Project information -----------------------------------------------------
 
 project = 'Dru'
-copyright = '2018-2019, BERG members: Marcin Pieczka, Radosław Michalski, Weronika Mrugała'
-author = 'Marcin Pieczka, Radosław Michalski, Weronika Mrugała'
+copyright = u'2018-2019, BERG members: Marcin Pieczka, Radosław Michalski, Weronika Mrugała'
+author = u'Marcin Pieczka, Radosław Michalski, Weronika Mrugała'
 
 # The short X.Y version
 version = ''
