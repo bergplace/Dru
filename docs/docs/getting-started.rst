@@ -59,7 +59,7 @@ Nevertheless, as soon as some blocks are in MongoDB, you can communicate with th
 
 Assuming that the Dru instance is installed on your localhost, you can try to test the environment by querying the API for a block. To do so, use your REST client (e.g. web browser) and make the following query::
 
-    http://localhost:8000/api/get_blocks/1/1
+    http://localhost:8000/api/get_blocks/0/0
 
 This call will return a JSON object that contains the URL to the actual result (result_url). If you follow this URL, you will get another JSON that contains the status of the query in the field "status". If the results are already available, they will be in the "data" field.
 
