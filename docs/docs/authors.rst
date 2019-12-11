@@ -5,6 +5,11 @@ Authors
 
 Dru is being actively developed by `BERG - Blockchain Exploration Research Group <https://bergplace.org/>`_.
 
+Project manager
+---------------
+
+`Radosław Michalski <https://www.ii.pwr.edu.pl/~michalski/>`_
+
 Core developers
 ---------------
 
