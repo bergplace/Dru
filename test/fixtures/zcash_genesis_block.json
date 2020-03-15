@@ -1,7 +1,7 @@
 {
     "_id": "",
     "hash": "00040fe8ec8471911baa1db1266ea15dd06b4a8a5c453883c000b031973dce08",
-    "confirmations": 327,
+    "confirmations": 27,
     "size": 1692,
     "height": 0,
     "version": 4,
@@ -23,6 +23,7 @@
                 {
                     "value": 0.0,
                     "valueZat": 0,
+                    "valueSat": 0,
                     "n": 0,
                     "scriptPubKey": {
                         "asm": "04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f OP_CHECKSIG",
