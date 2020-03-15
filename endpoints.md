@@ -14,15 +14,12 @@ Endpoints - blocks:
 
        If the requirements are not met, the endpoint returns an error.
 
-	get_blocks_range(start_height, num_of_blocks)
-		Returns the num_of_blocks blocks from start_height. This endpoint can
-		return blocks from start_height in both directions, i.e., lower than
-		and higher than start_height (including start_height).
+	get_blocks_number(start_height, num_of_blocks)
+		Returns the num_of_blocks blocks from start_height.
 
 		Requires:
-			num_of_blocks != 0
+			num_of_blocks > 0
 			start_height >= 0
-			start_height + num_of_blocks >= 0
 			start_height + num_of_blocks <= max_height
 
 Next level of abstraction is the list of nodes and edges as a future foundation of a graph
@@ -31,7 +28,7 @@ for further processing.
 Assumptions:
 	- the basic entity understood as a node is an address
 	- the link is represented by the transaction
-	- since there are multiple inputs and outputs possible, the only possiblity to link nodes
+	- since there are multiple inputs and outputs possible, the only possibility to link nodes
   	  in the transaction ID, thus it will be the link attribute within all the resulting source rows
 	- the decision of the researcher is how to deal with it in terms of further building the graph
 	- however, the endpoints calculating graph metrics and measures will have parameters controllable
@@ -41,13 +38,11 @@ Assumptions:
 
 Endpoints - edges:
 
-	getEdges(startBlockID, endBlockID, [attributes])
+	get_edges_range(startBlockID, endBlockID)
 		Returns the list of edges starting from startBlockID build from numOfBlocks blocks.
 
-	getEdges(startBlockID, numOfBlocks, [attributes])
-		Returns the list of edges starting from block startBlockID to endBlockID.
-
-	The [attributes] are the optional attributes that will be added to the list of edges.
+		By default it returns the following attributes:
+		    address_vin; address_vout; value; height; txid
 
 	getTransactionAttrs(transactionID, [attributes])
 		Returns all/selected attributes of a transaction provided by transactionID.

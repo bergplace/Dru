@@ -23,23 +23,23 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'i2sm+89p-m8)zq$lsbli#$(#w9bd4sn-$yjfqr*#0z1w^s+&+_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG') == 'True'
+DEBUG = os.environ.get('DEBUG') == 'true'
 
-BASE_URL = os.environ.get('BASE_URL')
+# Crafting BASE_URL
+WEB_HOST = os.environ.get('WEB_HOST')
+WEB_PORT = os.environ.get('WEB_PORT')
 
-# base url transformation so it fits allowed hosts format
-HOST_BASED_ON_BASE_URL = BASE_URL
+if int(WEB_PORT) > 1000:
+    BASE_URL = f'{WEB_HOST}:{WEB_PORT}'
+else:
+    BASE_URL = WEB_HOST
 
-if BASE_URL.startswith('http://'):
-    HOST_BASED_ON_BASE_URL = BASE_URL[len('http://'):]
+if os.environ.get('HTTPS') == 'true':
+    BASE_URL = f'https://{BASE_URL}'
+else:
+    BASE_URL = f'http://{BASE_URL}'
 
-if BASE_URL.startswith('https://'):
-    HOST_BASED_ON_BASE_URL = BASE_URL[len('https://'):]
-
-if BASE_URL.startswith('www.'):
-    HOST_BASED_ON_BASE_URL = BASE_URL[len('www.'):]
-
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', f'.{HOST_BASED_ON_BASE_URL}']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', f'.{WEB_HOST}']
 
 # Application definition
 
@@ -138,13 +138,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/srv/static'
 
 # Celery settings
-CELERY_BROKER_URL = 'amqp://rabbit'
+BROKER_URL = 'amqp://rabbit'
 
 TASK_RESULTS_DIR = '/task-results'
 
 # email settings
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -152,6 +155,8 @@ if DEBUG:
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST_USER = os.environ.get('SENDGRID_USERNAME')
 EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_PASSWORD')
+EMAIL_ADDRESS = os.environ.get('EMAIL_ADDRESS')
+EMAIL_REPLY_TO_ADDRESS = os.environ.get('EMAIL_REPLY_TO_ADDRESS')
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 

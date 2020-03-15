@@ -1,52 +1,40 @@
 # Dru - blockchain analysis platform
 
-Creates and maintains a database with cryptocurrency blocks and provides a API for querying it. All contained in docker.
+This software allows looking at cryptocurrencies blockchains 
+from perspective of Network science. Software used to get hold of 
+ blocks is our (https://github.com/bergplace/block-engine)
+ which connects to cryptocurrency node, continuously extracts all blocks, 
+ resolves transactions input addresses
+ and saves them to mongoDB for ease of use.  
+## BEFORE FIRST RUN
 
-Dru platform is developoed and optimized for zcash, yet it is capable to work with different cryptocoins.
+- make sure you have `docker` and `docker-compose` installed
+- remember to create `dru.conf` file with  
+  `cp dru.default.conf dru.conf`
+- set RPC password and user on your cryptocurrency node
+- type those RPC credentials into `dru.conf` file
+- run one of the commands listed below
 
-## Installation
+## USAGE
 
-### Prerequisites
-1. Linux OS
-1. Full zcash node
-1. About 100Gb free space (full node + DB)
-1. `docker` & `docker-compose`
-1. `build-essential` (maketools)
-1. `pycodestyle` & `pylint`
+PRODUCTION
+- run full production version:  
+    `make prod`
+- stop production:  
+    `make down-prod`
 
-### Installation
-1. `cp -v .env.dist .env`
-1. set variables in `.env`
-1. run `make`
-1. now you can connect to DB on port specified in `.env`
-1. web api is available on `http://localhost:${api_port}`
+DEVELOPMENT
+- run full version for local development:  
+    `make dev`
+- run web without block-engine:  
+    `make web-dev`
+- run tests of the system:  
+    `make test`
 
-## Management
-
-### connect to mongo shell
-
-`docker-compose exec mongo mongo auth`
-
-then to authenticate, type into the shell
-
-`db.auth('username', 'password')`
-
-### Follow logs of db maintainer
-
-`docker-compose logs db_maintainer`
-
-## Usage in python
-
-### Connect to database
-
-to connect to database you can use 'mongo_connection.py' from usage-examples directory
-than create mongo_credentials.py to hold variables like MONGO_USER, MONGO_PASS etc.
-and now you are ready to use your database!
-
-### Getting last block
-
-```python
-from mongo_connection import get_db_connection
-db = get_db_connection()
-last_block = db.blocks.find().sort([('height', -1)])[0]
-```
+TOOLS
+- go into django-shell of web container:  
+    `make django-shell`
+- go into bash shell of web container:  
+    `make bash`
+- transform markdown files to html  
+    `make html`

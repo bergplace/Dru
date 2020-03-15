@@ -1,0 +1,17 @@
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    access_log /var/log/nginx/web.log;
+    location = /favicon.ico { access_log off; log_not_found off; }
+
+    location / {
+        include         uwsgi_params;
+        uwsgi_pass      unix:/srv/socket.sock;
+    }
+
+    location /static {
+        autoindex on;
+        alias   /srv/static/;
+    }
+}

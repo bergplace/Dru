@@ -7,34 +7,45 @@ WELCOME TO
 \____/\_/\_\\_____/
 
 BEFORE FIRST RUN
-
 - make sure you have docker and docker-compose installed
-- remember to create .env file with cp .env.dist .env
-- set RPC password and user on your cryptocurrency node
-- type those RPC credentials into .env file
-- run one of the commands listed below
+- remember to create dru.conf file with
+  cp dru.default.conf dru.conf
+- run 'make start'
+
+USING EXTERNAL CRYPTOCURRENCY NODE
+- set those values in your cryptocurrency settings:
+    rpcallowip=<<'docker0' interface ip/ip_mask>>
+    rpcuser=<<username>>
+    rpcpassword=<<password>>
+    rpcport=<<rpc_port>>
+- set RPC password, user and port in dru.conf
+- REMEMBER TO CHECK YOUR FIREWALL SETTINGS
 
 USAGE
+- run Dru:
+    make start
+- stop Dru:
+    make stop
+- restart Dru:
+    make restart
 
-    PRODUCTION
-    - run full production version:
-        make prod
-    - stop production:
-        make down-prod
+DEVELOPMENT
+- run tests on system with test configuration:
+    make test
+- run tests on already running system
+    make run-test
+- follow logs:
+    make logs
+- follow celery logs:
+    make logs-celery
+- transform markdown files to html:
+    make html
 
-    DEVELOPMENT
-    - run full version for local development:
-        make dev
-    - run web without block-engine:
-        make web-dev
-
-    TOOLS
-    - go into django-shell of web container:
-        make django-shell
-    - go into bash shell of web container:
-        make bash
-    - transform markdown files to html
-        make html
+TOOLS
+- go into django-shell of web container:
+    make django-shell
+- go into bash shell of web container:
+    make bash
 
 
 CONTACT

@@ -1,58 +1,66 @@
+
 help:
 	less help-msg
 
-dev: build-dev down-dev run-dev
+restart: start
 
-web-dev: build-web-dev down-dev run-web-dev
+start: manage-conf build stop run
 
-prod: build-prod down-prod run-prod
+test: manage-test-conf build stop run-on-travis sleep run-test
+
+fuzz:
+	python3 test/fuzz.py
 
 html:
 	python3 transform_md_to_html.py
 
-# DEV
+# START
 
-build-dev:
+manage-conf:
+	./build-tools/cp_conf_if_not_exists.sh
+	cp dru.conf .env
+	python3 build-tools/manage-env.py
+
+build:
 	docker-compose build
 
-run-dev:
-	docker-compose up
-
-down-dev:
+stop:
 	docker-compose down -v
 
-# PURE WEB DEV
+run:
+	./build-tools/docker-compose-up.sh -d
 
-build-web-dev:
-	docker-compose build mongo mongo-express rabbit postgres web celery
+# TEST
 
-run-web-dev:
-	docker-compose up mongo mongo-express rabbit postgres web celery
+sleep:
+	sleep 30
 
-# PROD
+manage-test-conf:
+	cp dru.test.conf .env
+	python3 build-tools/manage-env.py
 
-build-prod:
-	docker-compose -f docker-compose.prod.yml build
+run-on-travis:
+	docker-compose up -d
 
-run-prod:
-	grep changeme .env && { echo "YOU NEED TO SET PROPER DB PASSWORDS"; exit 1 ;} || true
-	docker-compose -f docker-compose.prod.yml up
-
-down-prod:
-	docker-compose -f docker-compose.prod.yml down -v
+run-test:
+	python3 -m unittest discover test
 
 # UTILS
 
 django-shell:
-	docker-compose exec web python manage.py shell
+	docker-compose exec web python3 manage.py shell
 
 bash:
 	docker-compose exec web bash
 
-test:
-	echo "NO TESTS"
+logs:
+	docker-compose logs -f
 
-## static code analysis
+logs-celery:
+	docker-compose logs -f celery
+
+# STATIC CODE ANALYSIS
+
 static_test: test-static-db_maintainer test-static-web_api test-static_tests test-static-usage_examples	
 
 test-static-db_maintainer:

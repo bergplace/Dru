@@ -6,17 +6,22 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from main.models import Email
+from tasks.netutils import get_max_height
 from tasks.utils import register_task, task_id_from_request, task_result_response, get_task_result
 from tasks.models import Tasks
-import tasks.tasks as tasks
 from web.settings import BASE_URL
 from web.utils import send_mail
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, SuspiciousOperation
 from django.core.validators import validate_email
 
 
 @api_view(['GET', 'POST'])
 def result(request, task_id):
+    try:
+        int(task_id, base=16)
+    except ValueError:
+        raise SuspiciousOperation("Task ID in url does not seam to be correct, should be hex")
+
     if Tasks.objects.filter(id=task_id).exists():
         task = Tasks.objects.get(id=task_id)
 
@@ -33,7 +38,7 @@ def result(request, task_id):
             if 'email' in request.data:
                 email = request.data['email']
                 if not Email.is_registered(email):
-                    Response({
+                    return Response({
                         'error': True,
                         'error-msg': 'email not registered'
                     })
@@ -42,7 +47,7 @@ def result(request, task_id):
                     task.set_email(email)
                     return Response({'status': 'ok'})
                 except ValidationError:
-                    Response({
+                    return Response({
                         'error': True,
                         'error-msg': 'email is not valid'
                     })
@@ -71,8 +76,11 @@ def register_email(request):
             })
         send_mail(
             request.data['email'],
-            'Email Verification',
-            f'{BASE_URL}/verify-email/{obj.verification_string}'
+            'Email verification for Dru processing platform',
+            f"""
+            Click the link below if you want to be able to email-track progress of Dru tasks
+            {BASE_URL}/verify-email/{obj.verification_string}
+            """
         )
         obj.verification_emails_sent += 1
         obj.save()
@@ -84,27 +92,14 @@ def register_email(request):
 
 
 @api_view(['GET'])
-def get_block_by_height(request, height):
-    task_id = task_id_from_request(request)
-    register_task(task_id, tasks.get_block_by_height, height)
-    return task_result_response(task_id)
-
-@api_view(['GET'])
-def get_blocks_range(request, start_height, end_height):
-    task_id = task_id_from_request(request)
-    register_task(task_id, tasks.get_blocks_range, start_height, end_height)
-    return task_result_response(task_id)
-
-@api_view(['GET'])
-def get_blocks_number(request, start_height, num_of_blocks):
-    task_id = task_id_from_request(request)
-    register_task(task_id, tasks.get_blocks_number, start_height, num_of_blocks)
-    return task_result_response(task_id)
-
-@api_view(['GET'])
-def wait_n_seconds(request, seconds):
-    task_id = task_id_from_request(request)
-    register_task(task_id, tasks.wait_n_seconds, seconds)
-    return task_result_response(task_id)
+def current_block_height(request):
+    return Response({'height': get_max_height()})
 
 
+def as_view(task):
+    def view(request, *args, **kwargs):
+        task_id = task_id_from_request(request)
+        register_task(task_id, task, *args, **kwargs)
+        return task_result_response(task_id)
+    view.__name__ = task.__name__.replace('_asr', '')
+    return api_view(['GET'])(view)

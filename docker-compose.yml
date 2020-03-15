@@ -1,101 +1,150 @@
-version: "3.1"
+version: "3.3"
 services:
+
+  zcashd:
+    build:
+      context: zcashd/
+    volumes:
+      - type: $zcash_volume_type
+        source: $zcash_volume_source
+        target: /root/.zcash
+    environment:
+      - "CRYPTO_USER=${cryptocurrency_rpc_username}"
+      - "CRYPTO_PASS=${cryptocurrency_rpc_password}"
+      - "CRYPTO_PORT=${cryptocurrency_rpc_port}"
+      - "TEST_MODE=${docker_zcash_node_test_mode}"
 
   mongo:
     image: mongo:4.0.4-xenial
     volumes:
-      - ${database_dir}:/data/db
+      - type: $mongo_volume_type
+        source: $mongo_volume_source
+        target: /data/db
     environment:
       - "AUTH=yes"
-      - "MONGO_INITDB_ROOT_USERNAME=${db_admin_username}"
-      - "MONGO_INITDB_ROOT_PASSWORD=${db_admin_password}"
+      - "MONGO_INITDB_ROOT_USERNAME=${mongo_admin_username}"
+      - "MONGO_INITDB_ROOT_PASSWORD=${mongo_admin_password}"
       - "MONGO_INITDB_DATABASE=${cryptocurrency}"
-    ports:
-      - 127.0.0.1:${db_port}:27017
 
   mongo-express:
     image: mongo-express
-    restart: always
     depends_on:
       - mongo
     ports:
-      - 127.0.0.1:${mongo_web_admin_port}:8081
+      - 127.0.0.1:8001:8081
     environment:
-      - "ME_CONFIG_MONGODB_ADMINUSERNAME=${db_admin_username}"
-      - "ME_CONFIG_MONGODB_ADMINPASSWORD=${db_admin_password}"
-      - "ME_CONFIG_MONGODB_SERVER=${db_host}"
+      - "ME_CONFIG_MONGODB_ADMINUSERNAME=${mongo_admin_username}"
+      - "ME_CONFIG_MONGODB_ADMINPASSWORD=${mongo_admin_password}"
+      - "ME_CONFIG_MONGODB_SERVER=mongo"
       - "ME_CONFIG_MONGODB_AUTH_DATABASE=${cryptocurrency}"
 
   block-engine:
-    image: bergplace/block-engine:1.01
+    image: bergplace/block-engine:1.03
     depends_on:
       - mongo
-    network_mode: "host"
     environment:
-      - "MONGODB_ADMIN_USER=${db_admin_username}"
-      - "MONGODB_ADMIN_PASS=${db_admin_password}"
-      - "MONGODB_READONLY_USER=${db_readonly_username}"
-      - "MONGODB_READONLY_PASS=${db_readonly_password}"
-      - "MONGODB_PORT=${db_port}"
+      - "MONGODB_ADMIN_USER=${mongo_admin_username}"
+      - "MONGODB_ADMIN_PASS=${mongo_admin_password}"
+      - "MONGODB_READONLY_USER=${mongo_readonly_username}"
+      - "MONGODB_READONLY_PASS=${mongo_readonly_password}"
+      - "MONGODB_HOST=mongo"
+      - "MONGODB_PORT=27017"
       - "CRYPTO=${cryptocurrency}"
       - "CRYPTO_USER=${cryptocurrency_rpc_username}"
       - "CRYPTO_PASS=${cryptocurrency_rpc_password}"
       - "CRYPTO_PORT=${cryptocurrency_rpc_port}"
+      - "CRYPTO_HOST=${cryptocurrency_host}"
       - "TX_ADDRESS_CACHE_LIMIT=${tx_address_cache_limit}"
 
   postgres:
     image: postgres:11
+    volumes:
+      - type: $postgres_volume_type
+        source: $postgres_volume_source
+        target: /var/lib/postgresql/data
 
   rabbit:
     image: rabbitmq:3.7-management
+    hostname: dru-rabbit
+    volumes:
+      - type: $rabbit_volume_type
+        source: $rabbit_volume_source
+        target: /var/lib/rabbitmq
     ports:
       - 127.0.0.1:8002:15672
 
   celery:
     build:
       context: web/
+    image: django
     volumes:
-      - ${task_result_dir}:/task-results
       - ./web/src:/app
+      - type: $task_results_volume_type
+        source: $task_results_volume_source
+        target: /task-results
     depends_on:
       - postgres
       - rabbit
       - mongo
     environment:
-      - "MONGODB_READONLY_USER=${db_readonly_username}"
-      - "MONGODB_READONLY_PASS=${db_readonly_password}"
-      - "MONGODB_HOST=${db_host}"
+      - "MONGODB_READONLY_USER=${mongo_readonly_username}"
+      - "MONGODB_READONLY_PASS=${mongo_readonly_password}"
+      - "MONGODB_HOST=mongo"
       - "MONGODB_NAME=${cryptocurrency}"
       - "DJANGO_SU_NAME=${web_admin_username}"
       - "DJANGO_SU_PASSWORD=${web_admin_password}"
-      - "DEBUG=True"
-      - "BASE_URL=http://localhost:8000"
+      - "DEBUG=${debug}"
+      - "WEB_HOST=${web_host}"
+      - "WEB_PORT=${web_port}"
       - "TYPE=celery"
-      - "CELERY_RDB_HOST='0.0.0.0'"
+      - "SENDGRID_USERNAME=${sendgrid_username}"
+      - "SENDGRID_PASSWORD=${sendgrid_password}"
+      - "EMAIL_ADDRESS=${email_address}"
+      - "EMAIL_REPLY_TO_ADDRESS=${email_reply_to_address}"
 
   web:
-    build:
-      context: web/
+    image: django
     volumes:
-      - ${task_result_dir}:/task-results
       - ./web/src:/app
+      - type: $task_results_volume_type
+        source: $task_results_volume_source
+        target: /task-results
+      - type: bind
+        source: "${web_ssl_key_path}"
+        target: /etc/ssl/private/server.key
+      - type: bind
+        source: "${web_ssl_cert_path}"
+        target: /etc/ssl/certs/server.pem
     depends_on:
       - postgres
       - rabbit
       - mongo
+      - celery
     environment:
-      - "MONGODB_READONLY_USER=${db_readonly_username}"
-      - "MONGODB_READONLY_PASS=${db_readonly_password}"
-      - "MONGODB_HOST=${db_host}"
+      - "MONGODB_READONLY_USER=${mongo_readonly_username}"
+      - "MONGODB_READONLY_PASS=${mongo_readonly_password}"
+      - "MONGODB_HOST=mongo"
       - "MONGODB_NAME=${cryptocurrency}"
       - "DJANGO_SU_NAME=${web_admin_username}"
       - "DJANGO_SU_PASSWORD=${web_admin_password}"
-      - "DEBUG=True"
-      - "BASE_URL=http://localhost:8000"
+      - "DEBUG=${debug}"
+      - "WEB_HOST=${web_host}"
+      - "WEB_PORT=${web_port}"
+      - "HTTPS=${web_enable_ssl}"
       - "TYPE=django"
       - "SENDGRID_USERNAME=${sendgrid_username}"
       - "SENDGRID_PASSWORD=${sendgrid_password}"
+      - "EMAIL_ADDRESS=${email_address}"
+      - "EMAIL_REPLY_TO_ADDRESS=${email_reply_to_address}"
     ports:
-      - 127.0.0.1:8000:8000
+      - ${web_port}:80
+      - 443:443
     tty: true
     stdin_open: true
+
+volumes:
+  tmp-vol-task_results:
+  tmp-vol-mongo:
+  tmp-vol-postgres:
+  tmp-vol-zcash:
+  tmp-vol-rabbit:
