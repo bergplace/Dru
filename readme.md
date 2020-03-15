@@ -2,39 +2,17 @@
 
 This software allows looking at cryptocurrencies blockchains 
 from perspective of Network science. Software used to get hold of 
- blocks is our (https://github.com/bergplace/block-engine)
- which connects to cryptocurrency node, continuously extracts all blocks, 
- resolves transactions input addresses
- and saves them to mongoDB for ease of use.  
-## BEFORE FIRST RUN
+blocks is our (https://github.com/bergplace/block-engine)
+which connects to cryptocurrency node, continuously extracts all blocks, 
+resolves transactions input addresses
+and saves them to mongoDB for ease of use.  
 
-- make sure you have `docker` and `docker-compose` installed
-- remember to create `dru.conf` file with  
-  `cp dru.default.conf dru.conf`
-- set RPC password and user on your cryptocurrency node
-- type those RPC credentials into `dru.conf` file
-- run one of the commands listed below
+# Documentation
 
-## USAGE
+For the project documentation, see https://dru.readthedocs.io.
 
-PRODUCTION
-- run full production version:  
-    `make prod`
-- stop production:  
-    `make down-prod`
+# Authors
 
-DEVELOPMENT
-- run full version for local development:  
-    `make dev`
-- run web without block-engine:  
-    `make web-dev`
-- run tests of the system:  
-    `make test`
+The project is created and mainained by Blockchain Exploration Research Group (BERG in short).
 
-TOOLS
-- go into django-shell of web container:  
-    `make django-shell`
-- go into bash shell of web container:  
-    `make bash`
-- transform markdown files to html  
-    `make html`
+Our webpage: https://bergplace.org/
