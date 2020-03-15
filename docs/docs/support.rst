@@ -3,7 +3,7 @@
 Support
 =======
 
-If you ancounter any problems while using Dru, do not hesitate to reach us.
+If you encounter any problems while using Dru, do not hesitate to reach us.
 
 Github issues
 -------------
