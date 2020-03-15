@@ -19,4 +19,4 @@ Another option is contacting us by `email <mailto:dru-support@bergplace.org>`_.
 IRC
 ---
 
-You can also reach us using IRC at Freenode (channel #dru).
+You can also reach us using IRC at Freenode (channels #dru or #bergplace).
