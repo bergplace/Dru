@@ -2,10 +2,10 @@ from random import randint, choice
 import aiohttp
 import asyncio
 
-URL = 'http://dru.bergplace.org'
+URL = 'http://127.0.0.1:8000'
 REPEAT_NUMBER = 10
-SPREAD = 10000
-CURRENT_HEIGHT = 543361
+SPREAD = 100
+CURRENT_HEIGHT = 6000
 
 APIS = [
     lambda offset: f'get_blocks/{offset}/{offset + randint(0, SPREAD)}',

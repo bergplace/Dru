@@ -24,7 +24,6 @@ Puts Dru in debug mode, not suitable for regular use, when dru is in debug mode 
 
 Which address the web server will be bound to.
 
-
 ``web_enable_ssl=false|true``
 
 Should Dru also provide TLS-secured version of the API?
@@ -47,7 +46,6 @@ The path for mongo database containing blocks. Space requirements for this datab
 ``postgres_dir=~/dru-data/pg``
 
 The path for Postgres database containing supplementary information for Dru.
-
 
 ``task_results_dir=~/dru-data/task-results/``
 
@@ -95,7 +93,7 @@ Credentials section
 
 ``web_admin_username=admin``
 
-The username of the web server administrator.
+The username of the web server administrator. The webserver admin portal is located at ``/admin`` URL.
 
 ``web_admin_password=pass``
 
