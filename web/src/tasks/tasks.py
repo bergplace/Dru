@@ -299,11 +299,17 @@ def get_transitivity(start_height, end_height):
 
     The graph is created from the blocks in the range [start_height, end_height]
     For global clustering coefficient value, use for get_transitivity_global.
+    Works only for simplified undirected graphs.
 
     """
 
     if heights_are_valid(start_height, end_height):
-        graph = get_graph(start_height, end_height, directed="false")
+        graph = get_graph(start_height, end_height, directed=False)
+        graph.simplify()
+
+        for e in graph.es:
+            logger.info(e.tuple)
+
         return dict(zip(graph.vs()["name"], graph.transitivity_local_undirected(None, "zero")))
     else:
         return None
@@ -315,11 +321,13 @@ def get_transitivity_global(start_height, end_height):
     """Returns the clustering coefficient of the graph created from the blocks in the range [start_height, end_height].
 
     This value is global for the graph. For node-level clustering coefficient, use get_transitivity.
+    Works only for simplified undirected graphs.
 
     """
 
     if heights_are_valid(start_height, end_height):
-        graph = get_graph(start_height, end_height, directed="false")
+        graph = get_graph(start_height, end_height, directed=False)
+        graph.simplify()
         return graph.transitivity_undirected()
     else:
         return None

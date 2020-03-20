@@ -77,4 +77,7 @@ def get_graph(start_height, end_height, directed):
                     graph.add_edge(transaction_vin, transaction_vout, value=transaction_value, txid=transaction_txid,
                                    height=block_height, time=block_time)
 
+    if directed is False:
+        graph.to_undirected()
+
     return graph
