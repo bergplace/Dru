@@ -42,7 +42,7 @@ Great! Please have a look at the :ref:`getting-started` guide.
    docs/maketargets
    docs/api-docs
    docs/server
-   docs/version-history
+   docs/changelog
    docs/source-code
    docs/authors
    docs/funding

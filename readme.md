@@ -11,6 +11,10 @@ and saves them to mongoDB for ease of use.
 
 For the project documentation, see https://dru.readthedocs.io.
 
+# Changelog
+
+https://dru.readthedocs.io/changelog.html
+
 # Authors
 
 The project is created and mainained by Blockchain Exploration Research Group (BERG in short).
