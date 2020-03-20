@@ -6,7 +6,17 @@ RUN apt-get update && apt-get install -y \
     python3-dev \
     supervisor \
     nginx \
-    libpcre3 libpcre3-dev pkg-config libxml2 libxml2-dev zlib1g-dev
+    libpcre3 \
+    libpcre3-dev \
+    pkg-config \
+    libxml2 \
+    libxml2-dev \
+    zlib1g-dev \
+    libtool \
+    bison \
+    flex \
+    automake \
+    autoconf
 
 COPY requirements.txt ./
 
@@ -22,13 +32,17 @@ COPY conf/web-tls-off /etc/nginx/sites-available/
 COPY conf/web-tls-on /etc/nginx/sites-available/
 RUN rm /etc/nginx/sites-enabled/default
 
-
 RUN chown -R www-data /srv
 RUN chown -R www-data /etc/nginx
 
 WORKDIR /app
 
+COPY src/wait-for-it.sh .
+RUN chmod +rx wait-for-it.sh
+COPY src/start.sh .
+RUN chmod +rx start.sh
+
 # Server
 EXPOSE 80
 STOPSIGNAL SIGINT
-CMD ["bash", "start.sh"]
+CMD ["bash", "./wait-for-it.sh", "postgres:5432", "-s", "-t", "120", "--", "./start.sh"]
