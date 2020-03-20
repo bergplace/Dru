@@ -20,7 +20,11 @@ Changed:
 
 - reduce fuzz test intensity
 
-1.0.0 (2019-08-19)
+Fixed:
+
+- fix endpoints computing transivitity, now they work only with simplified undirected graphs
+
+1.0.0 - 2019-08-19
 ------------------
 
 First public release.
