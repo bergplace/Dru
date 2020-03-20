@@ -6,7 +6,17 @@ RUN apt-get update && apt-get install -y \
     python3-dev \
     supervisor \
     nginx \
-    libpcre3 libpcre3-dev pkg-config libxml2 libxml2-dev zlib1g-dev
+    libpcre3 \
+    libpcre3-dev \
+    pkg-config \
+    libxml2 \
+    libxml2-dev \
+    zlib1g-dev \
+    libtool \
+    bison \
+    flex \
+    automake \
+    autoconf
 
 COPY requirements.txt ./
 
