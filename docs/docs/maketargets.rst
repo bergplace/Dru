@@ -13,12 +13,6 @@ Shows the help message.
 
 .. code:: bash
 
-    make restart
-
-Restarts Dru.
-
-.. code:: bash
-
     make start
 
 Starts Dru in the regular production mode using ``dru.default.conf`` as the initial configuration file. Before starting, verify configuration settings in this file.
@@ -31,9 +25,15 @@ Starts Dru in the testing mode. This includes running the Travis tests as well a
 
 .. code:: bash
 
+    make restart
+
+Restarts Dru.
+
+.. code:: bash
+
     make fuzz
 
-Starts the "fuzz" tests, calling multiple Dru endpoints with variety of parameters. This allows to verify whether Dru's endpoints are working properly. Before starting, please update the ``URL`` directive in ``test/fuzz.py``.
+Starts the "fuzz" tests, calling multiple Dru endpoints with variety of parameters. This allows to verify whether Dru's endpoints are working properly. Before starting, please make sure that the ``URL`` directive in ``test/fuzz.py`` points to the right server.
 
 .. code:: bash
 

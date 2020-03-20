@@ -14,7 +14,7 @@ Installing Dru
 Installing docker
 ~~~~~~~~~~~~~~~~~
 
-Dru runs in the Docker environment. Before continuing with installing Dru, please make sure that you have Docker CE installed. The following guide shows how to install Docker CE: https://docs.docker.com/install/
+Dru runs in the Docker environment. Before continuing with installing Dru, please make sure that you have Docker CE and Docker Compose installed. The following guide shows how to install Docker CE: https://docs.docker.com/install/ and this one describes the installation process of Docker Compose: https://docs.docker.com/compose/install/
 
 Cloning the repository
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -46,7 +46,7 @@ Most likely, you will want to start Dru in the following manner::
 
     make start
 
-All make targets are described in the :ref:`maketargets` section.
+It is worth to know that Dru also offers the ``make target`` directive that loads only first 7,000 of blocks and lets to test the whole environment without downloading the whole blockchain. All make targets are described in the :ref:`maketargets` section.
 
 Using Dru
 ---------
@@ -65,7 +65,7 @@ This call will return a JSON object that contains the URL to the actual result (
 
 If you are running Dru for Zcash, this call return the Zcash genesis block.
 
-If everything worked well, you can continue using Dru. For the documentation of all Dru API endpoints, see :ref:`api` section. Otherwise, please look at Dru logs by running the command "make logs". If you won't find anything helpful, try to look for support using the :ref:`support` section.
+If everything worked well, you can continue using Dru. For the documentation of all Dru API endpoints, see :ref:`api` section. Otherwise, if you'll encounter any problems, please have a look at Dru logs by running the command ``make logs``. If you won't find anything helpful, try to look for support using the :ref:`support` section.
 
 Stopping Dru
 ------------
