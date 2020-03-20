@@ -33,7 +33,7 @@ run:
 # TEST
 
 sleep:
-	sleep 60
+	sleep 30
 
 manage-test-conf:
 	cp dru.test.conf .env
