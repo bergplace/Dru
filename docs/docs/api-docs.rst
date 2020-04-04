@@ -177,3 +177,11 @@ If any of these addresses does not exist in the graph, None will be returned.
 Returns the count and total value of transactions between two addresses in the graph.
 The graph is created from the blocks in the range [start_height, end_height].
 If any of these addresses does not exist in the graph, None will be returned.
+
+.. code:: python
+
+    def get_zcash_tx_types_count(start_height, end_height):
+
+The returned dictionary contains the blocks' heights accompanied by the following:
+block time and number of shielded-shielded, shielded-transaparent, transparent-shielded, transparent-transparent transactions.
+For details on transactions' types, see: https://z.cash/technology/

@@ -92,16 +92,14 @@ def get_blocks_reduced(start_height, end_height):
 @celery_app.task
 @auto_save_result
 def get_zcash_tx_types_count(start_height, end_height):
-    """Returns the numbers of types of transactions accompanied by block time.
-
-    The returned dictionary contains the blocks' heights accompanied by the following:
+    """The returned dictionary contains the blocks' heights accompanied by the following:
     - time
     - number of shielded-shielded transactions
     - number of shielded-transaparent transactions
     - number of transparent-shielded transactions
     - number of transparent-transparent transactions
 
-    For details, see: https://z.cash/technology/
+    For details on transactions' types, see: https://z.cash/technology/
 
     """
 

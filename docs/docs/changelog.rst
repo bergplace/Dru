@@ -10,6 +10,8 @@ Added:
 
 - wait-for-it.sh script to celery & web containers for waiting for postgres to start
 
+- endpoint get_zcash_tx_types_count for counting transparent/shielded transactions
+
 Changed:
 
 - update python-igraph to version 0.8.0
