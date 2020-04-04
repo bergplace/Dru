@@ -27,4 +27,5 @@ urlpatterns = [
          as_view(tasks.are_connected)),
     path('get_transactions_value/<int:start_height>/<int:end_height>/<str:address1>/<str:address2>',
          as_view(tasks.get_transactions_value)),
+    path('get_zcash_tx_types_count/<int:start_height>/<int:end_height>', as_view(tasks.get_zcash_tx_types_count)),
 ]
