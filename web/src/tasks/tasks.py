@@ -91,6 +91,79 @@ def get_blocks_reduced(start_height, end_height):
 
 @celery_app.task
 @auto_save_result
+def get_zcash_tx_types_count(start_height, end_height):
+    """Returns the numbers of types of transactions accompanied by block time.
+
+    The returned dictionary contains the blocks' heights accompanied by the following:
+    - time
+    - number of shielded-shielded transactions
+    - number of shielded-transaparent transactions
+    - number of transparent-shielded transactions
+    - number of transparent-transparent transactions
+
+    For details, see: https://z.cash/technology/
+
+    """
+
+    if heights_are_valid(start_height, end_height):
+
+        blocks = Mongo.db(os.environ['MONGODB_NAME']).blocks.find(
+            {
+                'height': {
+                        '$gte': start_height,
+                        '$lte': end_height
+                }
+            },
+            {
+                'height': 1,
+                'time': 1,
+                'tx.txid': 1,
+                'tx.vin.addresses': 1,
+                'tx.vin.coinbase': 1,
+                'tx.vout.value': 1,
+                'tx.vout.scriptPubKey.addresses': 1,
+                '_id': 0
+            },
+            no_cursor_timeout=True
+        )
+
+        dict_blocks = dict()
+
+        for block in blocks:
+            counter_transparent_transparent = 0
+            counter_transparent_shielded = 0
+            counter_shielded_transparent = 0
+            counter_shielded_shielded = 0
+
+            for transaction in block['tx']:
+                if len(transaction['vin']) == 0:
+                    if len(transaction['vout']) == 0:
+                        counter_shielded_shielded = counter_shielded_shielded + 1
+                    else:
+                        counter_shielded_transparent = counter_shielded_transparent + 1
+                else:
+                    if len(transaction['vout']) == 0:
+                        counter_transparent_shielded = counter_transparent_shielded + 1
+                    else:
+                        counter_transparent_transparent = counter_transparent_transparent + 1
+
+            dict_blocks.update({block['height']:
+                    {
+                        'time': block['time'],
+                        's-s': counter_shielded_shielded,
+                        's-t': counter_shielded_transparent,
+                        't-s': counter_transparent_shielded,
+                        't-t': counter_transparent_transparent
+                    }
+                })
+
+        return dict_blocks
+    else:
+        return None
+
+
+@celery_app.task
+@auto_save_result
 def get_edges(start_height, end_height):
     """Returns the list of edges blocks for a given range of blocks' heights.
     These edges can be easily imported into graph-processing libraries.
