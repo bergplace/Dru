@@ -46,7 +46,7 @@ Most likely, you will want to start Dru in the following manner::
 
     make start
 
-It is worth to know that Dru also offers the ``make target`` directive that loads only first 7,000 of blocks and lets to test the whole environment without downloading the whole blockchain. All make targets are described in the :ref:`maketargets` section.
+It is worth to know that Dru also offers the ``make test`` directive that loads only first 7,000 of blocks and lets to test the whole environment without downloading the whole blockchain. All make targets are described in the :ref:`maketargets` section.
 
 Using Dru
 ---------
