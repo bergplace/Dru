@@ -1,12 +1,13 @@
 {
     "_id": "",
     "hash": "00040fe8ec8471911baa1db1266ea15dd06b4a8a5c453883c000b031973dce08",
-    "confirmations": 27,
+    "confirmations": 83,
     "size": 1692,
     "height": 0,
     "version": 4,
     "merkleroot": "c4eaa58879081de3c24a7b117ed2b28300e7ec4c4c1dff1d3f1268b7857a4ddb",
     "finalsaplingroot": "0000000000000000000000000000000000000000000000000000000000000000",
+    "chainhistoryroot": "0000000000000000000000000000000000000000000000000000000000000000",
     "tx": [
         {
             "txid": "c4eaa58879081de3c24a7b117ed2b28300e7ec4c4c1dff1d3f1268b7857a4ddb",
