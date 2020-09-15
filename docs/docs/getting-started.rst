@@ -3,6 +3,11 @@
 Getting started
 ===============
 
+Firstly, test Dru using our instance
+------------------------------------
+
+Before installing Dru in your environment, we highly encourage you to evaluate its capabilities using a Zcashe instance provided by us. This would help you to understand how it operares and how to query its API endpoints. To do so, visit the :ref:`Server` section. But if you decided to install Dru locally, continue with the instructions provided in this section.
+
 Where to install Dru?
 ---------------------
 
