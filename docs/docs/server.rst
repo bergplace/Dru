@@ -9,11 +9,11 @@ It is available until withdrawing (not earlier than 2021-12-31) at the following
 
 SSL-enabled, recommended:
 
-	`<https://dru.bergplace.org/api>`_
+	`<https://dru.bergplace.org>`_
 
 non-SSL, not recommended:
 	
-	`<http://dru.bergplace.org/api>`_
+	`<http://dru.bergplace.org>`_
 
 For instance, if you want to test the API, you might be willing to get the edges of the first 11 blocks of Zcash blockchain:
 
