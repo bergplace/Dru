@@ -1,5 +1,5 @@
 ipython
-django==2.2.24
+django==2.2.27
 psycopg2-binary==2.8.4
 djangorestframework>=3.9.4,<4
 Markdown==3.0.1
