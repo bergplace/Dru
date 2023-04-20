@@ -19,7 +19,7 @@ Installing Dru
 Installing docker
 ~~~~~~~~~~~~~~~~~
 
-Dru runs in the Docker environment. Before continuing with installing Dru, please make sure that you have Docker CE and Docker Compose installed. The following guide shows how to install Docker CE: https://docs.docker.com/install/ and this one describes the installation process of Docker Compose: https://docs.docker.com/compose/install/
+Dru runs in the Docker environment. Before continuing with installing Dru, please make sure that you have Docker CE and Docker Compose installed. The following guide shows how to install Docker Desktop containing both: https://docs.docker.com/desktop/, but please decide which scenario will work for you the best (Destop or standalone versions).
 
 Cloning the repository
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -36,7 +36,7 @@ Creating the configuration
 Next, use the default configuration file as a template for your Dru instance configuration::
 
     cd Dru
-    cp dru.conf.default dru.conf
+    cp dru.default.conf dru.conf
 
 Then, edit the dru.conf to suite your needs according to the :ref:`configuration` section.
 
