@@ -22,10 +22,10 @@ manage-conf:
 	python3 build-tools/manage-env.py
 
 build:
-	docker-compose build
+	docker compose build
 
 stop:
-	docker-compose down -v
+	docker compose down -v
 
 run:
 	./build-tools/docker-compose-up.sh -d
@@ -40,7 +40,7 @@ manage-test-conf:
 	python3 build-tools/manage-env.py
 
 run-on-travis:
-	docker-compose up -d
+	docker compose up -d
 
 run-test:
 	python3 -m unittest discover test
@@ -48,16 +48,16 @@ run-test:
 # UTILS
 
 django-shell:
-	docker-compose exec web python3 manage.py shell
+	docker compose exec web python3 manage.py shell
 
 bash:
-	docker-compose exec web bash
+	docker compose exec web bash
 
 logs:
-	docker-compose logs -f
+	docker compose logs -f
 
 logs-celery:
-	docker-compose logs -f celery
+	docker compose logs -f celery
 
 # STATIC CODE ANALYSIS
 

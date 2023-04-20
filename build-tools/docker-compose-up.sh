@@ -16,4 +16,4 @@ if [ $debug = "true" ]
         MONGO_EXPRESS=0
 fi
 
-docker-compose up -V --scale zcashd=$ZCASH_NODES --scale mongo-express=$MONGO_EXPRESS $1
+docker compose up -V --scale zcashd=$ZCASH_NODES --scale mongo-express=$MONGO_EXPRESS $1
